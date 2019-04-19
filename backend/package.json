@@ -1,0 +1,33 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "lab1-canvas-backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha test"
+  },
+  "author": "jiang du",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^3.0.4",
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
+    "chai-http": "^4.2.1",
+    "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "express-jwt": "^5.3.1",
+    "filesize": "^4.1.2",
+    "formidable": "^1.2.1",
+    "jsonwebtoken": "^8.5.0",
+    "kafka-node": "^4.1.0",
+    "mocha": "^6.0.2",
+    "mongoose": "^5.4.20",
+    "mongoose-sequence": "^5.0.1",
+    "mysql": "^2.16.0",
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "uuid": "^3.3.2"
+  }
+}
