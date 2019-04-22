@@ -3,14 +3,26 @@ const ClientConnection = require('../client')
 let client = new ClientConnection('user', 'response_user');
 client.init();
 
-const creatUser = (req, res) => {
-    console.log('Signup request')
+const signin = (req, res) => {
+    console.log('Signin request')
     let message = {
-        cmd: 'CREATE_USER',
+        cmd: 'SIGN_IN',
         user: req.body
     }
     client.send(message, function(err, result) {
-        console.log('the result for creatUser is: ', result);
+        console.log('the result for signin is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
+const signup = (req, res) => {
+    console.log('Signup request')
+    let message = {
+        cmd: 'SIGN_UP',
+        user: req.body
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for signup is: ', result);
         res.status(result.status).json(result.data);
     })
 }
@@ -82,4 +94,4 @@ const readMessage = (req, res) => {
     })
 }
 
-module.exports = {creatUser, getUser, getUserCourses, getUserMessages ,createUserMessage, readMessage}
+module.exports = {signin, signup, getUser, getUserCourses, getUserMessages ,createUserMessage, readMessage}

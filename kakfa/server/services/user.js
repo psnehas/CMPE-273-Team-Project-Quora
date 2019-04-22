@@ -1,13 +1,43 @@
 var db = require('../../../Backend/lib/mongoDB')
 var bcrypt = require('bcrypt')
+var jwt = require('jsonwebtoken')
 
-const createUser = (user, next) => {
+
+const signin = (user, next) => {
+    console.log('Signin request')
+    let {email, password} = user;
+    db.findUserByEmail(email)
+    .then(result => {
+        console.log(result)
+        let res = {};
+        if (!result) {
+            res.status = 400;
+            res.data = {error: 'User doesn\'t exists'};
+        } else {
+            if (!bcrypt.compareSync(password, result.password)){
+                console.log("Signin failed, wrong password")
+                res.status = 400;
+                res.data = {error: 'Invalid password'};
+            } else {
+                const token = jwt.sign({ email: result.email }, 'quora_secret_key')
+                res.status = 200;
+                res.data = {
+                    token,
+                    userid: result.user_id,
+                }
+            }
+        }
+        next(null, res);
+    })
+}
+
+const signup = (user, next) => {
     console.log('create a user: ', user);
     db.findUserByEmail(user.email)
     .then(result => {
        console.log(result)
        let res = {};
-        if (result !== undefined && result.length > 0) {
+        if (result) {
             res.status = 400;
             res.data = {error: 'User exists'};
             next(null, res);
@@ -80,7 +110,7 @@ const createUserMessage = (message, next) => {
     const {subject, content, to_email, userid} = message;
     db.findUserByEmail(to_email)
     .then(to => {
-        let touser = to[0].toObject();
+        let touser = to.toObject();
         db.findUserByID(userid)
         .then(from => {
             let fromuser = from[0].toObject();
@@ -118,8 +148,11 @@ const readMessage = (messageid, next) => {
 
 const dispatch = (message, next) => {
     switch (message.cmd) {
-        case 'CREATE_USER':
-            createUser(message.user, next);
+        case 'SIGN_IN':
+            signin(message.user, next);
+            break;
+        case 'SIGN_UP':
+            signup(message.user, next);
             break;
         case 'GET_USER':
             getUser(message.userid, next);
