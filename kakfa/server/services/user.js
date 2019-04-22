@@ -1,4 +1,4 @@
-var db = require('../../../Backend/lib/mongoDB')
+var db = require('../../../backend/lib/mongoDB')
 var bcrypt = require('bcrypt')
 var jwt = require('jsonwebtoken')
 
