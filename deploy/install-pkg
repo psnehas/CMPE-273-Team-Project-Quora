@@ -1,0 +1,8 @@
+#!/bin/sh
+
+exec >/dev/null
+exec 2>&1
+
+cd /home/ec2-user/CMPE-273-Team-Project-Quora/backend && npm install
+
+cd /home/ec2-user/CMPE-273-Team-Project-Quora/kakfa && npm install

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+exec >/dev/null
+exec 2>&1
+
+pm2 delete index
+pm2 delete server
+
+rm -rf /home/ec2-user/CMPE-273-Team-Project-Quora/backend/node_modules
+rm -rf /home/ec2-user/CMPE-273-Team-Project-Quora/kakfa/node_modules

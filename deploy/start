@@ -1,0 +1,8 @@
+#!/bin/sh
+
+exec >/dev/null
+exec 2>&1
+
+cd /home/ec2-user/CMPE-273-Team-Project-Quora/backend && pm2 start index.js
+
+cd /home/ec2-user/CMPE-273-Team-Project-Quora/kakfa/server && pm2 start server.js
