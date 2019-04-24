@@ -6,17 +6,17 @@ files:
 
 hooks:
 ApplicationStop:
-   - location: deploy/stop
+   - location: ./deploy/stop
      timeout: 60
-     runas: ec2-user
+     runas: root
 
 AfterInstall:
-   - location: deploy/install-pkg
+   - location: ./deploy/install-pkg
      timeout: 1200
-     runas: ec2-user
+     runas: root
 
 ApplicationStart:
-   - location: deploy/start
+   - location: ./deploy/start
      timeout: 60
-     runas: ec2-user
+     runas: root
 
