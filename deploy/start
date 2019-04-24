@@ -1,6 +1,6 @@
 #!/bin/sh
 
-exec >/dev/null
+exec > deploy.log
 exec 2>&1
 
 cd /home/ec2-user/CMPE-273-Team-Project-Quora/backend && pm2 start index.js

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-exec >/dev/null
+exec > deploy.log 
 exec 2>&1
 
 pm2 delete index
