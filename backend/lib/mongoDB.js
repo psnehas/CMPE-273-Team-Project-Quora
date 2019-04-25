@@ -99,8 +99,8 @@ exports.createComment = (answerid, comment) => {
     return Answer.findOneAndUpdate({answer_id: answerid}, {$push: {comments: {comment: comment}}}).exec();
 }
 
-exports.createAnswer = (newAnswer) => {
-    let newAnswer = new Answer(newAnswer);
+exports.createAnswer = (data) => {
+    let newAnswer = new Answer(data);
     return newAnswer.save();
 }
 
