@@ -3,6 +3,12 @@
 export NVM_DIR="/home/ec2-user/.nvm" 
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
+pm2 delete index
+pm2 delete server
+
+rm -rf /home/ec2-user/CMPE-273-Team-Project-Quora/backend/node_modules
+rm -rf /home/ec2-user/CMPE-273-Team-Project-Quora/kakfa/node_modules
+
 cd /home/ec2-user/CMPE-273-Team-Project-Quora/backend
 npm install
 
