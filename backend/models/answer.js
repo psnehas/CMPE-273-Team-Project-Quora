@@ -3,15 +3,11 @@ var autoIncrement = require('mongoose-sequence')(mongoose)
 
 const AnswerSchema = new mongoose.Schema({
     user_id:{
-        type: String,
+        type: Number,
         trim: true
     },
     question_id: {
-        type: String,
-        trim: true
-    },
-    answer_id: {
-        type: String,
+        type: Number,
         trim: true
     },
     bookmark: {
@@ -82,4 +78,4 @@ const AnswerSchema = new mongoose.Schema({
 
 AnswerSchema.plugin(autoIncrement, {inc_field: 'answer_id'});
 
-module.exports =  mongoose.model('User', AnswerSchema);
+module.exports =  mongoose.model('Answer', AnswerSchema);
