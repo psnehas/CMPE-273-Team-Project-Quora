@@ -3,20 +3,19 @@ os: linux
 files:
   - source: /
     destination: /home/ec2-user/CMPE-273-Team-Project-Quora
-
 hooks:
-ApplicationStop:
-   - location: ./deploy/stop
+  ApplicationStop:
+   - location: deploy/stop
      timeout: 60
-     runas: root
+     runas: ec2-user
 
-AfterInstall:
-   - location: ./deploy/install-pkg
+  AfterInstall:
+   - location: deploy/install-pkg
      timeout: 1200
-     runas: root
+     runas: ec2-user
 
-ApplicationStart:
-   - location: ./deploy/start
+  ApplicationStart:
+   - location: deploy/start
      timeout: 60
-     runas: root
+     runas: ec2-user
 

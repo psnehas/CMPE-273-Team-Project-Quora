@@ -1,8 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
-exec > deploy.log
-exec 2>&1
+export NVM_DIR="/home/ec2-user/.nvm" 
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-cd /home/ec2-user/CMPE-273-Team-Project-Quora/backend && npm install
+cd /home/ec2-user/CMPE-273-Team-Project-Quora/backend
+npm install
 
-cd /home/ec2-user/CMPE-273-Team-Project-Quora/kakfa && npm install
+cd /home/ec2-user/CMPE-273-Team-Project-Quora/kakfa
+npm install
