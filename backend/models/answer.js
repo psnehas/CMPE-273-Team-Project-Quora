@@ -2,6 +2,10 @@ var mongoose = require('mongoose')
 var autoIncrement = require('mongoose-sequence')(mongoose)
 
 const AnswerSchema = new mongoose.Schema({
+    user_id:{
+        type: String,
+        trim: true
+    },
     question_id: {
         type: String,
         trim: true
@@ -9,6 +13,9 @@ const AnswerSchema = new mongoose.Schema({
     answer_id: {
         type: String,
         trim: true
+    },
+    bookmark: {
+        type: Boolean
     },
     upvote: {
         type: Number
