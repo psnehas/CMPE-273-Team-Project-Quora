@@ -48,6 +48,10 @@ const UserSchema = new mongoose.Schema({
             endYear: {type: String, default: ''},
         }
     ],
+    followed_people : [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    following_people : [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    followed_questions : [{type: mongoose.Schema.Types.ObjectId, ref: 'Answer'}],
+    followed_topics: [{type: mongoose.Schema.Types.ObjectId, ref: 'Topic'}],
     profileCredential: {type: String, default: ''},
     messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
 })
