@@ -1,6 +1,7 @@
 var mongoose = require('mongoose')
 var User = require('../models/user')
 var Message = require('../models/message')
+var Answer = require('../models/answer')
 
 const uri_altas = 'mongodb+srv://admin:admin@quora-2jksh.mongodb.net/';
 const uri_local = 'mongodb://localhost:27017/quora';
@@ -75,4 +76,29 @@ exports.getMessagesByUserID = (userid) => {
 
 exports.readMessage = (messageid) => {
     return Message.findOneAndUpdate({message_id: messageid}, {$set: {status: 'readed'}}).exec();
+}
+
+//Answer
+exports.upvoteAnswer = (answerid) => {
+    return Answer.findOneAndUpdate({answer_id: answerid}, {$inc : {upvote : 1}}).exec();
+}
+
+exports.downvoteAnswer = (answerid) => {
+    return Answer.findOneAndUpdate({answer_id: answerid}, {$inc : {downvote : 1}}).exec();
+}
+
+exports.getVotes = (answerid) => {
+    return Answer.findOne({answer_id: answerid}).exec();
+}
+
+exports.getComments = (answerid) => {
+    return Answer.find({answer_id: answerid}).exec();
+}
+
+exports.getComments = (answerid) => {
+    return Answer.find({answer_id: answerid}).exec();
+}
+
+exports.setBookmark = (userid, answerid) => {
+    return Answer.findOneAndUpdate({user_id: userid,answer_id: answerid}, {$set: {bookmark: true}}).exec();
 }
