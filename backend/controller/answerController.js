@@ -6,85 +6,102 @@ var path = require('path')
 const upvote = (req, res) => {
     db.upvoteAnswer(req.body.answer_id).then(() =>{
         console.log("Upvote answer ", req.body.answer_id)
+        res.status(200).json({
+            success: "Upvote answer "+ req.body.answer_id
+        })
     })
 }
 
 const downvote = (req, res) => {
     db.downvoteAnswer(req.body.answer_id).then(() =>{
         console.log("Downvote answer ", req.body.answer_id)
+        res.status(200).json({
+            success: "Downvote answer "+ req.body.answer_id
+        })
     })
 }
 
 const allVotes = (req, res) => {
-    db.getVotes(req.body.answer_id).then(result =>{
+    db.getVotes(req.params.answer_id).then(result =>{
         console.log("Upvotes: ", result.upvote)
         console.log("Downvotes: ", result.downvote)
+        res.status(200).json({
+            allVotes: result
+        })
     })
 }
 
 const allComments = (req, res) => {
-    db.getComments(req.body.answer_id).then(result =>{
-        console.log("Comments: ", result.comments)
+    db.getComments(req.params.answer_id).then(result =>{
+        console.log("allComments: ", result.comments)
+        res.status(200).json({
+            success: result.comments
+        })
+    })
+}
+
+const makeComment = (req, res) => {
+    console.log("Answer ID: ", req.body.answer_id)
+    console.log("Comment: ", req.body.comment)
+    db.createComment(req.body.answer_id, req.body.comment).then(() =>{
+        res.status(200).json({
+            success: 'Comment created'
+        })
+    })
+}
+
+const makeAnswer = (req, res) => {
+    console.log("question ID: ", req.params.question)
+    console.log("Comment: ", req.body.comment)
+    newAnswer ={
+        question_id: req.params.question_id,
+        owner: req.body.user_id,
+        content: req.body.answer,
+        upvote: 0,
+        downvote: 0,
+        bookmark: [],
+        comments: [],
+    }
+    db.createAnswer(newAnswer).then(() =>{
+        res.status(200).json({
+            success: 'Answer created'
+        })
+    })
+}
+
+const updateAnswer = (req, res) => {
+    console.log("question ID: ", req.params.question)
+    console.log("Comment: ", req.body.comment)
+    editInfo ={
+        question_id: req.params.question_id,
+        answer_id: req.params.answer_id,
+        owner: req.body.user_id,
+        content: req.body.answer,
+    }
+    db.updateOneAnswer(editInfo).then(() =>{
+        res.status(200).json({
+            success: 'Answer Edited'
+        })
     })
 }
 
 const createBookmark = (req, res) => {
+    console.log("Bookmark added")
     db.setBookmark(req.body.user_id, req.body.answer_id).then(() =>{
-        console.log("Bookmark added", )
+        res.status(200).json({
+            success: 'Bookmark added'
+        })
     })
 }
-// const updateUser = (req, res) => {
-//     let user = {}
-//     const filepath = path.join(__dirname + '/' + '../public/images')
-//     if (!fs.existsSync(filepath)) {
-//         fs.mkdirSync(filepath, {recursive: true})
-//     }
-//     let form = new formidable.IncomingForm()
-//     form.keepExtensions = true
-//     form.uploadDir = filepath
-//     form.parse(req, (err, fields, files) => {
-//         if (err) {
-//             return res.status(400).json({
-//                 error: 'Photo could not be uploaded'
-//             })
-//         }
-//         Object.assign(user, fields)
-//         user.avatar = ''
-//         let absPath = ''
-//         if (files.avatar) {
-//             console.log('tmp avatar path: ', files.avatar.path)
-//             db.findAvatarPathByID(user.id)
-//             .then(result => {
-//                 console.log('query avatar path result: ', result.avatar)
-//                 user.avatar = user.id + '__' + files.avatar.name
-//                 absPath = path.join(__dirname, '../public/images', user.avatar)
-//                 console.log('abs path is: ', absPath)
-//                 fs.rename(files.avatar.path, absPath, err => {
-//                     if (err)
-//                         console.log(err)
-//                 })
-//                 console.log('user object: ', user)
-//                 db.updateUser(user)
-//                     .then(() => {
-//                         res.status(200).json({
-//                         success: 'Update user profile successfully'
-//                     })
-//                 })
-//             })
-//         }
-//     })   
-// }
 
-// const getPhoto = (req, res) => {
-//     console.log('Get user avatar of: ', req.params.userID)
-//     db.findAvatarPathByID(req.params.userID)
-//     .then(result => {
-//         console.log('query avatar path result: ', result)
-//         let absPath = path.join(__dirname, '../public/images', result.avatar)
-//         console.log('avatar file path: ', absPath)
-//         res.status(200).sendFile(absPath)
-//     })
-// }
+const getOneAnswer = (req, res) => {
+    db.findOneAnswer(req.params.answer_id).then(result =>{
+        console.log("Answer content: ", result)
+        res.status(200).json({
+            answerContent: result
+        })
+    })
+}
 
-
-module.exports = {upvote, downvote, allVotes, allComments, createBookmark}
+module.exports = {upvote, downvote, allVotes, allComments, makeComment, createBookmark,
+    getOneAnswer, makeAnswer, updateAnswer}

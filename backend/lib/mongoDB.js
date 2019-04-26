@@ -95,10 +95,23 @@ exports.getComments = (answerid) => {
     return Answer.find({answer_id: answerid}).exec();
 }
 
-exports.getComments = (answerid) => {
-    return Answer.find({answer_id: answerid}).exec();
+exports.createComment = (answerid, comment) => {
+    return Answer.findOneAndUpdate({answer_id: answerid}, {$push: {comments: {comment: comment}}}).exec();
+}
+
+exports.createAnswer = (data) => {
+    let newAnswer = new Answer(data);
+    return newAnswer.save();
 }
 
 exports.setBookmark = (userid, answerid) => {
-    return Answer.findOneAndUpdate({user_id: userid,answer_id: answerid}, {$set: {bookmark: true}}).exec();
+    return Answer.findOneAndUpdate({answer_id: answerid}, {$push: {bookmark: {user_id: userid}}}).exec();
+}
+
+exports.findOneAnswer = (answerid) => {
+    return Answer.findOne({answer_id: answerid}).exec();
+}
+
+exports.updateOneAnswer = (editInfo) => {
+    return Answer.findOneAndUpdate({answer_id: editInfo.answer_id}, {$set: {content: editInfo.content}}).exec();
 }
