@@ -19,7 +19,7 @@ const signin = (user, next) => {
                 res.status = 400;
                 res.data = {error: 'Invalid password'};
             } else {
-                const token = jwt.sign({ email: result.email }, 'quora_secret_key')
+                const token = jwt.sign({ email: result.email, user_id: result.user_id }, 'quora_secret_key')
                 res.status = 200;
                 res.data = {
                     token,
@@ -61,11 +61,11 @@ const getUser = (userid, next) => {
     .then(result => {
         console.log(result)
         let res = {};
-        if (result !== undefined && result.length > 0) {
+        if (result) {
             let user = ['courses', '_id', 'password', '__v'].reduce((u, p) => {
                 delete u[p];
                 return u;
-            }, result[0].toObject());
+            }, result.toObject());
             user.id = user.user_id;
             console.log('the user is: ', user)
             res.status = 200;
@@ -113,7 +113,7 @@ const createUserMessage = (message, next) => {
         let touser = to.toObject();
         db.findUserByID(userid)
         .then(from => {
-            let fromuser = from[0].toObject();
+            let fromuser = from.toObject();
             let message = {
                 from_user_id: fromuser.user_id,
                 from_name: fromuser.name,

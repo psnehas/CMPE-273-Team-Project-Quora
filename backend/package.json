@@ -20,6 +20,7 @@
     "express-jwt": "^5.3.1",
     "filesize": "^4.1.2",
     "formidable": "^1.2.1",
+    "ioredis": "^4.9.0",
     "jsonwebtoken": "^8.5.0",
     "kafka-node": "^4.1.1",
     "mocha": "^6.0.2",
@@ -28,7 +29,6 @@
     "mysql": "^2.16.0",
     "passport": "^0.4.0",
     "passport-jwt": "^4.0.0",
-    "redis": "^2.8.0",
     "uuid": "^3.3.2"
   }
 }

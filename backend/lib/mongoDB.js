@@ -48,7 +48,7 @@ exports.findUserByEmail = (email) => {
 }
 
 exports.findUserByID = (id) => {
-    return User.find({user_id: id}).exec();
+    return User.findOne({user_id: id}).exec();
 }
 
 exports.findAvatarPathByID = (id) => {
