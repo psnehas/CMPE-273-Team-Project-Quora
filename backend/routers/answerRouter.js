@@ -4,11 +4,31 @@ var userControllerLocal = require('../controller/userController')
 var userControllerKafka = require('../../kakfa/client/controller/user');
 const answerRouter = express.Router()
 
-router.route('/signin').post(userControllerKafka.signin)
-router.route('/signup').post(userControllerKafka.signup)
+router.route('/api/bookmark/user/:userID/answer/:answerID')
+.post(authController.requireSignin,)
 
-router.route('/api/users/photo/:userID')
-.get(userControllerLocal.getPhoto)
+router.route('/api/answer/:answerID/upvote')
+.put(authController.requireSignin,)
+
+router.route('/api/answer/:answerID/downvote')
+.put(authController.requireSignin,)
+
+router.route('/api/answer_votes/:answerID')
+.get(authController.requireSignin,)
+
+router.route('/api/answer/:answerID/comment')
+.post(authController.requireSignin,)
+
+router.route('/api/answer/:answerID/all_comments')
+.get(authController.requireSignin,)
+
+router.route('/api/question/:questionID/answer')
+.post(authController.requireSignin,)
+
+router.route('/api/question/:questionID/answer/:answerID')
+.put(authController.requireSignin,)
+.get(authController.requireSignin,)
+
 
 router.route('/api/users/courses/:userID')
 .get(authController.requireSignin, userControllerKafka.getUserCourses)
