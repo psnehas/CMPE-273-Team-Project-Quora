@@ -11,19 +11,21 @@ const signin = (user, next) => {
         console.log(result)
         let res = {};
         if (!result) {
-            res.status = 400;
+            res.status = 401;
             res.data = {error: 'User doesn\'t exists'};
         } else {
             if (!bcrypt.compareSync(password, result.password)){
                 console.log("Signin failed, wrong password")
-                res.status = 400;
+                res.status = 401;
                 res.data = {error: 'Invalid password'};
             } else {
                 const token = jwt.sign({ email: result.email, user_id: result.user_id }, 'quora_secret_key')
                 res.status = 200;
                 res.data = {
                     token,
-                    userid: result.user_id,
+                    user_id: result.user_id,
+                    first_name: result.first_name,
+                    last_name: result.last_name
                 }
             }
         }
@@ -78,21 +80,37 @@ const getUser = (userid, next) => {
     })
 }
 
-const getUserCourses = (userid, next) => {
-    db.findCoursesByUserID(userid)
-        .then(result => {
-            let courses = result.toObject().courses.map(course => 
-                ['announcements', 'assignments', 'quizzes', 'people', 'files', '_id', '__v'].reduce((course, p)=> {
-                    delete course[p];
-                    return course;
-                }, course)
-            );
-            console.log('courses reuslt: ', courses);
-            next(null, {
-                status: 200,
-                data: courses
-            })
+const getUserFeed = (userid, next) => {
+    db.findFeedByUserID(userid)
+    .then(result => {
+        console.log('feed reuslt: ', result);
+        next(null, {
+            status: 200,
+            data: result
         })
+    })
+}
+
+const getUserTopics = (userid, next) => {
+    db.findTopicsBuUserID(userid)
+    .then(result => {
+        console.log('topics reuslt: ', result);
+        next(null, {
+            status: 200,
+            data: result
+        })
+    })
+}
+
+const createTopic = (topic_name, next) => {
+    db.insertTopic({name: topic_name})
+    .then(result => {
+        console.log('create topic reuslt: ', result);
+        next(null, {
+            status: 200,
+            data: {success: 'Successfully created a topic'}
+        })
+    })
 }
 
 const getUserMessages = (userid, next) => {
@@ -157,8 +175,14 @@ const dispatch = (message, next) => {
         case 'GET_USER':
             getUser(message.userid, next);
             break;
-        case 'GET_COURSE':
-            getUserCourses(message.userid, next);
+        case 'GET_FEED':
+            getUserFeed(message.userid, next);
+            break;
+        case 'GET_TOPICS':
+            getUserTopics(message.userid, next);
+            break;
+        case 'CREATE_TOPIC':
+            createTopic(message.topic_name, next);
             break;
         case 'GET_MESSAGE':
             getUserMessages(message.userid, next);

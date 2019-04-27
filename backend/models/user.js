@@ -40,7 +40,7 @@ const UserSchema = new mongoose.Schema({
             graduationYear: {type: String, default: ''},
         }
     ],
-    careers : [
+    careers: [
         {
             position: {type: String, default: ''},
             company: {type: String, default: ''},
@@ -48,11 +48,27 @@ const UserSchema = new mongoose.Schema({
             endYear: {type: String, default: ''},
         }
     ],
-    followed_people : [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-    following_people : [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-    followed_questions : [{type: mongoose.Schema.Types.ObjectId, ref: 'Answer'}],
+    followed_people: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    following_people: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    followed_questions: [{type: mongoose.Schema.Types.ObjectId, ref: 'Question'}],
     followed_topics: [{type: mongoose.Schema.Types.ObjectId, ref: 'Topic'}],
     profileCredential: {type: String, default: ''},
+    feeded_q_a: [ 
+        {
+            question_id: Number,
+            question_body: String,
+            top_answer: {
+                createdBy: String,
+                createdOn: Date,
+                body: String,
+            } 
+        }
+    ],
+    activities: {
+        questions:[ Date ],
+        answers: [ Date ],
+        comments: [ Date ],
+    },
     messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
 })
 

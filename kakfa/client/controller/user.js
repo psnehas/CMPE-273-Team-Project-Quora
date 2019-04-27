@@ -39,14 +39,38 @@ const getUser = (req, res) => {
     })
 }
 
-const getUserCourses = (req, res) => {
-    console.log('Get user course from user id: ', req.params.userID)
+const getUserFeed = (req, res) => {
+    console.log('Get user feed from user id: ', req.user.user_id)
     let message = {
-        cmd: 'GET_COURSE',
-        userid: req.params.userID
+        cmd: 'GET_FEED',
+        userid: req.user.user_id
     }
     client.send(message, function(err, result) {
         console.log('the result for getUserCourses is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
+const getUserTopics = (req, res) => {
+    console.log('Get user topics  user id: ', req.user.user_id)
+    let message = {
+        cmd: 'GET_TOPICS',
+        userid: req.user.user_id
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for getUserTopics is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
+const createTopic = (req, res) => {
+    console.log('Create topic with name: ', req.body.topic_name);
+    let message = {
+        cmd: 'CREATE_TOPIC',
+        topic_name : req.body.topic_name
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for createTopics is: ', result);
         res.status(result.status).json(result.data);
     })
 }
@@ -94,4 +118,5 @@ const readMessage = (req, res) => {
     })
 }
 
-module.exports = {signin, signup, getUser, getUserCourses, getUserMessages ,createUserMessage, readMessage}
+module.exports = {signin, signup, getUserFeed, getUserTopics, createTopic, 
+    getUser, getUserMessages ,createUserMessage, readMessage}

@@ -1,5 +1,6 @@
 var mongoose = require('mongoose')
 var User = require('../models/user')
+var Topic = require('../models/topic')
 var Message = require('../models/message')
 var Answer = require('../models/answer')
 
@@ -53,6 +54,19 @@ exports.findUserByID = (id) => {
 
 exports.findAvatarPathByID = (id) => {
     return User.findOne({user_id: id}, {'_id': 0, 'avatar': 1}).exec();
+}
+
+exports.findFeedByUserID = (id) => {
+    return User.findOne({user_id: id}).select('feeded_q_a -_id').exec();
+}
+
+exports.findTopicsBuUserID = (id) => {
+    return User.findOne({user_id: id}).populate('followed_topics', 'name topic_id -_id').select('followed_topics -_id').exec();
+}
+
+exports.insertTopic = (name) => {
+    let newTopic = new Topic(name);
+    return newTopic.save();
 }
 
 exports.updateUser = (user) => {
