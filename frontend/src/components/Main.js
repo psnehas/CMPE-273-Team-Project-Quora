@@ -4,6 +4,7 @@ import Login from './Login/Login';
 import SignUp from './SignUp/SignUp';
 import Home from './Home/Home';
 import navbar from './NavBar/Navbar';
+import Profile from './Profile/Profile';
 
 
 //Create a Main Component
@@ -19,6 +20,7 @@ class Main extends Component {
                     <Route path='/signup' component={SignUp} />
 
                     <Route path="/home" exact component={Home} />
+                    <Route path="/profile" exact component={Profile} />
 
                 </Switch>
             </div>
