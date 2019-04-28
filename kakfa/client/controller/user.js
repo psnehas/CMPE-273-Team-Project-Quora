@@ -63,6 +63,20 @@ const getUserTopics = (req, res) => {
     })
 }
 
+const followTopics = (req, res) => {
+    console.log('User follow topics  with action: ', req.body.follow)
+    let message = {
+        cmd: 'FOLLOW_TOPICS',
+        userid: req.user.user_id,
+        action: req.body.action,
+        topic_ids: req.body.topic_ids,
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for getUserTopics is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
 const createTopic = (req, res) => {
     console.log('Create topic with name: ', req.body.topic_name);
     let message = {
@@ -75,48 +89,4 @@ const createTopic = (req, res) => {
     })
 }
 
-const getUserMessages = (req, res) => {
-    console.log('Get user messages from user id: ', req.params.userID)
-    let message = {
-        cmd: 'GET_MESSAGE',
-        userid: req.params.userID
-    }
-    client.send(message, function(err, result) {
-        console.log('the result for getUserMessages is: ', result);
-        res.status(result.status).json(result.data);
-    })
-}
-
-const createUserMessage = (req, res) => {
-    console.log('Create user messages message is: ', req.body)
-    console.log('Create user messages from user id: ', req.params.userID)
-    const {subject, content, to} = req.body;
-    let message = {
-        cmd: 'CREATE_MESSAGE',
-        message: {
-            subject: subject,
-            content: content,
-            to_email: to,
-            userid: req.params.userID
-        }
-    }
-    client.send(message, function(err, result) {
-        console.log('the result for createUserMessage is: ', result);
-        res.status(result.status).json(result.data);
-    })
-}
-
-const readMessage = (req, res) => {
-    console.log('User reads a message, id is: ', req.body.messageid)
-    let message = {
-        cmd:'READ_MESSAGE',
-        messageid: req.body.messageid
-    }
-    client.send(message, function(err, result) {
-        console.log('the result for readMessage is: ', result);
-        res.status(result.status).json(result.data);
-    })
-}
-
-module.exports = {signin, signup, getUserFeed, getUserTopics, createTopic, 
-    getUser, getUserMessages ,createUserMessage, readMessage}
+module.exports = {signin, signup, getUserFeed, getUserTopics, followTopics, createTopic, getUser}

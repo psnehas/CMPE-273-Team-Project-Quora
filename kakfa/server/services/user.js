@@ -19,11 +19,11 @@ const signin = (user, next) => {
                 res.status = 401;
                 res.data = {error: 'Invalid password'};
             } else {
-                const token = jwt.sign({ email: result.email, user_id: result.user_id }, 'quora_secret_key')
+                const token = jwt.sign({ email: result.email, user_id: result._id }, 'quora_secret_key')
                 res.status = 200;
                 res.data = {
                     token,
-                    user_id: result.user_id,
+                    user_id: result._id,
                     first_name: result.first_name,
                     last_name: result.last_name
                 }
@@ -60,16 +60,12 @@ const signup = (user, next) => {
 
 const getUser = (userid, next) => {
     db.findUserByID(userid)
-    .then(result => {
-        console.log(result)
+    .then(user => {
+        console.log(user)
         let res = {};
-        if (result) {
-            let user = ['courses', '_id', 'password', '__v'].reduce((u, p) => {
-                delete u[p];
-                return u;
-            }, result.toObject());
-            user.id = user.user_id;
+        if (user) {
             console.log('the user is: ', user)
+            delete user.password;
             res.status = 200;
             res.data = user;
         } else {
@@ -92,7 +88,7 @@ const getUserFeed = (userid, next) => {
 }
 
 const getUserTopics = (userid, next) => {
-    db.findTopicsBuUserID(userid)
+    db.findTopicsByUserID(userid)
     .then(result => {
         console.log('topics reuslt: ', result);
         next(null, {
@@ -100,6 +96,29 @@ const getUserTopics = (userid, next) => {
             data: result
         })
     })
+}
+
+const followTopics = (userid, action, topic_ids, next) => {
+    console.log('followTopics request, the typeof follow is: ', typeof follow);
+    if (action === 'follow') {
+        db.userFollowTopics(userid, topic_ids)
+        .then(result => {
+            console.log('follow topic result: ', result);
+            next(null, {
+                status: 200,
+                success: true
+            })
+        })
+    } else {
+        db.userUnfollowTopics(userid, topic_ids)
+        .then(result => {
+            console.log('unfollow topic result: ', result);
+            next(null, {
+                status: 200,
+                success: true
+            })
+        })
+    }
 }
 
 const createTopic = (topic_name, next) => {
@@ -180,6 +199,9 @@ const dispatch = (message, next) => {
             break;
         case 'GET_TOPICS':
             getUserTopics(message.userid, next);
+            break;
+        case 'FOLLOW_TOPICS':
+            followTopics(message.userid, message.action, message.topic_ids, next);
             break;
         case 'CREATE_TOPIC':
             createTopic(message.topic_name, next);

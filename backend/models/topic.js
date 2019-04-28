@@ -7,6 +7,7 @@ const TopicSchema = new mongoose.Schema({
         trim: true,
         required: 'Name is required'
     },
+    questions: [ {type: mongoose.Schema.Types.ObjectId, ref: 'Question'} ]
 })
 
 TopicSchema.plugin(autoIncrement, {inc_field: 'topic_id'});

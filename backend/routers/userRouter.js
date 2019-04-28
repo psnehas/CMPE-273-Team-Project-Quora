@@ -12,6 +12,9 @@ router.route('/userFeed')
 
 router.route('/userTopics')
 .get(authController.requireSignin, userControllerKafka.getUserTopics)
+.post(authController.requireSignin, userControllerKafka.followTopics);
+
+router.route('/topics')
 .post(authController.requireSignin, userControllerKafka.createTopic);
 
 router.route('/api/users/photo/:userID')
@@ -20,10 +23,5 @@ router.route('/api/users/photo/:userID')
 router.route('/api/users/:userID')
 .get(authController.requireSignin, userControllerKafka.getUser)
 .put(authController.requireSignin, userControllerLocal.updateUser)
-
-router.route('/api/users/messages/:userID')
-.get(authController.requireSignin, userControllerKafka.getUserMessages)
-.post(authController.requireSignin, userControllerKafka.createUserMessage)
-.put(authController.requireSignin, userControllerKafka.readMessage)
 
 module.exports = {router}

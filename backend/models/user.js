@@ -1,5 +1,4 @@
 var mongoose = require('mongoose')
-var autoIncrement = require('mongoose-sequence')(mongoose)
 
 const UserSchema = new mongoose.Schema({
     first_name: {
@@ -55,13 +54,8 @@ const UserSchema = new mongoose.Schema({
     profileCredential: {type: String, default: ''},
     feeded_q_a: [ 
         {
-            question_id: Number,
+            question_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Question'},
             question_body: String,
-            top_answer: {
-                createdBy: String,
-                createdOn: Date,
-                body: String,
-            } 
         }
     ],
     activities: {
@@ -71,7 +65,5 @@ const UserSchema = new mongoose.Schema({
     },
     messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
 })
-
-UserSchema.plugin(autoIncrement, {inc_field: 'user_id'});
 
 module.exports =  mongoose.model('User', UserSchema);

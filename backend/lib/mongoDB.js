@@ -49,19 +49,26 @@ exports.findUserByEmail = (email) => {
 }
 
 exports.findUserByID = (id) => {
-    return User.findOne({user_id: id}).exec();
+    return User.findById(id).exec();
 }
 
 exports.findAvatarPathByID = (id) => {
-    return User.findOne({user_id: id}, {'_id': 0, 'avatar': 1}).exec();
+    return User.findById(id).exec();
 }
 
 exports.findFeedByUserID = (id) => {
-    return User.findOne({user_id: id}).select('feeded_q_a -_id').exec();
+    return User.findById(id).select('feeded_q_a -_id').exec();
+    /*
+    .then(feed => {
+        let question_id = feed.question_id;
+        return Question.findOne({question_id})
+    });
+    */
 }
 
-exports.findTopicsBuUserID = (id) => {
-    return User.findOne({user_id: id}).populate('followed_topics', 'name topic_id -_id').select('followed_topics -_id').exec();
+exports.findTopicsByUserID = (id) => {
+    return User.findById(id).populate('followed_topics', 'name topic_id')
+    .select('followed_topics -_id').exec();
 }
 
 exports.insertTopic = (name) => {
@@ -69,27 +76,16 @@ exports.insertTopic = (name) => {
     return newTopic.save();
 }
 
+exports.userFollowTopics = (userid, topic_ids) => {
+    return User.findOneAndUpdate({_id: userid}, {$push: {followed_topics: topic_ids}}).exec();
+}
+
+exports.userUnfollowTopics = (userid, topic_ids) => {
+    return User.findByIdAndUpdate({_id: userid}, {$pull: {followed_topics: topic_ids[0]}}).exec();
+}
+
 exports.updateUser = (user) => {
-    return User.findOneAndUpdate({user_id: user.id}, user).exec();
-}
-
-exports.insertMessage = (userid, message) => {
-    const newMessage = new Message(message);
-    return newMessage.save()
-    .then(message => {
-        return User.findOneAndUpdate({user_id: userid}, {$push: {messages: message._id}}).exec();
-    });
-}
-
-exports.getMessagesByUserID = (userid) => {
-    return User.findOne({user_id: userid})
-        .populate({
-            path: 'messages',
-        }).select('messages -_id').exec();
-}
-
-exports.readMessage = (messageid) => {
-    return Message.findOneAndUpdate({message_id: messageid}, {$set: {status: 'readed'}}).exec();
+    return User.findOneAndUpdate({_id: user.id}, user).exec();
 }
 
 //Answer

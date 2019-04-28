@@ -1,11 +1,10 @@
 var mongoose = require('mongoose')
-var autoIncrement = require('mongoose-sequence')(mongoose)
 
 const MessageSchema = mongoose.Schema({
-    from_user_id: Number,
+    from_user_id: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     from_name: String,
     from_email: String,
-    to_user_id: Number,
+    to_user_id: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     to_name: String,
     to_email: String,
     subject: {type: String, default: ''},
@@ -15,7 +14,5 @@ const MessageSchema = mongoose.Schema({
         return new Date().toUTCString();
     }}
 })
-
-MessageSchema.plugin(autoIncrement, {inc_field: 'message_id'});
 
 module.exports =  mongoose.model('Message', MessageSchema)
