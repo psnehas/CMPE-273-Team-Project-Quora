@@ -120,25 +120,25 @@ const dispatch = (message, next) => {
         case 'DOWNVOTE':
             downvote(message.req, next);
             break;
-        case 'ALLVOTES':
+        case 'ALL_VOTES':
             allVotes(message.req, next);
             break;
-        case 'ALLCOMMENTS':
+        case 'ALL_COMMENTS':
             allComments(message.req, next);
             break;
-        case 'MAKECOMMENT':
+        case 'MAKE_COMMENT':
             makeComment(message.req, next);
             break;
-        case 'MAKEANSWER':
+        case 'MAKE_ANSWER':
             makeAnswer(message.req, next);
             break;
-        case 'UPDATEANSWER':
+        case 'UPDATE_ANSWER':
             updateAnswer(message.req, next);
             break;
-        case 'CREATEBOOKMARK':
+        case 'CREATE_BOOKMARK':
             createBookmark(message.req, next);
             break;
-        case 'GETONEANSWER':
+        case 'GET_ONE_ANSWER':
             getOneAnswer(message.req, next);
             break;
         default:

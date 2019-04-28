@@ -31,7 +31,7 @@ const downvote = (req, res) => {
 const allVotes = (req, res) => {
     console.log("get votes request")
     let message = {
-        cmd: 'ALLVOTES',
+        cmd: 'ALL_VOTES',
         user: req.body
     }
     client.send(message, function(err, result) {
@@ -43,7 +43,7 @@ const allVotes = (req, res) => {
 const allComments = (req, res) => {
     console.log("get comments request")
     let message = {
-        cmd: 'ALLCOMMENTS',
+        cmd: 'ALL_COMMENTS',
         user: req.body
     }
     client.send(message, function(err, result) {
@@ -55,7 +55,7 @@ const allComments = (req, res) => {
 const makeComment = (req, res) => {
     console.log("make comment request")
     let message = {
-        cmd: 'MAKECOMMENT',
+        cmd: 'MAKE_COMMENT',
         user: req.body
     }
     client.send(message, function(err, result) {
@@ -67,7 +67,7 @@ const makeComment = (req, res) => {
 const makeAnswer = (req, res) => {
     console.log("make answer request")
     let message = {
-        cmd: 'MAKEANSWER',
+        cmd: 'MAKE_ANSWER',
         user: req.body
     }
     client.send(message, function(err, result) {
@@ -79,7 +79,7 @@ const makeAnswer = (req, res) => {
 const updateAnswer = (req, res) => {
     console.log("update answer request")
     let message = {
-        cmd: 'UPDATEANSWER',
+        cmd: 'UPDATE_ANSWER',
         user: req.body
     }
     client.send(message, function(err, result) {
@@ -91,7 +91,7 @@ const updateAnswer = (req, res) => {
 const createBookmark = (req, res) => {
     console.log("create bookmark request")
     let message = {
-        cmd: 'CREATEBOOKMARK',
+        cmd: 'CREATE_BOOKMARK',
         user: req.body
     }
     client.send(message, function(err, result) {
@@ -103,7 +103,7 @@ const createBookmark = (req, res) => {
 const getOneAnswer = (req, res) => {
     console.log("get one answer request")
     let message = {
-        cmd: 'GETONEANSWER',
+        cmd: 'GET_ONE_ANSWER',
         user: req.body
     }
     client.send(message, function(err, result) {
