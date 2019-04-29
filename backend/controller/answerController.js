@@ -1,7 +1,4 @@
 var db = require('../lib/mongoDB')
-var formidable = require('formidable')
-var fs = require('fs')
-var path = require('path')
 
 const upvote = (req, res) => {
     db.upvoteAnswer(req.body.answer_id).then(() =>{
