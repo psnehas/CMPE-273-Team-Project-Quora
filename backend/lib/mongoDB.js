@@ -49,7 +49,7 @@ exports.findUserByEmail = (email) => {
 }
 
 exports.findUserByID = (id) => {
-    return User.findById(id).exec();
+    return User.findById(id).select('-password -__v').exec();
 }
 
 exports.findAvatarPathByID = (id) => {

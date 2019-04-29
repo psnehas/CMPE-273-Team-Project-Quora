@@ -20,6 +20,11 @@ app.use('/public/images', express.static(__dirname + '/public/images'))
 
 app.use('/', userRouter.router)
 
+// for load balancer
+app.use('/*', (req, res) => {
+    res.sendFile(__dirname + '/index.html');
+})
+
 let server = app.listen(app.get('port'), () => {
     console.log('Server is running on port: ', app.get('port'));
 })
