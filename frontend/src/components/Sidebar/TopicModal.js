@@ -3,16 +3,14 @@ import React, { Component } from 'react';
 import AsyncSelect from 'react-select/lib/Async';
 import axios from 'axios';
 import _ from "lodash";
-import {msgstore_apis, david_test_apis} from '../../config';
+import {msgstore_apis, david_test_apis, user_tracking_apis} from '../../config';
 
-class AddQModal extends Component {
+class TopicModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user_name: this.props.user_name,
       selectedTopics: [],
       options: [],
-      questionText: '',
       token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTY2ODI3MzksImlkIjoiNWNjNTIzNjA3MmM5YmYzNDM2ODJiNGIwIn0.2yvfGmvutYPygv_oPbj7QUdiDxVvxbh6o5eHYZ2CBUU'
     }
     this.handlePost = this.handlePost.bind(this);
@@ -25,27 +23,32 @@ class AddQModal extends Component {
     console.log(e.target.name, e.target.value);
   }
 
-
   handlePost = (e) => {
     e.preventDefault();
+    const ids = this.state.selectedTopics.map(topic => 
+        topic.label
+    );
+    console.log(ids);
     const data = {
-      questionText: this.state.questionText,
-      topics: this.state.selectedTopics
+      action: 'topic',
+      ids: ids,
+      unfollow: false
     }
     console.log(data);
 
-    axios.post(david_test_apis + '/questions', data, {
+    axios.post(user_tracking_apis + '/userFollow', data, {
       headers: {
         'Authorization': `JWT ${this.state.token}`
       }
     }).then(response => {
-      console.log(response.data)
-      this.props.afterAdd();
-    })
+       this.props.update_sidebar(response.data.followed_topics);
+    }).catch(error => {
+      console.log(error);
+    }); 
 
   }
 
-  componentDidMount(){
+  componentDidMount() {
 
   }
 
@@ -57,27 +60,27 @@ class AddQModal extends Component {
   };
 
 
- getOptions = inputValue => {
-   return axios.get(david_test_apis + '/topics', {
-    headers: {
-      'Authorization': `JWT ${this.state.token}`
-    },
-     params: {
-      excludeFavorites: false
-     }
-   })
-   .then(response=>{
-     console.log(response.data);
-//     this.setState({
-//       options: response.data
-//     })
-     return response.data
-   }).then(options => {
-    const filtered = _.filter(options, o =>
-      _.startsWith(_.toLower(o.label), _.toLower(inputValue))
-    );
-     return filtered.slice(0, 10);
-   })
+  getOptions = inputValue => {
+    return axios.get(david_test_apis + '/topics', {
+      headers: {
+        'Authorization': `JWT ${this.state.token}`
+      },
+      params: {
+        excludeFollowed: true
+       }
+     })
+      .then(response => {
+        console.log(response.data);
+        //     this.setState({
+        //       options: response.data
+        //     })
+        return response.data
+      }).then(options => {
+        const filtered = _.filter(options, o =>
+          _.startsWith(_.toLower(o.label), _.toLower(inputValue))
+        );
+        return filtered.slice(0, 10);
+      })
   }
 
   render() {
@@ -93,20 +96,13 @@ class AddQModal extends Component {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            Add Question
+            What are your interests?
             </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group controlId="exampleForm.ControlTextarea1">
-              <Form.Label>{this.state.user_name} asked</Form.Label>
-              <Form.Text className="text-muted">
-                Start your question with "What", "How", "Why", etc.
-              </Form.Text>
-              <Form.Control as="textarea" rows="3" name="questionText" onChange={this.handleChange} />
-              <Form.Text className="text-muted">
-                Select topics you want to post question to
-              </Form.Text>
+              <Form.Label className="text-muted">Select topics you want to follow</Form.Label>
               <AsyncSelect
                 isMulti
                 cacheOptions
@@ -119,12 +115,12 @@ class AddQModal extends Component {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="light" onClick={this.props.onHide}>Cancel</Button>
-          <Button onClick={this.handlePost}>Add Question</Button>
+          <Button style={{ 'color': '#949494', 'text-decoration': 'none', 'fontWeight': 400}} variant="link" onClick={this.props.onHide}>Not now</Button>
+          <Button onClick={this.handlePost}>Done</Button>
         </Modal.Footer>
       </Modal>
     );
   }
 }
 // apply above mapping to Login class
-export default AddQModal
+export default TopicModal

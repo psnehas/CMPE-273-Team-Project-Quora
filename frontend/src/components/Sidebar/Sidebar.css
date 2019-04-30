@@ -42,3 +42,10 @@ footer {
     padding:15px;
     margin-top:10px;
 }
+
+.sidebar {
+  color: #666;
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 14px;
+}

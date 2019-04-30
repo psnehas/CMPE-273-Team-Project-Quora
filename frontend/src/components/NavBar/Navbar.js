@@ -31,6 +31,12 @@ class navbar extends Component {
         })
     }
 
+    afterAdd = () => {
+        this.setState({
+            show_add: false
+        })
+    }
+
     render() {
         //if Cookie is set render Logout Button
 
@@ -67,12 +73,12 @@ class navbar extends Component {
 
             <Navbar bg="light" expand="md">
                 <Navbar.Brand>
-                    <Link to='/'>CWUORA</Link>
+                    <Link to='/' style={{color: 'red', 'text-decoration': 'none'}}>CWUORA</Link>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
-                        <Nav.Link as={NavLink} to="/home"><span className="fa fa-home"></span> Home</Nav.Link>
+                        <Nav.Link as={NavLink} to="/"><span className="fa fa-home"></span> Home</Nav.Link>
                         <Nav.Link as={NavLink} to="/answer">Answer</Nav.Link>
                     </Nav>
                     {navLogin}
@@ -87,6 +93,8 @@ class navbar extends Component {
             <AddModal
                 show={this.state.show_add}
                 onHide={modalClose}
+                afterAdd={this.afterAdd}
+                user_name={this.state.user_name}
             />
             </Navbar>
         )

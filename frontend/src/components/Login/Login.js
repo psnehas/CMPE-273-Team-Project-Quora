@@ -5,7 +5,7 @@ import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { userActions } from '../../_actions';
 import { connect } from 'react-redux';
-import backend_host from '../../config';
+import {backend_host} from '../../config';
 //import Cookies from 'universal-cookie';
 
 //Define a Login Component
@@ -50,17 +50,17 @@ class Login extends Component {
 
         if (data.email && data.password) {
             //set the with credentials to true
-            axios.defaults.withCredentials = true;
-			axios.defaults.crossDomain = true;
+ //           axios.defaults.withCredentials = true;
+//			axios.defaults.crossDomain = true;
             console.log("axios.defaults.crossDomain = true");
             //make a post request with the user data
             
-            axios.post(backend_host+'/user/login', data)
+            axios.post(backend_host+'/signin', data)
                 .then(response => {
                     console.log(response);
                     //console.log("Status Code : ", response.status);
                     //console.log("role:", response.data);
-                    if (response.status === 200 && response.data.auth === true) {
+                    if (response.status === 200 /*&& response.data.auth === true*/) {
 //						const cookies = new Cookies();
 						cookie.save('JWT', response.data.token, { path: '/' });
 						//console.log(cookies.get('JWT'));

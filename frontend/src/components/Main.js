@@ -3,8 +3,10 @@ import { Route, Switch } from 'react-router-dom';
 import Login from './Login/Login';
 import SignUp from './SignUp/SignUp';
 import Home from './Home/Home';
-import navbar from './NavBar/Navbar';
-import Profile from './Profile/Profile';
+import QuestionPage from './QuestionPage/QuestionPage';
+import SidebarLayout from './SidebarLayout/SidebarLayout';
+import Navbar from './NavBar/Navbar'
+import TopicPage from './TopicPage/TopicPage';
 
 
 //Create a Main Component
@@ -12,15 +14,16 @@ class Main extends Component {
     render() {
         return (
             <div>
-                <Route path="/" component={navbar} />
-
+                <Navbar />
                 <Switch>
                     {/*Render Different Component based on Route*/}
+                    <SidebarLayout exact path="/" component={Home} />
+                    <SidebarLayout path="/topics/:topic" component={TopicPage} />
+
                     <Route path="/login" component={Login} />
                     <Route path='/signup' component={SignUp} />
 
-                    <Route path="/home" exact component={Home} />
-                    <Route path="/profile" exact component={Profile} />
+                    <Route path="/questions/:questionId" component={QuestionPage} />
 
                 </Switch>
             </div>

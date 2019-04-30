@@ -1,0 +1,57 @@
+  .topic_pill {
+    color: #666; 
+    font-size: 13px;
+    background: #f7f7f7;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-weight: 400;
+    padding: 4px 6px;
+    border-radius: 4px;
+    margin-right: 4px;
+  }
+
+  .q_page_button{
+    text-decoration: 'none';
+    color: #666;
+    font-size: 14px;
+    font-weight: 400;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.42;
+    border-radius: 15px;
+    background: #008000
+  }
+
+.threaded_comments {
+    font-size: 13px;
+    display: block;
+    padding: 16px;
+    padding-top: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    padding-left: 16px;
+    margin-top: 16px!important;
+    background-color: #fafafa;
+    border: 1px solid #e2e2e2;
+    border-radius: 3px;
+    border-color: #efefef;
+    position: relative;
+    min-height: 32px;
+    width: 95%
+} 
+
+.comment_truncate {
+    white-space: nowrap;      /*keep text on one line */
+    overflow: hidden;         /*prevent text from being shown outside the border */
+    text-overflow: ellipsis;  /*cut off text with an ellipsis*/ 
+}
+
+.comment_body {
+    font-size :13
+}

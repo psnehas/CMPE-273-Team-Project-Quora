@@ -5,7 +5,7 @@ import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { userActions } from '../../_actions';
 import { connect } from 'react-redux';
-import backend_host from '../../config';
+import {backend_host} from '../../config';
 //import Cookies from 'universal-cookie';
 
 //Define a Login Component
