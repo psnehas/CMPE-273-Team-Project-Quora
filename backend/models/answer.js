@@ -26,13 +26,22 @@ const AnswerSchema = new mongoose.Schema({
             user_id: {type: Number}
         }
     ],
-    comments: [
-        {
-            comment: {type: String}
-        }
-    ]
+    comments: [CommentSchema]
+})
+
+const CommentSchema = new mongoose.Schema({
+    owner: {
+        type: Number // user_id
+    },
+    time: {
+        type: String
+    },
+    comment: {
+        type: String
+    }
 })
 
 AnswerSchema.plugin(autoIncrement, {inc_field: 'answer_id'});
+CommentSchema.plugin(autoIncrement, {inc_field: 'comment_id'});
 
 module.exports =  mongoose.model('Answer', AnswerSchema);
