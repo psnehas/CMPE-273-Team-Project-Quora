@@ -9,6 +9,9 @@ const AnswerSchema = new mongoose.Schema({
     owner: {
         type: Number // user_id
     },
+    time: {
+        type: String
+    },
     content: {
         type: String
     },
