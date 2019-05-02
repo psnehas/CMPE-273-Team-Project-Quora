@@ -1,5 +1,6 @@
 var KafkaConnection = require('../Connection');
 var user = require('./services/user');
+var answer = require('./services/answer')
 
 class ServerConnection {
     constructor(producer_topic, consumer_topic) {
@@ -40,3 +41,6 @@ class ServerConnection {
 
 let userServer = new ServerConnection('response_user', 'user');
 userServer.handleTopicRequest(user.dispatch);
+
+let answerServer = new ServerConnection('response_answer', 'answer');
+answerServer.handleTopicRequest(answer.dispatch);
