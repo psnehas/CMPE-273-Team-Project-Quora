@@ -8,7 +8,7 @@ const upvote = (req, res) => {
     console.log("upvote request")
     let message = {
         cmd: 'UPVOTE',
-        user: req.body
+        upvote: req.body
     }
     client.send(message, function(err, result) {
         console.log('the result for upvote is: ', result);
@@ -20,7 +20,7 @@ const downvote = (req, res) => {
     console.log("downvote request")
     let message = {
         cmd: 'DOWNVOTE',
-        user: req.body
+        downvote: req.body
     }
     client.send(message, function(err, result) {
         console.log('the result for downvote is: ', result);
@@ -32,7 +32,7 @@ const allVotes = (req, res) => {
     console.log("get votes request")
     let message = {
         cmd: 'ALL_VOTES',
-        user: req.body
+        allVotes: req.body
     }
     client.send(message, function(err, result) {
         console.log('the result for get votes is: ', result);
@@ -44,7 +44,7 @@ const allComments = (req, res) => {
     console.log("get comments request")
     let message = {
         cmd: 'ALL_COMMENTS',
-        user: req.body
+        allComments: req.body
     }
     client.send(message, function(err, result) {
         console.log('the result for get comments is: ', result);
@@ -56,7 +56,7 @@ const makeComment = (req, res) => {
     console.log("make comment request")
     let message = {
         cmd: 'MAKE_COMMENT',
-        user: req.body
+        comment: req.body
     }
     client.send(message, function(err, result) {
         console.log('the result for make comment is: ', result);
@@ -68,7 +68,7 @@ const makeAnswer = (req, res) => {
     console.log("make answer request")
     let message = {
         cmd: 'MAKE_ANSWER',
-        user: req.body
+        answer: req.body
     }
     client.send(message, function(err, result) {
         console.log('the result for make answer is: ', result);
@@ -80,7 +80,7 @@ const updateAnswer = (req, res) => {
     console.log("update answer request")
     let message = {
         cmd: 'UPDATE_ANSWER',
-        user: req.body
+        update: req.body
     }
     client.send(message, function(err, result) {
         console.log('the result for update answer is: ', result);
@@ -92,7 +92,7 @@ const createBookmark = (req, res) => {
     console.log("create bookmark request")
     let message = {
         cmd: 'CREATE_BOOKMARK',
-        user: req.body
+        userAnswer: req.body
     }
     client.send(message, function(err, result) {
         console.log('the result for create bookmark is: ', result);
@@ -104,7 +104,7 @@ const getOneAnswer = (req, res) => {
     console.log("get one answer request")
     let message = {
         cmd: 'GET_ONE_ANSWER',
-        user: req.body
+        OneAnswer: req.body
     }
     client.send(message, function(err, result) {
         console.log('the result for get one answer is: ', result);
