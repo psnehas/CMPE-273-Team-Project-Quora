@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import style from './Profile.module.css';
 import { Container, Col, Row, Image, Card, Button } from 'react-bootstrap';
 
-import ProfileContent from './PorfileContent/ProfileContent'
+import Content from './Content/Content'
 import Sidebar from './Sidebar/Sidebar';
 
 class Profile extends Component {
@@ -41,7 +41,7 @@ class Profile extends Component {
                             <Sidebar />
                         </Col>
                         <Col xs={8}>
-                            <ProfileContent />
+                            <Content />
                         </Col>
                     </Row>
                 </Container>

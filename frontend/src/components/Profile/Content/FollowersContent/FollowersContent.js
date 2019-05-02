@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 
-import style from '../Profile.module.css';
+import style from '../../Profile.module.css'
 
-class ProfileContent extends Component {
+class FollowersContent extends Component {
     render() {
         return (
             <h3 className={style.contentTitle}>
                 <div>
-                    Profile
+                    Followers
                 </div>
             </h3>
         )
     }
 }
 
-export default ProfileContent;
+export default FollowersContent;
