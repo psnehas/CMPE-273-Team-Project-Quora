@@ -77,6 +77,7 @@ const getUser = (userid, next) => {
 }
 
 const getUserFeed = (userid, next) => {
+    /*
     db.findFeedByUserID(userid)
     .then(result => {
         console.log('feed reuslt: ', result);
@@ -85,6 +86,11 @@ const getUserFeed = (userid, next) => {
             data: result
         })
     })
+    */
+   next(null, {
+       status: 200,
+       data: {feeded_q_a: []}
+   });
 }
 
 const getUserTopics = (userid, next) => {

@@ -49,20 +49,12 @@ const UserSchema = new mongoose.Schema({
     ],
     followed_people: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     following_people: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-    followed_questions: [{type: mongoose.Schema.Types.ObjectId, ref: 'Question'}],
+    created_questions: [{question_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Question'}, created_time: Date}],
+    followed_questions: [{question_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Question'}, followed_time: Date}],
+    created_answers: [{answer_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Answer'}, asnwer_time: Date}],
+    bookmarked_answers: [{type: mongoose.Schema.Types.ObjectId, ref: 'Answer'}],
     followed_topics: [{type: mongoose.Schema.Types.ObjectId, ref: 'Topic'}],
     profileCredential: {type: String, default: ''},
-    feeded_q_a: [ 
-        {
-            question_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Question'},
-            question_body: String,
-        }
-    ],
-    activities: {
-        questions:[ Date ],
-        answers: [ Date ],
-        comments: [ Date ],
-    },
     messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
 })
 
