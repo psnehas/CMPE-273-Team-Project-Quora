@@ -18,7 +18,8 @@ class Main extends Component {
                 <Switch>
                     {/*Render Different Component based on Route*/}
                     <SidebarLayout exact path="/" component={Home} />
-                    <SidebarLayout path="/topics/:topic" component={TopicPage} />
+
+                    <SidebarLayout path="/topics/:topic" component={TopicPage}/>
 
                     <Route path="/login" component={Login} />
                     <Route path='/signup' component={SignUp} />

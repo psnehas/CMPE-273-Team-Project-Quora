@@ -14,6 +14,7 @@ class navbar extends Component {
         super(props);
         this.state = {
             show_add: false
+            
         };
         this.handleLogout = this.handleLogout.bind(this);
         this.handleAdd = this.handleAdd.bind(this);
@@ -48,10 +49,6 @@ class navbar extends Component {
             //           console.log("Able to read cookie");
             navLogin = (
                 <NavDropdown title={authentication.first_name} id="basic-nav-dropdown">
-                    <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                    <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-                    <NavDropdown.Divider />
                     <NavDropdown.Item onClick={this.handleLogout}>Logout</NavDropdown.Item>
                 </NavDropdown>
             );
@@ -62,7 +59,7 @@ class navbar extends Component {
             navLogin = (
                 <Nav className="ml-auto">
                     <Nav.Link as={NavLink} to="/login"><span className="fa fa-sign-in"></span> Login</Nav.Link>
-                    <Nav.Link as={NavLink} to="/signup"><span className="fa fa-user-plus"></span></Nav.Link>
+                    <Nav.Link as={NavLink} to="/signup"><span className="fa fa-user-plus"></span> SignUp</Nav.Link>
                 </Nav>
             )
         }
@@ -73,18 +70,17 @@ class navbar extends Component {
 
             <Navbar bg="light" expand="md">
                 <Navbar.Brand>
-                    <Link to='/' style={{color: 'red', 'text-decoration': 'none'}}>CWUORA</Link>
+                    <Link to='/' style={{color: 'red', 'text-decoration': 'none'}}>CWORA</Link>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         <Nav.Link as={NavLink} to="/"><span className="fa fa-home"></span> Home</Nav.Link>
-                        <Nav.Link as={NavLink} to="/answer">Answer</Nav.Link>
                     </Nav>
                     {navLogin}
 
                     <Button variant="danger"
-                       /* disabled= {authentication.loggedIn}*/
+                        disabled={!authentication.loggedIn}
                         onClick= {this.handleAdd} 
                         /*{authentication.loggedIn ? this.handleAdd : null}*/>Add Question</Button>
                 </Navbar.Collapse>
@@ -94,7 +90,7 @@ class navbar extends Component {
                 show={this.state.show_add}
                 onHide={modalClose}
                 afterAdd={this.afterAdd}
-                user_name={this.state.user_name}
+                user_name={authentication.first_name + ' ' + authentication.last_name}
             />
             </Navbar>
         )

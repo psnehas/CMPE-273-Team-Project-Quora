@@ -10,10 +10,10 @@ export function signup(state = {}, action) {
     case userConstants.SIGNUP_SUCCESS:
       return {
         signedUp: true,
-        email: action.email,
+//       email: action.email,
 //        role: action.role,
-        user_id: action.user_id,
-        first_name: action.first_name
+//        user_id: action.user_id,
+//        first_name: action.first_name
       }
     case userConstants.SIGNUP_FAILURE:
       return {
