@@ -5,6 +5,7 @@ import { withRouter, NavLink } from 'react-router-dom';
 import style from '../Profile.module.css';
 
 const Sidebar = (props) => {
+    console.log("Profile Sidebar uid", props.uid);
     return (
         <Nav className="flex-column" variant="pills">
             <h3 className={style.contentTitle}>
@@ -12,23 +13,23 @@ const Sidebar = (props) => {
                     Feeds
                 </div>
             </h3>
-            <NavLink to="/profile" className="nav-link" exact>
+            <NavLink to={`/profile/${props.uid}`} className="nav-link" exact>
                 Profile
             </NavLink>
-            <NavLink to="/profile/answers" className="nav-link">
+            <NavLink to={`/profile/${props.uid}/answers`} className="nav-link">
                 Answers
             </NavLink>
-            <NavLink to="/profile/questions" className="nav-link">
+            <NavLink to={`/profile/${props.uid}/questions`} className="nav-link">
                 Questions
             </NavLink>
-            <NavLink to="/profile/followers" className="nav-link">
+            <NavLink to={`/profile/${props.uid}/followers`} className="nav-link">
                 Followers
             </NavLink>
-            <NavLink to="/profile/following" className="nav-link">
+            <NavLink to={`/profile/${props.uid}/following`} className="nav-link">
                 Following
             </NavLink>
 
-        </Nav>
+        </Nav >
     )
 }
 

@@ -11,11 +11,11 @@ class Content extends Component {
     render() {
         return (
             <React.Fragment>
-                <Route path='/profile' exact component={ProfileContent} />
-                <Route path='/profile/answers' component={AnswersContent} />
-                <Route path='/profile/questions' component={QuestionsContent} />
-                <Route path='/profile/followers' component={FollowersContent} />
-                <Route path='/profile/following' component={FollowingContent} />
+                <Route path='/profile/:uid/' exact component={ProfileContent} />
+                <Route path='/profile/:uid/answers' component={AnswersContent} />
+                <Route path='/profile/:uid/questions' component={QuestionsContent} />
+                <Route path='/profile/:uid/followers' component={FollowersContent} />
+                <Route path='/profile/:uid/following' component={FollowingContent} />
             </React.Fragment>
 
         )

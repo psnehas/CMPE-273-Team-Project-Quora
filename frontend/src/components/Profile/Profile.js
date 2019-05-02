@@ -13,6 +13,7 @@ class Profile extends Component {
 
     componentDidMount() {
         let user = {
+            uid: this.props.match.params.uid,
             name: "YC",
             profile_image: "https://res-1.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco/v1425070395/lch84n574ygfa3xr5irq.png"
         }
@@ -38,10 +39,10 @@ class Profile extends Component {
                     <hr />
                     <Row>
                         <Col>
-                            <Sidebar />
+                            <Sidebar uid={this.state.user.uid}/>
                         </Col>
                         <Col xs={8}>
-                            <Content />
+                            <Content uid={this.state.user.uid}/>
                         </Col>
                     </Row>
                 </Container>
