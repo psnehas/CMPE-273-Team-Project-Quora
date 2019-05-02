@@ -1,7 +1,4 @@
-var db = require('../lib/mongoDB')
-var formidable = require('formidable')
-var fs = require('fs')
-var path = require('path')
+var db = require('../../../backend/lib/mongoDB')
 
 const upvote = (req, next) => {
     db.upvoteAnswer(req.body.answer_id).then(result =>{
@@ -56,21 +53,24 @@ const makeComment = (req, next) => {
 }
 
 const makeAnswer = (req, next) => {
-    console.log("question ID: ", req.params.question)
-    console.log("Comment: ", req.body.comment)
-    newAnswer ={
-        question_id: req.params.question_id,
-        owner: req.body.user_id,
-        content: req.body.answer,
-        upvote: 0,
-        downvote: 0,
-        bookmark: [],
-        comments: [],
-    }
-    db.createAnswer(newAnswer).then(() =>{
+    console.log("question message: ", req)
+    // console.log("Comment: ", req.body.comment)
+    // newAnswer ={
+    //     question_id: req.params.question_id,
+    //     owner: req.body.user_id,
+    //     content: req.body.answer,
+    //     upvote: 0,
+    //     downvote: 0,
+    //     bookmark: [],
+    //     comments: [],
+    // }
+    newAnswer = req.answer
+    console.log("newAnswer", newAnswer)
+    db.createAnswer(newAnswer).then(result =>{
+        console.log("rere",result)
         next(null, {
             status: 200,
-            data: result.messages
+            data: result
         })
     })
 }
@@ -93,13 +93,13 @@ const updateAnswer = (req, next) => {
 }
 
 const createBookmark = (req, next) => {
-    console.log("Bookmark added")
-    db.setBookmark(req.body.user_id, req.body.answer_id).then(() =>{
+    db.setBookmark(req.userAnswer.user_id, req.userAnswer.answer_id).then(result =>{
         next(null, {
             status: 200,
-            data: result.messages
+            data: result
         })
     })
+    console.log("Bookmark added")
 }
 
 const getOneAnswer = (req, next) => {
@@ -115,31 +115,31 @@ const getOneAnswer = (req, next) => {
 const dispatch = (message, next) => {
     switch (message.cmd) {
         case 'UPVOTE':
-            upvote(message.req, next);
+            upvote(message, next);
             break;
         case 'DOWNVOTE':
-            downvote(message.req, next);
+            downvote(message, next);
             break;
         case 'ALL_VOTES':
-            allVotes(message.req, next);
+            allVotes(message, next);
             break;
         case 'ALL_COMMENTS':
-            allComments(message.req, next);
+            allComments(message, next);
             break;
         case 'MAKE_COMMENT':
-            makeComment(message.req, next);
+            makeComment(message, next);
             break;
         case 'MAKE_ANSWER':
-            makeAnswer(message.req, next);
+            makeAnswer(message, next);
             break;
         case 'UPDATE_ANSWER':
-            updateAnswer(message.req, next);
+            updateAnswer(message, next);
             break;
         case 'CREATE_BOOKMARK':
-            createBookmark(message.req, next);
+            createBookmark(message, next);
             break;
         case 'GET_ONE_ANSWER':
-            getOneAnswer(message.req, next);
+            getOneAnswer(message, next);
             break;
         default:
             console.log('unknown request');
