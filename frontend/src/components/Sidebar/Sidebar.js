@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './Sidebar.css';
-import { NavLink } from 'react-router-dom';
-import { Nav, Button } from 'react-bootstrap';
+import {Link, NavLink, withRouter } from 'react-router-dom';
+import { Nav,  Button } from 'react-bootstrap';
 import TopicModal from './TopicModal';
 import axios from 'axios';
 import cookie from 'react-cookies';
@@ -12,8 +12,8 @@ class Sidebar extends Component {
         super(props);
         this.state = {
             sidebar_links: [],
-            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTY2ODI3MzksImlkIjoiNWNjNTIzNjA3MmM5YmYzNDM2ODJiNGIwIn0.2yvfGmvutYPygv_oPbj7QUdiDxVvxbh6o5eHYZ2CBUU'
-            //token: cookie.load('JWT')
+//            token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTY5NDg3NDksImlkIjoiNWNjOTMyN2VmMzYzOTMwMDAxZDkzMzIxIn0.1PyIZ9tVZCH9ihiF8KHTv8McvGlAwhBHor8GGPd7QKc'
+            token: cookie.load('JWT')
         }
     }
 
@@ -84,4 +84,4 @@ class Sidebar extends Component {
     }
 }
 
-export default Sidebar;
+export default withRouter(Sidebar);

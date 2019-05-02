@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, withRouter } from 'react-router-dom';
 import cookie from 'react-cookies';
 import { Route } from 'react-router';
 //import './Home.css';
@@ -19,8 +19,8 @@ return(
                             <Sidebar/>
                            {/* <Button style={{ 'text-decoration': 'none', "font-size": 14, "line-height": 10 }} variant="link" onClick={this.selectTopics}>Follow More</Button>*/}
                         </Col>
-                        <Col>
-                            <Component {...matchProps}></Component>
+                        <Col md={9}>
+                            <Component {...matchProps} key={Math.random()*10000+1}></Component>
                         </Col>
                     </Row>
                 </Container>
@@ -32,4 +32,4 @@ return(
             };
 
 
-export default SidebarLayout;
+export default withRouter(SidebarLayout);

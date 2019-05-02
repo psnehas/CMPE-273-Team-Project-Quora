@@ -15,8 +15,9 @@ export function authentication(state = {}, action) {
         loggedIn: true,
         email: action.email,
    //     role: action.role,
-        user_id: action.user_id,
-        frist_name: action.first_name
+//        user_id: action.user_id,
+        first_name: action.firstname,
+        last_name: action.lastname
       }
     case userConstants.LOGIN_FAILURE:
       return {

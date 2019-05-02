@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import style from './Profile.module.css';
 import { Container, Col, Row, Image, Card, Button } from 'react-bootstrap';
 
+import Content from './Content/Content'
+import Sidebar from './Sidebar/Sidebar';
+
 class Profile extends Component {
 
     state = {
@@ -25,16 +28,21 @@ class Profile extends Component {
             <React.Fragment>
                 <Container>
                     <Row>
-                        <Col>
+                        <Col className={style.center}>
                             <Image className={style.profile_photo_image} src={this.state.user.profile_image} roundedCircle />
                         </Col>
                         <Col xs={8}>
                             <h1>{this.state.user.name}</h1>
                         </Col>
                     </Row>
+                    <hr />
                     <Row>
-                        <Col></Col>
-                        <Col xs={8}></Col>
+                        <Col>
+                            <Sidebar />
+                        </Col>
+                        <Col xs={8}>
+                            <Content />
+                        </Col>
                     </Row>
                 </Container>
             </React.Fragment>

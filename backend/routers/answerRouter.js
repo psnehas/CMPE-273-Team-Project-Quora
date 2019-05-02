@@ -1,45 +1,32 @@
 var express = require('express')
 var authController = require('../controller/authController')
-var userControllerLocal = require('../controller/userController')
-var userControllerKafka = require('../../kakfa/client/controller/user');
-const answerRouter = express.Router()
+var answerControllerLocal = require('../controller/answerController')
+var answerControllerKafka = require('../../kakfa/client/controller/answer');
+const router = express.Router()
 
-router.route('/api/bookmark/user/:userID/answer/:answerID')
-.post(authController.requireSignin,)
+router.route('/bookmark/user/:userID/answer/:answerID')
+.post(authController.requireSignin, answerControllerKafka.createBookmark)
 
-router.route('/api/answer/:answerID/upvote')
-.put(authController.requireSignin,)
+router.route('/answer/:answerID/upvote')
+.put(authController.requireSignin, answerControllerKafka.upvote)
 
-router.route('/api/answer/:answerID/downvote')
-.put(authController.requireSignin,)
+router.route('/answer/:answerID/downvote')
+.put(authController.requireSignin, answerControllerKafka.downvote)
 
-router.route('/api/answer_votes/:answerID')
-.get(authController.requireSignin,)
+router.route('/answer_votes/:answerID')
+.get(authController.requireSignin, answerControllerKafka.allVotes)
 
-router.route('/api/answer/:answerID/comment')
-.post(authController.requireSignin,)
+router.route('/answer/:answerID/comment')
+.post(authController.requireSignin, answerControllerKafka.makeComment)
 
-router.route('/api/answer/:answerID/all_comments')
-.get(authController.requireSignin,)
+router.route('/answer_comments/:answerID')
+.get(authController.requireSignin, answerControllerKafka.allComments)
 
-router.route('/api/question/:questionID/answer')
-.post(authController.requireSignin,)
+router.route('/question/:questionID/answer')
+.post(authController.requireSignin, answerControllerKafka.makeAnswer)
 
-router.route('/api/question/:questionID/answer/:answerID')
-.put(authController.requireSignin,)
-.get(authController.requireSignin,)
+router.route('/question/:questionID/answer/:answerID')
+.put(authController.requireSignin, answerControllerKafka.updateAnswer)
+.get(authController.requireSignin, answerControllerKafka.getOneAnswer)
 
-
-router.route('/api/users/courses/:userID')
-.get(authController.requireSignin, userControllerKafka.getUserCourses)
-
-router.route('/api/users/:userID')
-.get(authController.requireSignin, userControllerKafka.getUser)
-.put(authController.requireSignin, userControllerLocal.updateUser)
-
-router.route('/api/users/messages/:userID')
-.get(authController.requireSignin, userControllerKafka.getUserMessages)
-.post(authController.requireSignin, userControllerKafka.createUserMessage)
-.put(authController.requireSignin, userControllerKafka.readMessage)
-
-module.exports = {answerRouter}
+module.exports = {router}

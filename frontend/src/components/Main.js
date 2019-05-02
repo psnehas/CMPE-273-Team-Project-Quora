@@ -7,6 +7,7 @@ import QuestionPage from './QuestionPage/QuestionPage';
 import SidebarLayout from './SidebarLayout/SidebarLayout';
 import Navbar from './NavBar/Navbar'
 import TopicPage from './TopicPage/TopicPage';
+import ProfilePage from './Profile/Profile'
 
 
 //Create a Main Component
@@ -18,13 +19,14 @@ class Main extends Component {
                 <Switch>
                     {/*Render Different Component based on Route*/}
                     <SidebarLayout exact path="/" component={Home} />
+
                     <SidebarLayout path="/topics/:topic" component={TopicPage} />
 
                     <Route path="/login" component={Login} />
                     <Route path='/signup' component={SignUp} />
 
                     <Route path="/questions/:questionId" component={QuestionPage} />
-
+                    <Route path="/profile" component={ProfilePage} />
                 </Switch>
             </div>
         )
