@@ -3,7 +3,7 @@ var autoIncrement = require('mongoose-sequence')(mongoose)
 
 const CommentSchema = new mongoose.Schema({
     owner: {
-        type: Number // user_id
+        type: String // email
     },
     time: {
         type: String
@@ -19,7 +19,7 @@ const AnswerSchema = new mongoose.Schema({
         trim: true
     },
     owner: {
-        type: Number // user_id
+        type: String // email
     },
     time: {
         type: String
