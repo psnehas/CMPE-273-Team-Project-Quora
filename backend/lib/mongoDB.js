@@ -135,6 +135,6 @@ exports.insertQuestion = (question) => {
     let newQuestion = new Question(question)
     return newQuestion.save();
 }
-// exports.fetchQuestion =(question_id)=>{
-//     return Question.findOne({question_id:question_id}).exec();
-// }
+exports.fetchQuestion =(question_id)=>{
+    return Question.findOne({question_id:question_id}).exec();
+}
