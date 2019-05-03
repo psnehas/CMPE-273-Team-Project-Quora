@@ -5,7 +5,7 @@ import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { userActions } from '../../_actions';
 import { connect } from 'react-redux';
-import {backend_host} from '../../config';
+import { user_auth_apis } from '../../config';
 //import Cookies from 'universal-cookie';
 
 //Define a Login Component
@@ -18,7 +18,7 @@ class SignUp extends Component {
         this.state = {
             first_name: "",
             last_name: "",
-//            role: "",
+            //            role: "",
             email: "",
             password: "",
             submitted: false,
@@ -37,11 +37,11 @@ class SignUp extends Component {
     submitSignUp = (e) => {
         e.preventDefault();
         const data = {
-            first_name: this.state.first_name,
-            last_name: this.state.last_name,
-//            role: this.state.role,
-            password: this.state.password,
-            email: this.state.email
+            FirstName: this.state.first_name,
+            LastName: this.state.last_name,
+            //            role: this.state.role,
+            Password: this.state.password,
+            Email: this.state.email
         }
 
         console.log('Fire submit button!');
@@ -52,28 +52,29 @@ class SignUp extends Component {
         this.props.dispatch(userActions.signup_request(email));
         this.setState({ submitted: true });
 
-        if (data.first_name && data.last_name && data.password && data.email) {
+        if (data.FirstName && data.LastName && data.Password && data.Email) {
 
-        //set the with credentials to true
- //       axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post(backend_host+'/signup', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200 && response.data.auth === true) {
-                    //cookie.save('userId', response.data.user_id, { path: '/', expires: "", maxAge: 1000, httpOnly: false });
-                    //cookie.save('role', response.data.role, { path: '/', expires: "", maxAge: 1000, httpOnly: false });
- //                   const cookies = new Cookies();
- //                   cookie.save('JWT', response.data.token, { path: '/' });
-                    this.props.dispatch(userActions.login_success(email, response.data.role, response.data.user_id));
-                } else {
-                    this.props.dispatch(userActions.signup_failure(email, "HTTP CODE != 200"));
-                }
-            }).catch(err => {
-                this.props.dispatch(userActions.signup_failure(email, err));
-//                console.log(error.body.message)
-            });
-        }  
+            //set the with credentials to true
+            //       axios.defaults.withCredentials = true;
+            //make a post request with the user data
+            axios.post(user_auth_apis + '/signup', data)
+                .then(response => {
+                    console.log("Status Code : ", response.status);
+                    if (response.status === 201) {
+                        //cookie.save('userId', response.data.user_id, { path: '/', expires: "", maxAge: 1000, httpOnly: false });
+                        //cookie.save('role', response.data.role, { path: '/', expires: "", maxAge: 1000, httpOnly: false });
+                        //                   const cookies = new Cookies();
+                        //                   cookie.save('JWT', response.data.token, { path: '/' });
+                        this.props.dispatch(userActions.signup_success(email, response.data.role, response.data.user_id));
+                        //                  this.props.dispatch(userActions.login_success(email, response.data.role, response.data.user_id));
+                    } else {
+                        this.props.dispatch(userActions.signup_failure(email, "HTTP CODE != 200"));
+                    }
+                }).catch(err => {
+                    this.props.dispatch(userActions.signup_failure(email, err));
+                    //                console.log(error.body.message)
+                });
+        }
     }
 
     render() {
@@ -84,9 +85,9 @@ class SignUp extends Component {
         const { first_name, last_name, email, password, submitted } = this.state;
 
         let redirectVar = null;
-//        console.log(signup);
-        if (authentication.loggedIn === true) {
-            redirectVar = <Redirect to="/Home" />
+        //        console.log(signup);
+        if (signup.signedUp === true) {
+            redirectVar = <Redirect to="/login" />
         }
 
         return (
@@ -134,6 +135,6 @@ class SignUp extends Component {
 }
 
 // reducer: authentication 's output maps to this.props.authentication
-const mapStateToProps = ({ signup,  authentication }) => ({ signup, authentication });
+const mapStateToProps = ({ signup, authentication }) => ({ signup, authentication });
 // apply above mapping to Login class
 export default connect(mapStateToProps)(SignUp);

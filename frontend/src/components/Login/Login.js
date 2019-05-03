@@ -5,7 +5,7 @@ import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { userActions } from '../../_actions';
 import { connect } from 'react-redux';
-import {backend_host} from '../../config';
+import {user_auth_apis} from '../../config';
 //import Cookies from 'universal-cookie';
 
 //Define a Login Component
@@ -37,8 +37,8 @@ class Login extends Component {
         e.preventDefault();
 
         const data = {
-            email: this.state.email,
-            password: this.state.password
+            Email: this.state.email,
+            Password: this.state.password
         }
         const { email } = this.state;
 
@@ -48,14 +48,14 @@ class Login extends Component {
 
         this.setState({ submitted: true });
 
-        if (data.email && data.password) {
+        if (data.Email && data.Password) {
             //set the with credentials to true
  //           axios.defaults.withCredentials = true;
 //			axios.defaults.crossDomain = true;
             console.log("axios.defaults.crossDomain = true");
             //make a post request with the user data
             
-            axios.post(backend_host+'/signin', data)
+            axios.post(user_auth_apis +'/login', data)
                 .then(response => {
                     console.log(response);
                     //console.log("Status Code : ", response.status);
@@ -64,7 +64,7 @@ class Login extends Component {
 //						const cookies = new Cookies();
 						cookie.save('JWT', response.data.token, { path: '/' });
 						//console.log(cookies.get('JWT'));
-                        this.props.dispatch(userActions.login_success(email, response.data.user_id));
+                        this.props.dispatch(userActions.login_success(response.data.firstname, response.data.lastname));
                     } /*else {
                         this.props.dispatch(userActions.login_failure(email, "HTTP CODE != 200"));
                     }*/
@@ -91,7 +91,7 @@ class Login extends Component {
         //console.log(authentication);
 
         if (authentication.loggedIn === true) {
-            redirectVar = <Redirect to="/courses" />;
+            redirectVar = <Redirect to="/" />;
         }
 
 

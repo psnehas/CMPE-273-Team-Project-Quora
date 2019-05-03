@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.route('/addQuestion').post(questionController.addQuestion);
 //router.route('/addQuestion').post(questionControllerKafka.insertQuestion);
-router.route('/questions/:question_id').get(questionController.fetchQuestion);
+//router.route('/questions/:question_id').get(questionController.fetchQuestion);
 
 
 module.exports={router}

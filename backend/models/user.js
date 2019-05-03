@@ -49,20 +49,36 @@ const UserSchema = new mongoose.Schema({
     ],
     followed_people: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     following_people: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-    followed_questions: [{type: mongoose.Schema.Types.ObjectId, ref: 'Question'}],
-    followed_topics: [{type: mongoose.Schema.Types.ObjectId, ref: 'Topic'}],
-    profileCredential: {type: String, default: ''},
-    feeded_q_a: [ 
+    created_questions: [
         {
-            question_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Question'},
-            question_body: String,
+            question_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Question' }, 
+            created_time: { type: Date, default: function() {
+                    return new Date().toUTCString();
+                }
+            }
         }
     ],
-    activities: {
-        questions:[ Date ],
-        answers: [ Date ],
-        comments: [ Date ],
-    },
+    followed_questions: [
+        {
+            question_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Question'}, 
+            followed_time: {type: Date, default: function() {
+                    return new Date().toUTCString();
+                }
+            }
+        }
+    ],
+    created_answers: [
+        {
+            answer_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Answer'}, 
+            created_time: {type: Date, default: function() {
+                    return new Date().toUTCString();
+                }
+            }
+        }
+    ],
+    bookmarked_answers: [{type: mongoose.Schema.Types.ObjectId, ref: 'Answer'}],
+    followed_topics: [{type: mongoose.Schema.Types.ObjectId, ref: 'Topic'}],
+    profileCredential: {type: String, default: ''},
     messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
 })
 

@@ -1,0 +1,5 @@
+.comment_truncate {
+    overflow: hidden;         /*prevent text from being shown outside the border */
+    text-overflow: ellipsis;  /*cut off text with an ellipsis*/ 
+    -webkit-line-clamp: 3;
+}

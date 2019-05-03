@@ -106,8 +106,8 @@ exports.getComments = (answerid) => {
     return Answer.find({answer_id: answerid}).exec();
 }
 
-exports.createComment = (answerid, comment) => {
-    return Answer.findOneAndUpdate({answer_id: answerid}, {$push: {comments: {comment: comment}}}).exec();
+exports.createComment = (comment) => {
+    return Answer.findOneAndUpdate({answer_id: comment.answer_id}, {$push: {comments: {owner: comment.owner, time : comment.time, comment : comment.comment}}}).exec();
 }
 
 exports.createAnswer = (data) => {
@@ -127,10 +127,14 @@ exports.updateOneAnswer = (editInfo) => {
     return Answer.findOneAndUpdate({answer_id: editInfo.answer_id}, {$set: {content: editInfo.content}}).exec();
 }
 
+exports.updateUserWithAnswer = (user, newAnswer) => {
+    return User.findOneAndUpdate({email: user}, {$push: {created_answers: {answer_id: newAnswer._id, created_time: newAnswer.time}}}).exec();
+}
+
 exports.insertQuestion = (question) => {
     let newQuestion = new Question(question)
     return newQuestion.save();
 }
-exports.fetchQuestion =(question_id)=>{
-    return Question.findOne({question_id:question_id}).exec();
-}
+// exports.fetchQuestion =(question_id)=>{
+//     return Question.findOne({question_id:question_id}).exec();
+// }
