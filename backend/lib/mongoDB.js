@@ -3,6 +3,7 @@ var User = require('../models/user')
 var Topic = require('../models/topic')
 var Message = require('../models/message')
 var Answer = require('../models/answer')
+var Question = require('../models/question')
 
 const uri_altas = 'mongodb+srv://admin:admin@quora-2jksh.mongodb.net/';
 const uri_local = 'mongodb://localhost:27017/quora';
@@ -124,4 +125,12 @@ exports.findOneAnswer = (answerid) => {
 
 exports.updateOneAnswer = (editInfo) => {
     return Answer.findOneAndUpdate({answer_id: editInfo.answer_id}, {$set: {content: editInfo.content}}).exec();
+}
+
+exports.insertQuestion = (question) => {
+    let newQuestion = new Question(question)
+    return newQuestion.save();
+}
+exports.fetchQuestion =(question_id)=>{
+    return Question.findOne({question_id:question_id}).exec();
 }

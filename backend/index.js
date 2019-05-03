@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var cookieParse = require('cookie-parser');
 
 var userRouter = require('./routers/userRouter')
+var questionRouter = require('./routers/questionRouter')
 var answerRouter = require('./routers/answerRouter')
 var passport = require('./lib/passport')
 
@@ -19,7 +20,7 @@ app.use(cookieParse());
 
 app.use('/public/images', express.static(__dirname + '/public/images'))
 
-app.use('/', userRouter.router, answerRouter.router)
+app.use('/', userRouter.router,questionRouter.router, answerRouter.router)
 
 // for load balancer
 app.use('/*', (req, res) => {
