@@ -43,7 +43,19 @@ const allComments = (req, next) => {
 
 const makeComment = (req, next) => {
     console.log("Answer ID: ", req.comment.answer_id)
-    db.createComment(req.comment).then(result =>{
+    var date = new Date().getDate(); //Current Date
+    var month = new Date().getMonth() + 1; //Current Month
+    var year = new Date().getFullYear(); //Current Year
+    var hours = new Date().getHours(); //Current Hours
+    var min = new Date().getMinutes(); //Current Minutes
+    var sec = new Date().getSeconds(); //Current Seconds
+    newComment = {
+        answer_id: req.comment.answer_id,
+        owner : req.comment.owner,
+        time: month + '/' + date + '/' + year + ' ' + hours + ':' + min + ':' + sec,
+        comment : req.comment.comment
+    }
+    db.createComment(newComment).then(result =>{
         next(null, {
             status: 200,
             data: result
@@ -53,25 +65,36 @@ const makeComment = (req, next) => {
 
 const makeAnswer = (req, next) => {
     console.log("question message: ", req)
-    // console.log("Comment: ", req.body.comment)
-    // newAnswer ={
-    //     question_id: req.params.question_id,
-    //     owner: req.body.user_id,
-    //     content: req.body.answer,
-    //     upvote: 0,
-    //     downvote: 0,
-    //     bookmark: [],
-    //     comments: [],
-    // }
-    newAnswer = req.answer
+    var date = new Date().getDate(); //Current Date
+    var month = new Date().getMonth() + 1; //Current Month
+    var year = new Date().getFullYear(); //Current Year
+    var hours = new Date().getHours(); //Current Hours
+    var min = new Date().getMinutes(); //Current Minutes
+    var sec = new Date().getSeconds(); //Current Seconds
+    newAnswer ={
+        question_id: req.answer.question_id,
+        owner: req.answer.owner,
+        time: month + '/' + date + '/' + year + ' ' + hours + ':' + min + ':' + sec,
+        content: req.answer.content,
+        upvote: 0,
+        downvote: 0,
+        bookmark: [],
+        comments: [],
+    }
     console.log("newAnswer", newAnswer)
     db.createAnswer(newAnswer).then(result =>{
-        console.log("rere",result)
         next(null, {
             status: 200,
             data: result
         })
     })
+    db.updateUserWithAnswer(req.answer.owner, newAnswer).then(result => {
+        next(null, {
+            status: 200,
+            data: result
+        })
+    })
+    
 }
 
 const updateAnswer = (req, next) => {

@@ -106,7 +106,7 @@ exports.getComments = (answerid) => {
 }
 
 exports.createComment = (comment) => {
-    return Answer.findOneAndUpdate({answer_id: comment.answer_id}, {$push: {comments: {owner: comment.owner, time : comment.time, comment : comment.content}}}).exec();
+    return Answer.findOneAndUpdate({answer_id: comment.answer_id}, {$push: {comments: {owner: comment.owner, time : comment.time, comment : comment.comment}}}).exec();
 }
 
 exports.createAnswer = (data) => {
@@ -124,4 +124,8 @@ exports.findOneAnswer = (answerid) => {
 
 exports.updateOneAnswer = (editInfo) => {
     return Answer.findOneAndUpdate({answer_id: editInfo.answer_id}, {$set: {content: editInfo.content}}).exec();
+}
+
+exports.updateUserWithAnswer = (user, newAnswer) => {
+    return User.findOneAndUpdate({email: user}, {$push: {created_answers: {answer_id: newAnswer._id, created_time: newAnswer.time}}}).exec();
 }
