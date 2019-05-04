@@ -10,6 +10,9 @@ const CommentSchema = new mongoose.Schema({
     },
     comment: {
         type: String
+    },
+    anonymous: {
+        type: Boolean
     }
 })
 
@@ -33,9 +36,12 @@ const AnswerSchema = new mongoose.Schema({
     downvote: {
         type: Number
     },
+    anonymous: {
+        type: Boolean
+    },
     bookmark: [
         {
-            user_id: {type: Number}
+            user_id: {type: String}
         }
     ],
     comments: [CommentSchema]
