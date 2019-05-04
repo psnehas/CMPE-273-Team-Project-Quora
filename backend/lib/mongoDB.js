@@ -107,7 +107,7 @@ exports.getComments = (answerid) => {
 }
 
 exports.createComment = (comment) => {
-    return Answer.findOneAndUpdate({answer_id: comment.answer_id}, {$push: {comments: {owner: comment.owner, time : comment.time, comment : comment.comment}}}).exec();
+    return Answer.findOneAndUpdate({answer_id: comment.answer_id}, {$push: {comments: {owner: comment.owner, time : comment.time, comment : comment.comment, anonymous: comment.anonymous}}}).exec();
 }
 
 exports.createAnswer = (data) => {
