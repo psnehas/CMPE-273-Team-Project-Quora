@@ -83,6 +83,11 @@ class navbar extends Component {
                             <Button variant="outline-success">Search</Button>
                         </Form>
                     </Nav>
+                    <Nav.Item>
+                        <div style={{ margin: '0 1em 0 1em', borderRadius: 50, backgroundColor: "wheat", textAlign: "center", width: "2em", height: "2em" }}>
+                            <span style={{ verticalAlign: "sub" }}>YC</span>
+                        </div>
+                    </Nav.Item>
                     {navLogin}
 
                     <Button variant="danger"

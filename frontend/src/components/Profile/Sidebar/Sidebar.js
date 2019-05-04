@@ -29,7 +29,7 @@ const Sidebar = (props) => {
                 Following
             </NavLink>
 
-        </Nav >
+        </Nav>
     )
 }
 
