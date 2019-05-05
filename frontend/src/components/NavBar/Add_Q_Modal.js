@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import AsyncSelect from 'react-select/lib/Async';
 import axios from 'axios';
 import _ from "lodash";
-import {msgstore_apis, david_test_apis} from '../../config';
+import {david_test_apis} from '../../config';
+import cookie from 'react-cookies';
 
 class AddQModal extends Component {
   constructor(props) {
@@ -13,7 +14,7 @@ class AddQModal extends Component {
       selectedTopics: [],
       options: [],
       questionText: '',
-      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTY5NDg3NDksImlkIjoiNWNjOTMyN2VmMzYzOTMwMDAxZDkzMzIxIn0.1PyIZ9tVZCH9ihiF8KHTv8McvGlAwhBHor8GGPd7QKc'
+      token: cookie.load('JWT'),
     }
     this.handlePost = this.handlePost.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -24,7 +25,6 @@ class AddQModal extends Component {
     this.setState({ [e.target.name]: e.target.value });
     console.log(e.target.name, e.target.value);
   }
-
 
   handlePost = (e) => {
     e.preventDefault();
@@ -39,8 +39,8 @@ class AddQModal extends Component {
         'Authorization': `JWT ${this.state.token}`
       }
     }).then(response => {
-      console.log(response.data)
-      this.props.afterAdd();
+     // console.log(response.data)
+      this.props.afteradd();
     })
 
   }
@@ -67,7 +67,7 @@ class AddQModal extends Component {
      }
    })
    .then(response=>{
-     console.log(response.data);
+     //console.log(response.data);
 //     this.setState({
 //       options: response.data
 //     })

@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import './Home.css';
-import { userActions } from '../../_actions';
+//import { userActions } from '../../_actions';
 import { connect } from 'react-redux';
-import Sidebar from '../Sidebar/Sidebar';
-import { Container, Col, Card, Button, Row } from 'react-bootstrap';
+//import Sidebar from '../Sidebar/Sidebar';
+import {Card, Button} from 'react-bootstrap';
 import AddModal from '../NavBar/Add_Q_Modal';
 import axios from 'axios';
-import { msgstore_apis, david_test_apis, user_tracking_apis } from '../../config';
+import {david_test_apis} from '../../config';
 import renderHTML from 'react-render-html';
 import Moment from 'react-moment';
 import { BadgeGroup } from '../QuestionPage/QuestionPage'
@@ -48,16 +48,16 @@ class Home extends Component {
         })
     }
     componentDidMount() {
-        axios.get(david_test_apis + '/questions', {
+        axios.get(david_test_apis + '/userfeed', {
             headers: {
                 'Authorization': `JWT ${this.state.token}`
             },
             params: {
-                topAnswer: true,
+ //               topAnswer: true,
                 depth: 1
             }
         }).then(response => {
-            console.log(response);
+ //           console.log(response);
             this.setState({
                 user_feed: response.data
             })
@@ -99,10 +99,10 @@ class Home extends Component {
         let main_panel = null;
 
         if (this.state.user_feed.length !== 0) {
-            main_panel = this.state.user_feed.map(q => {
+            main_panel = this.state.user_feed.map((q, idx) => {
                 let answer = null;
                 if ('answers' in q) {
-                    console.log(html_truncate(q.answers[0].answerText, 3));
+  //                  console.log(html_truncate(q.answers[0].answerText, 3));
                     answer = (
                         <div>
                             <ul className="list-unstyled">
@@ -119,7 +119,7 @@ class Home extends Component {
                     answer = <p>Be the first to answer this question! </p>
                 }
                 return (
-                    <Card>
+                    <Card key = {idx}>
                         <Card.Body >
                             <BadgeGroup data={q.topics} />
                             <Card.Title style={{ fontWeight: 'bold' }}>{q.questionText}</Card.Title>
@@ -179,7 +179,7 @@ class Home extends Component {
                     show={this.state.show_add}
                     onHide={modal_Q_Close}
                     user_name={this.state.user_name}
-                    after_add={this.after_add}
+                    afteradd={this.afterAdd}
 
                 />
                 {/*}
@@ -192,8 +192,8 @@ class Home extends Component {
                         <Col> */}
                             <Card>
                                 <Card.Body>
-                                    <Card.Title style={{ "font-size": 14, "color": 949494 }}>{'Hi, ' + this.state.user_name}</Card.Title>
-                                    <Button variant="link" onClick={this.showModal} style={{ 'text-decoration': 'none' }} className="add_q_link">What is your question?</Button>
+                                    <Card.Title style={{ "fontSize": 14, "color": 949494 }}>{'Hi, ' + this.state.user_name}</Card.Title>
+                                    <Button variant="link" onClick={this.showModal} style={{ 'textDecoration': 'none' }} className="add_q_link">What is your question?</Button>
                                 </Card.Body>
                             </Card>
 
