@@ -152,6 +152,10 @@ exports.updateUserWithAnswer = (user, newAnswer) => {
     return User.findOneAndUpdate({email: user}, {$push: {created_answers: {answer_id: newAnswer._id, created_time: newAnswer.time}}}).exec();
 }
 
+exports.updateUserBookmark = (user, answerid) => {
+    return User.findOneAndUpdate({email: user}, {$push: {bookmarked_answers: answerid._id}}).exec();
+}
+
 exports.insertQuestion = (question) => {
     let newQuestion = new Question(question)
     return newQuestion.save();

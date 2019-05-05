@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import './Sidebar.css';
-import {Link, NavLink, withRouter } from 'react-router-dom';
+import {NavLink, withRouter } from 'react-router-dom';
 import { Nav,  Button } from 'react-bootstrap';
 import TopicModal from './TopicModal';
 import axios from 'axios';
 import cookie from 'react-cookies';
-import { user_tracking_apis, backend_host } from '../../config'
+import { user_tracking_apis} from '../../config'
 
 class Sidebar extends Component {
     constructor(props) {
@@ -48,7 +48,7 @@ class Sidebar extends Component {
         })
             .then((res) => {
                 if (res.status === 200) {
-                    console.log(res.data);
+//                    console.log(res.data);
                     this.setState({
                         sidebar_links: res.data.followed_topics,
                     });
@@ -75,10 +75,10 @@ class Sidebar extends Component {
                     onHide={modal_T_Close}
                     update_sidebar={this.update_sidebar}
                 />
-                <Nav style={{ "font-size": 14, "line-height": 10 }} className="flex-column" >
+                <Nav style={{ "fontSize": 14, "lineHeight": 1.0 }} className="flex-column" >
                     {sidebar_body}
                 </Nav>
-                <Button style={{ 'text-decoration': 'none', "font-size": 14, "line-height": 10,  'margin-left': 8 }} variant="link" onClick={this.selectTopics}>Follow More</Button>
+                <Button style={{ 'textDecoration': 'none', "fontSize": 14, "lineHeight": 1.0,  'marginLeft': 8 }} variant="link" onClick={this.selectTopics}>Follow More</Button>
             </div>
         );
     }
