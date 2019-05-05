@@ -90,7 +90,7 @@ const updateAnswer = (req, next) => {
     db.updateOneAnswer(editInfo).then(result =>{
         next(null, {
             status: 200,
-            data: result
+            data: "Answer " + editInfo.answer_id + " updated..."
         })
     })
 }
