@@ -1,10 +1,6 @@
 var kafka = require('kafka-node')
 const kafkaHost = '172.31.18.174:9092'
-<<<<<<< HEAD
-//const kafkaHost = 'localhost:9092'
-=======
 // const kafkaHost = 'localhost:9092'
->>>>>>> 63d5664dfa520cbc2392a935c46dbf0ab1f1bea0
 
 module.exports = class KafkaConnection {
     constructor(producer_topic, consumer_topic) {
