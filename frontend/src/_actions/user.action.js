@@ -1,8 +1,8 @@
 import { userConstants } from '../_constant';
 
 function login_request(email) { return { type: userConstants.LOGIN_REQUEST, email} }
-function login_success(firstname, lastname) { 
-    return { type: userConstants.LOGIN_SUCCESS, firstname, lastname}; }
+function login_success(user_id, firstname, lastname) { 
+    return { type: userConstants.LOGIN_SUCCESS, user_id, firstname, lastname}; }
 function login_failure(email, err) { return { type: userConstants.LOGIN_FAILURE, email, err } }
 function logout() {
     return { type: userConstants.LOGOUT};

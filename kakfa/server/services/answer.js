@@ -53,7 +53,8 @@ const makeComment = (req, next) => {
         answer_id: req.comment.answer_id,
         owner : req.comment.owner,
         time: month + '/' + date + '/' + year + ' ' + hours + ':' + min + ':' + sec,
-        comment : req.comment.comment
+        comment : req.comment.comment,
+        anonymous: req.comment.anonymous
     }
     db.createComment(newComment).then(result =>{
         next(null, {
@@ -78,6 +79,7 @@ const makeAnswer = (req, next) => {
         content: req.answer.content,
         upvote: 0,
         downvote: 0,
+        anonymous: req.answer.anonymous,
         bookmark: [],
         comments: [],
     }

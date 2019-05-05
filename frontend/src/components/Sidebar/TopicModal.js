@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import AsyncSelect from 'react-select/lib/Async';
 import axios from 'axios';
 import _ from "lodash";
-import {msgstore_apis, david_test_apis, user_tracking_apis} from '../../config';
+import {david_test_apis, user_tracking_apis} from '../../config';
+import cookie from 'react-cookies';
 
 class TopicModal extends Component {
   constructor(props) {
@@ -11,7 +12,7 @@ class TopicModal extends Component {
     this.state = {
       selectedTopics: [],
       options: [],
-      token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTY5NDg3NDksImlkIjoiNWNjOTMyN2VmMzYzOTMwMDAxZDkzMzIxIn0.1PyIZ9tVZCH9ihiF8KHTv8McvGlAwhBHor8GGPd7QKc'
+      token: cookie.load('JWT')
     }
     this.handlePost = this.handlePost.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -70,7 +71,7 @@ class TopicModal extends Component {
        }
      })
       .then(response => {
-        console.log(response.data);
+        //console.log(response.data);
         //     this.setState({
         //       options: response.data
         //     })

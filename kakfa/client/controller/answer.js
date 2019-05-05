@@ -8,7 +8,7 @@ const upvote = (req, res) => {
     console.log("upvote request")
     let message = {
         cmd: 'UPVOTE',
-        upvote: req.body
+        upvote: req.params
     }
     client.send(message, function(err, result) {
         console.log('the result for upvote is: ', result);
@@ -20,7 +20,7 @@ const downvote = (req, res) => {
     console.log("downvote request")
     let message = {
         cmd: 'DOWNVOTE',
-        downvote: req.body
+        downvote: req.params
     }
     client.send(message, function(err, result) {
         console.log('the result for downvote is: ', result);
@@ -29,10 +29,11 @@ const downvote = (req, res) => {
 }
 
 const allVotes = (req, res) => {
+    console.log("req may has paprams", req.params)
     console.log("get votes request")
     let message = {
         cmd: 'ALL_VOTES',
-        allVotes: req.body
+        allVotes: req.params
     }
     client.send(message, function(err, result) {
         console.log('the result for get votes is: ', result);
@@ -44,7 +45,7 @@ const allComments = (req, res) => {
     console.log("get comments request")
     let message = {
         cmd: 'ALL_COMMENTS',
-        allComments: req.body
+        allComments: req.params
     }
     client.send(message, function(err, result) {
         console.log('the result for get comments is: ', result);
@@ -54,9 +55,15 @@ const allComments = (req, res) => {
 
 const makeComment = (req, res) => {
     console.log("make comment request")
+    let request = {
+        answer_id: req.params.answer_id,
+        owner: req.body.owner,
+        comment: req.body.comment,
+        anonymous: req.body.anonymous
+    }
     let message = {
         cmd: 'MAKE_COMMENT',
-        comment: req.body
+        comment: request
     }
     client.send(message, function(err, result) {
         console.log('the result for make comment is: ', result);
@@ -66,9 +73,15 @@ const makeComment = (req, res) => {
 
 const makeAnswer = (req, res) => {
     console.log("make answer request")
+    let request = {
+        question_id: req.params.question_id,
+        owner: req.body.owner,
+        content: req.body.content,
+        anonymous: req.body.anonymous
+    }
     let message = {
         cmd: 'MAKE_ANSWER',
-        answer: req.body
+        answer: request
     }
     client.send(message, function(err, result) {
         console.log('the result for make answer is: ', result);
@@ -78,9 +91,13 @@ const makeAnswer = (req, res) => {
 
 const updateAnswer = (req, res) => {
     console.log("update answer request")
+    let request = {
+        answer_id: req.params.answer_id,
+        content: req.body.content
+    }
     let message = {
         cmd: 'UPDATE_ANSWER',
-        update: req.body
+        update: request
     }
     client.send(message, function(err, result) {
         console.log('the result for update answer is: ', result);
@@ -92,7 +109,7 @@ const createBookmark = (req, res) => {
     console.log("create bookmark request")
     let message = {
         cmd: 'CREATE_BOOKMARK',
-        userAnswer: req.body
+        userAnswer: req.params
     }
     client.send(message, function(err, result) {
         console.log('the result for create bookmark is: ', result);
@@ -104,7 +121,7 @@ const getOneAnswer = (req, res) => {
     console.log("get one answer request")
     let message = {
         cmd: 'GET_ONE_ANSWER',
-        OneAnswer: req.body
+        OneAnswer: req.params
     }
     client.send(message, function(err, result) {
         console.log('the result for get one answer is: ', result);

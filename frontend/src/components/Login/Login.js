@@ -5,7 +5,7 @@ import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { userActions } from '../../_actions';
 import { connect } from 'react-redux';
-import {user_auth_apis} from '../../config';
+import {backend_host,  user_auth_apis} from '../../config';
 //import Cookies from 'universal-cookie';
 
 //Define a Login Component
@@ -32,13 +32,13 @@ class Login extends Component {
 
     //submit Login handler to send a request to the node backend
     submitLogin = (e) => {
-        console.log("run login");
+ //       console.log("run login");
         //prevent page from refresh
         e.preventDefault();
 
         const data = {
-            Email: this.state.email,
-            Password: this.state.password
+            email: this.state.email,
+            password: this.state.password
         }
         const { email } = this.state;
 
@@ -48,23 +48,23 @@ class Login extends Component {
 
         this.setState({ submitted: true });
 
-        if (data.Email && data.Password) {
+        if (data.email && data.password) {
             //set the with credentials to true
  //           axios.defaults.withCredentials = true;
 //			axios.defaults.crossDomain = true;
-            console.log("axios.defaults.crossDomain = true");
+//            console.log("axios.defaults.crossDomain = true");
             //make a post request with the user data
             
-            axios.post(user_auth_apis +'/login', data)
+            axios.post(backend_host +'/signin', data)
                 .then(response => {
-                    console.log(response);
+//                    console.log(response);
                     //console.log("Status Code : ", response.status);
                     //console.log("role:", response.data);
                     if (response.status === 200 /*&& response.data.auth === true*/) {
 //						const cookies = new Cookies();
 						cookie.save('JWT', response.data.token, { path: '/' });
 						//console.log(cookies.get('JWT'));
-                        this.props.dispatch(userActions.login_success(response.data.firstname, response.data.lastname));
+                        this.props.dispatch(userActions.login_success(response.data.user_id,response.data.first_name, response.data.last_name));
                     } /*else {
                         this.props.dispatch(userActions.login_failure(email, "HTTP CODE != 200"));
                     }*/
@@ -91,7 +91,7 @@ class Login extends Component {
         //console.log(authentication);
 
         if (authentication.loggedIn === true) {
-            redirectVar = <Redirect to="/" />;
+        //    redirectVar = <Redirect to="/" />;
         }
 
 

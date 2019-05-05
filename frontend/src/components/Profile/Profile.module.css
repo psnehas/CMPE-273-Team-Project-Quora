@@ -2,11 +2,25 @@
     width: 150px;
 }
 
+.profile_photo_image_wrapper {
+    display: inline-block;
+    position: relative;
+}
+
+.edit_text {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+
 .center {
     text-align: center;
 }
 
-.contentTitle{
+.contentTitle {
     color: #333;
     font-weight: 600;
     position: relative;
@@ -14,4 +28,8 @@
     margin-bottom: 16px;
     padding-bottom: 8px;
     font-size: 15px;
+}
+
+.marginRight {
+    margin-right: 10px;
 }

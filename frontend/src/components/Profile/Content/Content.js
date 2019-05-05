@@ -8,14 +8,16 @@ import FollowersContent from './FollowersContent/FollowersContent';
 import FollowingContent from './FollowingContent/FollowingContent';
 
 class Content extends Component {
+
     render() {
         return (
+            // props => <ProfileContent {...props} />
             <React.Fragment>
-                <Route path='/profile/:uid/' exact component={ProfileContent} />
-                <Route path='/profile/:uid/answers' component={AnswersContent} />
-                <Route path='/profile/:uid/questions' component={QuestionsContent} />
-                <Route path='/profile/:uid/followers' component={FollowersContent} />
-                <Route path='/profile/:uid/following' component={FollowingContent} />
+                <Route path='/profile/:uid/' exact render={() => <ProfileContent {...this.props} />} />
+                <Route path='/profile/:uid/answers' render={() => <AnswersContent {...this.props} />} />
+                <Route path='/profile/:uid/questions' render={() => <QuestionsContent {...this.props} />} />
+                <Route path='/profile/:uid/followers' render={() => <FollowersContent {...this.props} />} />
+                <Route path='/profile/:uid/following' render={() => <FollowingContent {...this.props} />} />
             </React.Fragment>
 
         )
