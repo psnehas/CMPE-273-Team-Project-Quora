@@ -13,9 +13,9 @@ export function authentication(state = {}, action) {
     case userConstants.LOGIN_SUCCESS:
       return {
         loggedIn: true,
-        email: action.email,
+   //     email: action.email,
    //     role: action.role,
-//        user_id: action.user_id,
+        user_id: action.user_id,
         first_name: action.firstname,
         last_name: action.lastname
       }

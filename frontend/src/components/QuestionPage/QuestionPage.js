@@ -1,101 +1,25 @@
 import React, { Component } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import cookie from 'react-cookies';
-//import { Redirect } from 'react-router';
-import { userActions } from '../../_actions';
+import { Redirect } from 'react-router';
+//import { userActions } from '../../_actions';
 import { connect } from 'react-redux';
 import './QuestionPage.css';
-import { ListGroup, Container, Badge, ButtonToolbar, Button, Collapse, Card, Form, Col, Row } from 'react-bootstrap';
+import { ListGroup, Container, Badge, ButtonToolbar, Button, Collapse, Card, Form} from 'react-bootstrap';
 //import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 import Moment from 'react-moment';
 import PropTypes from 'prop-types';
 import AnswerEditor from '../AnswerEditor/AnswerEditor';
 import renderHTML from 'react-render-html';
-import { msgstore_apis, david_test_apis, user_tracking_apis } from '../../config';
-
-const fake_reponse = {
-    "spaceId": "spaceId",
-    "createdBy": "createdBy",
-    "topics": [{
-        "topics": {
-            "label": "label"
-        }
-    }, {
-        "topics": {
-            "label": "label"
-        }
-    }],
-    "answers": [{
-        "answers": {
-            "questionId": "questionId",
-            "comments": [{
-                "replies": {
-                    "answerId": "answerId",
-                    "replies": [{}, {}],
-                    "createdBy": "John Smith",
-                    "parentCommentId": "parentCommentId",
-                    "_id": "_id",
-                    "commentText": "Velit aute mollit ipsum ad dolor consectetur nulla officia culpa adipisicing exercitation fugiat tempor. Voluptate deserunt sit sunt nisi aliqua fugiat proident ea ut. Mollit voluptate reprehenderit occaecat nisi ad non minim tempor sunt voluptate consectetur exercitation id ut nulla. Ea et fugiat aliquip nostrud sunt incididunt consectetur culpa aliquip eiusmod dolor. Anim ad Lorem aliqua in cupidatat nisi enim eu nostrud do aliquip veniam minim.",
-                    "createdOn": "2000-01-23T04:56:07.000+00:00"
-                }
-            }, {
-                "replies": {
-                    "answerId": "answerId",
-                    "replies": [{}, {}],
-                    "createdBy": "Somebody",
-                    "parentCommentId": "parentCommentId",
-                    "_id": "_id",
-                    "commentText": "Here is a comment",
-                    "createdOn": "2000-01-23T04:56:07.000+00:00"
-                }
-            }],
-            "answerText": "<ul><li>dag</li><li>sdgd</li><li>sgdg</li></ul>",
-            "createdBy": "createdBy",
-            "_id": "_id",
-            "createdOn": "2000-01-23T04:56:07.000+00:00"
-        }
-    }, {
-        "answers": {
-            "questionId": "questionId",
-            "comments": [{
-                "replies": {
-                    "answerId": "answerId",
-                    "replies": [{}, {}],
-                    "createdBy": "createdBy",
-                    "parentCommentId": "parentCommentId",
-                    "_id": "_id",
-                    "commentText": "commentText",
-                    "createdOn": "2000-01-23T04:56:07.000+00:00"
-                }
-            }, {
-                "replies": {
-                    "answerId": "answerId",
-                    "replies": [{}, {}],
-                    "createdBy": "createdBy",
-                    "parentCommentId": "parentCommentId",
-                    "_id": "_id",
-                    "commentText": "commentText",
-                    "createdOn": "2000-01-23T04:56:07.000+00:00"
-                }
-            }],
-            "answerText": "<p>Test2 Test2 Test2</p>",
-            "createdBy": "createdBy",
-            "_id": "_id",
-            "createdOn": "2000-01-23T04:56:07.000+00:00"
-        }
-    }],
-    "_id": "_id",
-    "createdOn": "2000-01-23T04:56:07.000+00:00",
-    "questionText": "questionText"
-}
+import { david_test_apis, user_tracking_apis } from '../../config';
 
 export class CommentPanel extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            comment_text: null,
+            comment_text: '',
             show_comments: false,
             comments: [],
             token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTY5NDg3NDksImlkIjoiNWNjOTMyN2VmMzYzOTMwMDAxZDkzMzIxIn0.1PyIZ9tVZCH9ihiF8KHTv8McvGlAwhBHor8GGPd7QKc'
@@ -110,7 +34,7 @@ export class CommentPanel extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(this.props.data);
+//        console.log(this.props.data);
         const data = {
             commentText: this.state.comment_text,
         };
@@ -139,11 +63,11 @@ export class CommentPanel extends Component {
                 depth: 0
             }
         }).then(response => {
-                this.setState({
-                    comments: response.data,
-                    show_comments: true,
-                    comment_text: ""
-                })
+            this.setState({
+                comments: response.data,
+                show_comments: true,
+                comment_text: ""
+            })
         }).catch(error => {
             console.log(error);
         })
@@ -173,21 +97,33 @@ export class CommentPanel extends Component {
         const { comment_text } = this.state
 
         let comment_list = null;
-        if (this.state.show_comments === true)
-            comment_list = this.state.comments.map((comment, idx) => {
-                return (
-                    <ListGroup.Item key={idx} style={{ border: 'none' }}>
-                        <ul className="list-unstyled" style={{ 'padding': 0, margin: 0 }}>
-                            <li style={{ 'fontWeight': 'bold', 'fontSize': 13 }}>{comment.displayName}</li>
-                            <li className='comment_body'> {comment.commentText}  </li>
-                        </ul>
-                    </ListGroup.Item>
-                )
-            });
+        if (this.state.show_comments === true) {
 
+            if (this.state.comments && this.state.comments.length !== 0) {
+                comment_list = this.state.comments.map((comment, idx) => {
+                    return (
+                        <ListGroup.Item key={idx} style={{ border: 'none' }}>
+                            <ul className="list-unstyled" style={{ 'padding': 0, margin: 0 }}>
+                                <li style={{ 'fontWeight': 'bold', 'fontSize': 13 }}>{comment.displayName}</li>
+                                <li className='comment_body'> {comment.commentText}  </li>
+                            </ul>
+                        </ListGroup.Item>
+                    )
+                });
+            }
+            else {
+
+                    comment_list = (<ListGroup.Item style={{ border: 'none' }}>
+                        <ul className="list-unstyled" style={{ 'padding': 0, margin: 0 }}>
+                        <li style={{ 'fontWeight': 'bold', 'fontSize': 13 }}>Be the first to comment this answer!</li>                   
+                        </ul>                       
+                    </ListGroup.Item>)
+
+            }
+        }
         let close_comments = null;
-        if (this.state.show_comments === true){
-            close_comments =  <Button style={{ 'margin-left': 12 }} size="sm" variant="link" onClick={()=>this.setState({show_comments: false})}> Close </Button>
+        if (this.state.show_comments === true) {
+            close_comments = <Button style={{ 'marginLeft': 12 }} size="sm" variant="link" onClick={() => this.setState({ show_comments: false })}> Close </Button>
         }
 
         return (
@@ -197,14 +133,14 @@ export class CommentPanel extends Component {
                         <Button size="sm" className="btn-circle">
                             <span className="fa fa-user fa-lg" style={{ color: 'FFFFFF' }}></span>
                         </Button>
-                        <Form.Control style={{ 'margin-left': 12, 'width': 600 }}
+                        <Form.Control style={{ 'marginLeft': 12, 'width': 600 }}
                             as="textarea" rows="1" size="sm" type="text" placeholder="Add a comment..."
                             onChange={this.onChange} value={this.state.comment_text} />
-                        <Button style={{ 'margin-left': 12 }}
+                        <Button style={{ 'marginLeft': 12 }}
                             size="sm" disabled={!comment_text}
                             onClick={this.handleSubmit}>
                             Add Comment</Button>
-                        <Button style={{ 'margin-left': 12 }} size="sm" variant="link" onClick={this.showComments}> All </Button>
+                        <Button style={{ 'marginLeft': 12 }} size="sm" variant="link" onClick={this.showComments}> All </Button>
                         {close_comments}
                     </Form.Group>
                 </Form>
@@ -238,7 +174,7 @@ export class AnswerList extends Component {
 
     render() {
         let details = null;
-        if (this.props.data.length != 0) {
+        if (this.props.data.length !== 0) {
             details = this.props.data.map((post, idx) => {
                 return (
                     <ListGroup.Item key={idx}>
@@ -286,7 +222,7 @@ export class BadgeGroup extends Component {
             details = this.props.data.map((post, idx) => {
                 return (
                     <Badge pill variant="light" className='topic_pill' key={idx}>
-                        {post.label}
+                       <Link style={{ color: '#666' }} to={'/topics/'+post.label}>{post.label}</Link> 
                     </Badge>
 
                 )
@@ -331,7 +267,7 @@ class QuestionPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user_name: "Yu Zhao",
+            user_name: this.props.authentication.first_name + ' ' + this.props.authentication.last_name,
             answer_input: false,
             question: {},
             questionId: this.props.match.params.questionId,
@@ -353,7 +289,7 @@ class QuestionPage extends Component {
                 depth: 1
             }
         }).then(response => {
-            console.log(response.data)
+            //console.log(response.data)
             this.setState({
                 question: response.data[0]
             })
@@ -361,21 +297,21 @@ class QuestionPage extends Component {
     }
 
     handleFollow() {
-        console.log("follow this question");
+//        console.log("follow this question");
 
         const data = {
             action: 'question',
             ids: [this.state.questionId],
             unfollow: false
         }
-        console.log(data);
+//        console.log(data);
 
         axios.post(user_tracking_apis + '/userFollow', data, {
             headers: {
                 'Authorization': `JWT ${this.state.token}`
             }
         }).then(response => {
-            console.log(response);
+//            console.log(response);
             this.setState({
                 followed: true
             })
@@ -411,9 +347,9 @@ class QuestionPage extends Component {
 
 
     handleInput = (value) => {
-        console.log(value);
+//        console.log(value);
         this.setState({ answer_string: value }, () => {
-            console.log(this.state.answer_string)
+//            console.log(this.state.answer_string)
         })
     };
 
@@ -427,14 +363,19 @@ class QuestionPage extends Component {
         if ('answers' in this.state.question) {
             AnswerList_data = this.state.question.answers;
         }
+        let redirectVar = null;
+        if (this.props.authentication.loggedIn !== true) {
+            redirectVar = <Redirect to="/login" />
+        }
         return (
             <div>
                 <Container>
+                    {redirectVar}
                     <ListGroup variant="flush">
                         <ListGroup.Item>
                             <BadgeGroup data={BadgeGroup_data} />
                             <h4><b>{this.state.question.questionText}</b></h4>
-                            <ButtonToolbar style={{ 'margin-left': -10 }}>
+                            <ButtonToolbar style={{ 'marginLeft': -10 }}>
                                 <Button className="q_page_button" variant="link" onClick={() => this.setState({ answer_input: !this.state.answer_input })}>
                                     <span className="fa fa-edit"></span> Answer</Button>
                                 <Button className="q_page_button" variant="link" onClick={this.handleFollow} disabled={this.state.followed}>

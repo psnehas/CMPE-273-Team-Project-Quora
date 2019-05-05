@@ -12,6 +12,7 @@ class Messages extends Component {
         newMsg: {
             from: cookie.load('email'),
             recipient: '',
+            subject: '',
             content: ''
         },
         messages: [],
@@ -84,6 +85,10 @@ class Messages extends Component {
                         <Form.Label>Recipient:</Form.Label>
                         <Form.Control type="text" placeholder="Recipient" onChange={this.onChangeHandler} value={this.state.newMsg.recipient} />
                     </Form.Group>
+                    <Form.Group controlId="Subject">
+                        <Form.Label>Subject:</Form.Label>
+                        <Form.Control type="text" placeholder="Subject" onChange={this.onChangeHandler} value={this.state.newMsg.subject} />
+                    </Form.Group>
                     <Form.Group controlId="content">
                         <Form.Label>Content:</Form.Label>
                         <Form.Control type="text" placeholder="Content" onChange={this.onChangeHandler} value={this.state.newMsg.content} />
@@ -121,7 +126,8 @@ class Messages extends Component {
                                 <Card.Header>From: {msg.from}</Card.Header>
                                 <Card.Body>
                                     <Card.Text>
-                                        {msg.content}
+                                        {`${msg.subject}
+                                         ${msg.content}`}
                                     </Card.Text>
                                 </Card.Body>
                             </Card>
