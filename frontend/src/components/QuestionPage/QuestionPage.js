@@ -12,7 +12,7 @@ import Moment from 'react-moment';
 import PropTypes from 'prop-types';
 import AnswerEditor from '../AnswerEditor/AnswerEditor';
 import renderHTML from 'react-render-html';
-import { david_test_apis, user_tracking_apis } from '../../config';
+import { david_test_apis, user_tracking_apis, backend_host } from '../../config';
 
 export class CommentPanel extends Component {
 
@@ -280,9 +280,9 @@ class QuestionPage extends Component {
     }
 
     componentDidMount() {
-        axios.get(david_test_apis + '/questions', {
+        axios.get(backend_host + '/questions', {
             headers: {
-                'Authorization': `JWT ${this.state.token}`
+                'Authorization': `Bearer ${this.state.token}`
             },
             params: {
                 questionId: this.state.questionId,
