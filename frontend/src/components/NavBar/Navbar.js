@@ -5,7 +5,7 @@ import cookie from 'react-cookies';
 //import './Navbar.css';
 import { userActions } from '../../_actions';
 import { connect } from 'react-redux';
-import { Navbar, Nav, NavDropdown, Button, Form, FormControl } from 'react-bootstrap';
+import { Navbar, Nav, NavDropdown, Button, Form, FormControl, OverlayTrigger, Popover, InputGroup } from 'react-bootstrap';
 import AddModal from './Add_Q_Modal';
 
 //create the Navbar Component
@@ -13,7 +13,11 @@ class navbar extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            show_add: false
+            show_add: false,
+            search: {
+                input: "",
+                catagory: ""
+            }
 
         };
         this.handleLogout = this.handleLogout.bind(this);
@@ -66,6 +70,15 @@ class navbar extends Component {
 
         let modalClose = () => this.setState({ show_add: false });
 
+        let user_popover = (
+            <Popover id="user-popover" title="Popover">
+                <Nav>
+                    <NavLink to={'/profile/chen'}>Profile</NavLink>
+                    <NavLink to={'/message/chen'}>Message</NavLink>
+                </Nav>
+            </Popover>
+        )
+
         return (
 
             <Navbar bg="light" expand="md">
@@ -78,15 +91,35 @@ class navbar extends Component {
                         <Nav.Link as={NavLink} to="/"><span className="fa fa-home"></span> Home</Nav.Link>
                     </Nav>
                     <Nav className="ml-auto">
-                        <Form inline>
+                        {/* <Form inline>
                             <FormControl type="text" placeholder="Search" className="mr-sm-2" />
                             <Button variant="outline-success">Search</Button>
-                        </Form>
+                        </Form> */}
+                        <InputGroup>
+                            <Form.Control
+                                placeholder="Search"
+                                aria-label="Search"
+                                aria-describedby="basic-addon2"
+                                value={this.state.search.input}
+                                id="input"
+                                onChange={this.onChangeHandler}
+                            />
+                            <InputGroup.Append>
+                                <Form.Control as="select" value={this.state.search.catagory} id="filter" onChange={this.onChangeHandler}>
+                                    <option value="user">User</option>
+                                    <option value="quesiton">Question</option>
+                                    <option value="topic">Topic</option>
+                                </Form.Control>
+                                <Button variant="outline-secondary" onClick={this.onSearchHandler}>Search</Button>
+                            </InputGroup.Append>
+                        </InputGroup>
                     </Nav>
                     <Nav.Item>
-                        <div style={{ margin: '0 1em 0 1em', borderRadius: 50, backgroundColor: "wheat", textAlign: "center", width: "2em", height: "2em" }}>
-                            <span style={{ verticalAlign: "sub" }}>YC</span>
-                        </div>
+                        <OverlayTrigger trigger="click" placement="bottom" overlay={user_popover}>
+                            <div style={{ margin: '0 1em 0 1em', borderRadius: 50, backgroundColor: "wheat", textAlign: "center", width: "2em", height: "2em", cursor: "pointer" }}>
+                                <span style={{ verticalAlign: "sub" }}>YC</span>
+                            </div>
+                        </OverlayTrigger>
                     </Nav.Item>
                     {navLogin}
 
