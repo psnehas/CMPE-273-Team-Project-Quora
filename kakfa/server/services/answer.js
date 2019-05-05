@@ -85,18 +85,12 @@ const makeAnswer = (req, next) => {
     }
     console.log("newAnswer", newAnswer)
     db.createAnswer(newAnswer).then(result =>{
+        db.updateUserWithAnswer(req.answer.owner, result)
         next(null, {
             status: 200,
-            data: result
+            data: "New Answer created"
         })
     })
-    db.updateUserWithAnswer(req.answer.owner, newAnswer).then(result => {
-        next(null, {
-            status: 200,
-            data: result
-        })
-    })
-    
 }
 
 const updateAnswer = (req, next) => {
