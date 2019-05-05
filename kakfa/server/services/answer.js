@@ -43,39 +43,27 @@ const allComments = (req, next) => {
 
 const makeComment = (req, next) => {
     console.log("Answer ID: ", req.comment.answer_id)
-    var date = new Date().getDate(); //Current Date
-    var month = new Date().getMonth() + 1; //Current Month
-    var year = new Date().getFullYear(); //Current Year
-    var hours = new Date().getHours(); //Current Hours
-    var min = new Date().getMinutes(); //Current Minutes
-    var sec = new Date().getSeconds(); //Current Seconds
     newComment = {
         answer_id: req.comment.answer_id,
         owner : req.comment.owner,
-        time: month + '/' + date + '/' + year + ' ' + hours + ':' + min + ':' + sec,
+        time: new Date(),
         comment : req.comment.comment,
         anonymous: req.comment.anonymous
     }
-    db.createComment(newComment).then(result =>{
+    db.createComment(newComment).then(() =>{
         next(null, {
             status: 200,
-            data: result
+            data: "New comment created under answer " + req.comment.answer_id
         })
     })
 }
 
 const makeAnswer = (req, next) => {
     console.log("question message: ", req)
-    var date = new Date().getDate(); //Current Date
-    var month = new Date().getMonth() + 1; //Current Month
-    var year = new Date().getFullYear(); //Current Year
-    var hours = new Date().getHours(); //Current Hours
-    var min = new Date().getMinutes(); //Current Minutes
-    var sec = new Date().getSeconds(); //Current Seconds
     newAnswer ={
         question_id: req.answer.question_id,
         owner: req.answer.owner,
-        time: month + '/' + date + '/' + year + ' ' + hours + ':' + min + ':' + sec,
+        time: new Date(),
         content: req.answer.content,
         upvote: 0,
         downvote: 0,

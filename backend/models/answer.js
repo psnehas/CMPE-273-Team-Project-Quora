@@ -6,7 +6,7 @@ const CommentSchema = new mongoose.Schema({
         type: String // email
     },
     time: {
-        type: String
+        type: Date
     },
     comment: {
         type: String
@@ -25,7 +25,7 @@ const AnswerSchema = new mongoose.Schema({
         type: String // email
     },
     time: {
-        type: String
+        type: Date
     },
     content: {
         type: String
