@@ -61,11 +61,9 @@ const signup = (user, next) => {
 const getUser = (userid, next) => {
     db.findUserByID(userid)
     .then(user => {
-        console.log(user)
         let res = {};
         if (user) {
             console.log('the user is: ', user)
-            delete user.password;
             res.status = 200;
             res.data = user;
         } else {

@@ -50,7 +50,28 @@ exports.findUserByEmail = (email) => {
 }
 
 exports.findUserByID = (id) => {
-    return User.findById(id).select('-password -__v').exec();
+    return User.findById(id)
+    .populate({
+        path: 'created_answers',
+        select: 'answer_id question_id time',
+    })
+    .populate({
+        path: 'bookmarked_answers',
+        select: 'answer_id question_id time',
+    })
+    .populate({
+        path: 'created_questions',
+        select: 'question_id question_text dateCreated',
+    })
+    .populate({
+        path: 'followed_people',
+        select: 'first_name last_name',
+    })
+    .populate({
+        path: 'following_people',
+        select: 'first_name last_name'
+    })
+    .select('first_name last_name profileCredential about').exec();
 }
 
 exports.findAvatarPathByID = (id) => {
