@@ -7,7 +7,8 @@ import QuestionPage from './QuestionPage/QuestionPage';
 import SidebarLayout from './SidebarLayout/SidebarLayout';
 import Navbar from './NavBar/Navbar'
 import TopicPage from './TopicPage/TopicPage';
-import ProfilePage from './Profile/Profile'
+import ProfilePage from './Profile/Profile';
+import MessagesPage from './Messages/Messages';
 
 
 //Create a Main Component
@@ -27,6 +28,7 @@ class Main extends Component {
 
                     <Route path="/questions/:questionId" component={QuestionPage} />
                     <Route path="/profile/:uid" component={ProfilePage} />
+                    <Route path="/messages/:uid" component={MessagesPage} />
                 </Switch>
             </div>
         )

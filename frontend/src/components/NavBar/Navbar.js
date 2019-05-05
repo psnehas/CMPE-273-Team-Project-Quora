@@ -74,7 +74,7 @@ class navbar extends Component {
             <Popover id="user-popover" title="Popover">
                 <Nav>
                     <NavLink to={'/profile/chen'}>Profile</NavLink>
-                    <NavLink to={'/message/chen'}>Message</NavLink>
+                    <NavLink to={'/messages/chen'}>Message</NavLink>
                 </Nav>
             </Popover>
         )
