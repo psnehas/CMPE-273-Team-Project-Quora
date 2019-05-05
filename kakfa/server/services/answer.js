@@ -1,21 +1,21 @@
 var db = require('../../../backend/lib/mongoDB')
 
 const upvote = (req, next) => {
-    db.upvoteAnswer(req.upvote.answer_id).then(result =>{
+    db.upvoteAnswer(req.upvote.answer_id).then(() =>{
         console.log("Upvote answer ", req.upvote.answer_id)
         next(null, {
             status: 200,
-            data: result
+            data: "Upvote answer " + req.upvote.answer_id + " Succeed!"
         })
     })
 }
 
 const downvote = (req, next) => {
-    db.downvoteAnswer(req.downvote.answer_id).then(result =>{
+    db.downvoteAnswer(req.downvote.answer_id).then(() =>{
         console.log("Downvote answer ", req.downvote.answer_id)
         next(null, {
             status: 200,
-            data: result
+            data: "Downvote answer " + req.downvote.answer_id + " Succeed!"
         })
     })
 }
@@ -114,10 +114,21 @@ const updateAnswer = (req, next) => {
 }
 
 const createBookmark = (req, next) => {
-    db.setBookmark(req.userAnswer.user_id, req.userAnswer.answer_id).then(result =>{
+    db.findOneAnswer(req.userAnswer.answer_id).then(result =>{
+        console.log("Answer content: ", result)
+        var exist = false
+        for(i = 0; i < result.bookmark.length; i++){
+            if(result.bookmark[i].user_id == req.userAnswer.user_id){
+                exist = true;
+            }
+            if(!exist && i == result.bookmark.length-1){
+                db.setBookmark(req.userAnswer.user_id, req.userAnswer.answer_id)
+                db.updateUserBookmark(req.userAnswer.user_id, result)
+            }
+        }
         next(null, {
             status: 200,
-            data: result
+            data: "Answer/User Schema: " + req.userAnswer.user_id + " add bookmark on answer " + req.userAnswer.answer_id
         })
     })
     console.log("Bookmark added")
