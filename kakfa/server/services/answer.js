@@ -86,9 +86,10 @@ const updateAnswer = (req, next) => {
     console.log("question ID: ", req.update)
     editInfo ={
         answer_id: req.update.answer_id,
+        time: new Date(),
         content: req.update.content,
     }
-    db.updateOneAnswer(editInfo).then(result =>{
+    db.updateOneAnswer(editInfo).then(() =>{
         next(null, {
             status: 200,
             data: "Answer " + editInfo.answer_id + " updated..."

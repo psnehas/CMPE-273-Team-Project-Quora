@@ -25,7 +25,7 @@ router.route('/answer_comments/:answer_id')
 router.route('/question/:question_id/answer')
 .post(authController.requireSignin, answerControllerKafka.makeAnswer)
 
-router.route('/question/:question_id/answer/:answer_id')
+router.route('/answer/:answer_id')
 .put(authController.requireSignin, answerControllerKafka.updateAnswer)
 .get(authController.requireSignin, answerControllerKafka.getOneAnswer)
 
