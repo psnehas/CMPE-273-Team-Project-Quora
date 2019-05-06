@@ -49,8 +49,29 @@ exports.findUserByEmail = (email) => {
     return User.findOne({email: email}).exec();
 }
 
-exports.findUserByID = (id) => {
-    return User.findById(id).select('-password -__v').exec();
+exports.findUserProfileByID = (id) => {
+    return User.findById(id)
+    .populate({
+        path: 'created_answers',
+        select: 'question_id time',
+    })
+    .populate({
+        path: 'bookmarked_answers',
+        select: 'question_id time',
+    })
+    .populate({
+        path: 'created_questions',
+        select: 'content time',
+    })
+    .populate({
+        path: 'followed_people',
+        select: 'first_name last_name',
+    })
+    .populate({
+        path: 'following_people',
+        select: 'first_name last_name'
+    })
+    .select('first_name last_name email city state zipCode profileCredential about educations careers').exec();
 }
 
 exports.findAvatarPathByID = (id) => {
@@ -128,13 +149,26 @@ exports.updateOneAnswer = (editInfo) => {
 }
 
 exports.updateUserWithAnswer = (user, newAnswer) => {
-    return User.findOneAndUpdate({email: user}, {$push: {created_answers: {answer_id: newAnswer._id, created_time: newAnswer.time}}}).exec();
+    return User.findOneAndUpdate({_id: user}, {$push: {created_answers: newAnswer._id}}).exec();
+}
+
+exports.updateQuestionWithAnswer = (questionid, newAnswer) => {
+    return Question.findOneAndUpdate({_id: questionid}, {$push: {answers: newAnswer._id}}).exec();
+}
+
+exports.updateUserBookmark = (user, answerid) => {
+    return User.findOneAndUpdate({email: user}, {$push: {bookmarked_answers: answerid._id}}).exec();
 }
 
 exports.insertQuestion = (question) => {
     let newQuestion = new Question(question)
     return newQuestion.save();
 }
+
+exports.bindUserQuestion = (user_id, question_id) => {
+    return User.findByIdAndUpdate(user_id, {$push: {created_questions: question_id}}).exec();
+}
+
 exports.fetchQuestion =(question_id)=>{
     return Question.findOne({question_id:question_id}).exec();
 }

@@ -1,21 +1,21 @@
 var db = require('../../../backend/lib/mongoDB')
 
 const upvote = (req, next) => {
-    db.upvoteAnswer(req.upvote.answer_id).then(result =>{
+    db.upvoteAnswer(req.upvote.answer_id).then(() =>{
         console.log("Upvote answer ", req.upvote.answer_id)
         next(null, {
             status: 200,
-            data: result
+            data: "Upvote answer " + req.upvote.answer_id + " Succeed!"
         })
     })
 }
 
 const downvote = (req, next) => {
-    db.downvoteAnswer(req.downvote.answer_id).then(result =>{
+    db.downvoteAnswer(req.downvote.answer_id).then(() =>{
         console.log("Downvote answer ", req.downvote.answer_id)
         next(null, {
             status: 200,
-            data: result
+            data: "Downvote answer " + req.downvote.answer_id + " Succeed!"
         })
     })
 }
@@ -43,39 +43,27 @@ const allComments = (req, next) => {
 
 const makeComment = (req, next) => {
     console.log("Answer ID: ", req.comment.answer_id)
-    var date = new Date().getDate(); //Current Date
-    var month = new Date().getMonth() + 1; //Current Month
-    var year = new Date().getFullYear(); //Current Year
-    var hours = new Date().getHours(); //Current Hours
-    var min = new Date().getMinutes(); //Current Minutes
-    var sec = new Date().getSeconds(); //Current Seconds
     newComment = {
         answer_id: req.comment.answer_id,
         owner : req.comment.owner,
-        time: month + '/' + date + '/' + year + ' ' + hours + ':' + min + ':' + sec,
+        time: new Date(),
         comment : req.comment.comment,
         anonymous: req.comment.anonymous
     }
-    db.createComment(newComment).then(result =>{
+    db.createComment(newComment).then(() =>{
         next(null, {
             status: 200,
-            data: result
+            data: "New comment created under answer " + req.comment.answer_id
         })
     })
 }
 
 const makeAnswer = (req, next) => {
     console.log("question message: ", req)
-    var date = new Date().getDate(); //Current Date
-    var month = new Date().getMonth() + 1; //Current Month
-    var year = new Date().getFullYear(); //Current Year
-    var hours = new Date().getHours(); //Current Hours
-    var min = new Date().getMinutes(); //Current Minutes
-    var sec = new Date().getSeconds(); //Current Seconds
     newAnswer ={
         question_id: req.answer.question_id,
         owner: req.answer.owner,
-        time: month + '/' + date + '/' + year + ' ' + hours + ':' + min + ':' + sec,
+        time: new Date(),
         content: req.answer.content,
         upvote: 0,
         downvote: 0,
@@ -85,18 +73,13 @@ const makeAnswer = (req, next) => {
     }
     console.log("newAnswer", newAnswer)
     db.createAnswer(newAnswer).then(result =>{
+        db.updateUserWithAnswer(req.answer.owner, result)
+        db.updateQuestionWithAnswer(req.answer.question_id, result)
         next(null, {
             status: 200,
-            data: result
+            data: "New Answer created"
         })
     })
-    db.updateUserWithAnswer(req.answer.owner, newAnswer).then(result => {
-        next(null, {
-            status: 200,
-            data: result
-        })
-    })
-    
 }
 
 const updateAnswer = (req, next) => {
@@ -108,16 +91,27 @@ const updateAnswer = (req, next) => {
     db.updateOneAnswer(editInfo).then(result =>{
         next(null, {
             status: 200,
-            data: result
+            data: "Answer " + editInfo.answer_id + " updated..."
         })
     })
 }
 
 const createBookmark = (req, next) => {
-    db.setBookmark(req.userAnswer.user_id, req.userAnswer.answer_id).then(result =>{
+    db.findOneAnswer(req.userAnswer.answer_id).then(result =>{
+        console.log("Answer content: ", result)
+        var exist = false
+        for(i = 0; i < result.bookmark.length; i++){
+            if(result.bookmark[i].user_id == req.userAnswer.user_id){
+                exist = true;
+            }
+        }
+        if(!exist && i == result.bookmark.length){
+            db.setBookmark(req.userAnswer.user_id, req.userAnswer.answer_id)
+            db.updateUserBookmark(req.userAnswer.user_id, result)
+        }
         next(null, {
             status: 200,
-            data: result
+            data: "Answer/User Schema: " + req.userAnswer.user_id + " add bookmark on answer " + req.userAnswer.answer_id
         })
     })
     console.log("Bookmark added")

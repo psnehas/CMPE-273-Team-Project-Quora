@@ -6,7 +6,7 @@ const CommentSchema = new mongoose.Schema({
         type: String // email
     },
     time: {
-        type: String
+        type: Date
     },
     comment: {
         type: String
@@ -18,14 +18,13 @@ const CommentSchema = new mongoose.Schema({
 
 const AnswerSchema = new mongoose.Schema({
     question_id: {
-        type: Number,
-        trim: true
+        type: mongoose.Schema.Types.ObjectId, ref: 'Question'
     },
     owner: {
-        type: String // email
+        type: mongoose.Schema.Types.ObjectId, ref: 'User'
     },
     time: {
-        type: String
+        type: Date
     },
     content: {
         type: String

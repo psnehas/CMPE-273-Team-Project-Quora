@@ -1,4 +1,5 @@
 var db=require("../lib/mongoDB");
+
 const addQuestion =(req,res)=>{
     var {question_text} = req.body;//only for console purpose
         console.log("Insert question", question_text);
@@ -19,7 +20,7 @@ const addQuestion =(req,res)=>{
 }
 
 const fetchQuestion=(req,res)=>{
-    var {question_id} = req.body;
+    var {question_id} = req.params;
     db.fetchQuestion(question_id).then((response)=>{
         res.status(200).json({
             success:"Question fetched",

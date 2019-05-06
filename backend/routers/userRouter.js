@@ -20,7 +20,7 @@ router.route('/topics')
 router.route('/api/users/photo/:userID')
 .get(userControllerLocal.getPhoto)
 
-router.route('/api/users/:userID')
+router.route('/profile/:userID')
 .get(authController.requireSignin, userControllerKafka.getUser)
 .put(authController.requireSignin, userControllerLocal.updateUser)
 
