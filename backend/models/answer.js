@@ -46,8 +46,4 @@ const AnswerSchema = new mongoose.Schema({
     comments: [CommentSchema]
 })
 
-
-CommentSchema.plugin(autoIncrement, {inc_field: 'comment_id'});
-AnswerSchema.plugin(autoIncrement, {inc_field: 'answer_id'});
-
 module.exports =  mongoose.model('Answer', AnswerSchema);
