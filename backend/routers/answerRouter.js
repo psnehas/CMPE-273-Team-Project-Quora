@@ -13,9 +13,6 @@ router.route('/answer/:answer_id/upvote')
 router.route('/answer/:answer_id/downvote')
 .put(authController.requireSignin, answerControllerKafka.downvote)
 
-router.route('/answer_votes/:answer_id')
-.get(authController.requireSignin, answerControllerKafka.allVotes)
-
 router.route('/answer/:answer_id/comment')
 .post(authController.requireSignin, answerControllerKafka.makeComment)
 

@@ -128,5 +128,5 @@ const getOwnerOfAnswer = (req, res) => {
     })
 }
 
-module.exports = {upvote, downvote, allVotes, allComments, makeComment, createBookmark,
+module.exports = {upvote, downvote, allComments, makeComment, createBookmark,
     getOneAnswer, makeAnswer, updateAnswer, getOwnerOfAnswer}
