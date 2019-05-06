@@ -22,7 +22,8 @@ const fetchQuestion = (req,res) => {
     console.log('Fetch question request, question', req.params)
     let message = {
         cmd: 'FETCH_QUESTION',
-        questionid: req.params
+        questionid: req.params,
+        userid: req.user.user_id
     }
     client.send(message, function(err, result) {
         if(err){

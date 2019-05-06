@@ -37,11 +37,7 @@ const AnswerSchema = new mongoose.Schema({
     anonymous: {
         type: Boolean
     },
-    bookmark: [
-        {
-            user_id: {type: String}
-        }
-    ],
+    bookmark: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     comments: [CommentSchema]
 })
 

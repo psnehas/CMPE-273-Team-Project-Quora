@@ -21,7 +21,7 @@ const addQuestion =(req,res)=>{
 
 const fetchQuestion=(req,res)=>{
     var {question_id} = req.params;
-    db.fetchQuestion(question_id).then((response)=>{
+    db.fetchQuestion(question_id).then( response =>{
         res.status(200).json({
             success:"Question fetched",
             data:response
