@@ -14,14 +14,20 @@ router.route('/userTopics')
 .get(authController.requireSignin, userControllerKafka.getUserTopics)
 .post(authController.requireSignin, userControllerKafka.followTopics);
 
+router.route('/topics/:topic_id/questions')
+.get(authController.requireSignin, userControllerKafka.getTopicQuestions);
+
 router.route('/topics')
+.get(authController.requireSignin, userControllerKafka.getTopics)
 .post(authController.requireSignin, userControllerKafka.createTopic);
 
-router.route('/api/users/photo/:userID')
-.get(userControllerLocal.getPhoto)
+router.route('/user_avatar/:userID')
+.get(userControllerLocal.getUserAvatar)
+.post(authController.requireSignin, userControllerLocal.updateUserAvatar)
 
 router.route('/profile/:userID')
-.get(authController.requireSignin, userControllerKafka.getUser)
-.put(authController.requireSignin, userControllerLocal.updateUser)
+.get(authController.requireSignin, userControllerKafka.getUser);
 
+router.route('/profile/update_info')
+.put(authController.requireSignin, userControllerKafka.updateUserInfo);
 module.exports = {router}

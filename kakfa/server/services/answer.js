@@ -3,9 +3,13 @@ var db = require('../../../backend/lib/mongoDB')
 const upvote = (req, next) => {
     db.upvoteAnswer(req.upvote.answer_id).then(() =>{
         console.log("Upvote answer ", req.upvote.answer_id)
-        next(null, {
-            status: 200,
-            data: "Upvote answer " + req.upvote.answer_id + " Succeed!"
+        db.getVotes(req.upvote.answer_id).then(result =>{
+            console.log("Upvotes: ", result.upvote)
+            console.log("Downvotes: ", result.downvote)
+            next(null, {
+                status: 200,
+                data: {upvotes: result.upvote, downvote: result.downvote}
+            })
         })
     })
 }
@@ -13,30 +17,23 @@ const upvote = (req, next) => {
 const downvote = (req, next) => {
     db.downvoteAnswer(req.downvote.answer_id).then(() =>{
         console.log("Downvote answer ", req.downvote.answer_id)
-        next(null, {
-            status: 200,
-            data: "Downvote answer " + req.downvote.answer_id + " Succeed!"
-        })
-    })
-}
-
-const allVotes = (req, next) => {
-    db.getVotes(req.allVotes.answer_id).then(result =>{
-        console.log("Upvotes: ", result.upvote)
-        console.log("Downvotes: ", result.downvote)
-        next(null, {
-            status: 200,
-            data: result
+        db.getVotes(req.downvote.answer_id).then(result =>{
+            console.log("Upvotes: ", result.upvote)
+            console.log("Downvotes: ", result.downvote)
+            next(null, {
+                status: 200,
+                data: {upvotes: result.upvote, downvote: result.downvote}
+            })
         })
     })
 }
 
 const allComments = (req, next) => {
     db.getComments(req.allComments.answer_id).then(result =>{
-        console.log("allComments: ", result)
+        console.log("allComments: ", result.comments)
         next(null, {
             status: 200,
-            data: result
+            data: result.comments
         })
     })
 }
@@ -86,9 +83,10 @@ const updateAnswer = (req, next) => {
     console.log("question ID: ", req.update)
     editInfo ={
         answer_id: req.update.answer_id,
+        time: new Date(),
         content: req.update.content,
     }
-    db.updateOneAnswer(editInfo).then(result =>{
+    db.updateOneAnswer(editInfo).then(() =>{
         next(null, {
             status: 200,
             data: "Answer " + editInfo.answer_id + " updated..."
@@ -127,6 +125,30 @@ const getOneAnswer = (req, next) => {
     })
 }
 
+const getOwnerOfAnswer = (req, next) => {
+    db.getOwnerOfAnswer(req.answer.answer_id).then(result =>{
+        console.log("Owner content: ", result)
+        if(result.anonymous == false){
+            next(null, {
+                status: 200,
+                data: {
+                    user_id: result.owner._id,
+                    name: result.owner.user_info.first_name +" "+ result.owner.user_info.last_name,
+                    crediential: result.owner.user_info.profileCredential
+                }
+            })
+        }
+        next(null, {
+            status: 200,
+            data: {
+                user_id: result.owner._id,
+                name: "anonymous",
+                crediential: result.owner.user_info.profileCredential
+            }
+        })
+    })
+}
+
 const dispatch = (message, next) => {
     switch (message.cmd) {
         case 'UPVOTE':
@@ -134,9 +156,6 @@ const dispatch = (message, next) => {
             break;
         case 'DOWNVOTE':
             downvote(message, next);
-            break;
-        case 'ALL_VOTES':
-            allVotes(message, next);
             break;
         case 'ALL_COMMENTS':
             allComments(message, next);
@@ -155,6 +174,9 @@ const dispatch = (message, next) => {
             break;
         case 'GET_ONE_ANSWER':
             getOneAnswer(message, next);
+            break;
+        case 'GET_OWNER_OF_ANSWER':
+            getOwnerOfAnswer(message, next);
             break;
         default:
             console.log('unknown request');

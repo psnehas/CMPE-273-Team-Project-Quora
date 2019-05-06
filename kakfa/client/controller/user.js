@@ -39,6 +39,19 @@ const getUser = (req, res) => {
     })
 }
 
+const updateUserInfo = (req, res) => {
+    console.log('Update user profile of: ', req.user.user_id)
+    let message = {
+        cmd: 'UPDATE_USER_INFO',
+        userid: req.user.user_id,
+        user_info: req.body
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for update user info is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
 const getUserFeed = (req, res) => {
     console.log('Get user feed from user id: ', req.user.user_id)
     let message = {
@@ -54,7 +67,7 @@ const getUserFeed = (req, res) => {
 const getUserTopics = (req, res) => {
     console.log('Get user topics  user id: ', req.user.user_id)
     let message = {
-        cmd: 'GET_TOPICS',
+        cmd: 'GET_USER_TOPICS',
         userid: req.user.user_id
     }
     client.send(message, function(err, result) {
@@ -63,8 +76,21 @@ const getUserTopics = (req, res) => {
     })
 }
 
+const getTopics = (req, res) => {
+    console.log('Get all topics with param: ', req.query.exclude);
+    let message = {
+        cmd: 'GET_TOPICS',
+        userid: req.user.user_id,
+        exclude: req.query.exclude
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for get all topics is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
 const followTopics = (req, res) => {
-    console.log('User follow topics  with action: ', req.body.follow)
+    console.log('User follow topics with action: ', req.body.action)
     let message = {
         cmd: 'FOLLOW_TOPICS',
         userid: req.user.user_id,
@@ -89,4 +115,18 @@ const createTopic = (req, res) => {
     })
 }
 
-module.exports = {signin, signup, getUserFeed, getUserTopics, followTopics, createTopic, getUser}
+const getTopicQuestions = (req, res) => {
+    console.log('Get topic questions with topic id: ', req.params.topic_id);
+    let message = {
+        cmd: 'GET_TOPIC_QUESTIONS',
+        userid: req.user.user_id,
+        topic_id: req.params.topic_id
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for get topic question is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
+module.exports = {signin, signup, getUserFeed, getUserTopics, getTopics, followTopics, createTopic, getTopicQuestions,
+    getUser, updateUserInfo}

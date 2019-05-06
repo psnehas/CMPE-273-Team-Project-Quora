@@ -71,11 +71,27 @@ exports.findUserProfileByID = (id) => {
         path: 'following_people',
         select: 'first_name last_name'
     })
-    .select('first_name last_name email city state zipCode profileCredential about educations careers').exec();
+    .select('user_info email').exec();
+}
+
+exports.findUserFollowedQuestions = (id) => {
+    return User.findById(id)
+    .populate({
+        path: 'followed_questions',
+    })
+    .select('followed_questions').exec();
+}
+
+exports.updateUserInfo = (id, user_info) => {
+    return User.findByIdAndUpdate(id, {$set: {user_info: user_info}}, {new: true}).exec();
 }
 
 exports.findAvatarPathByID = (id) => {
     return User.findById(id).exec();
+}
+
+exports.updateUserAvatar = (user_id, avatar) => {
+    return User.findByIdAndUpdate(user_id, {$set: {avatar: avatar}}).exec();
 }
 
 exports.findFeedByUserID = (id) => {
@@ -89,8 +105,12 @@ exports.findFeedByUserID = (id) => {
 }
 
 exports.findTopicsByUserID = (id) => {
-    return User.findById(id).populate('followed_topics', 'name topic_id')
+    return User.findById(id).populate('followed_topics', 'label')
     .select('followed_topics -_id').exec();
+}
+
+exports.getAllTopics = () => {
+    return Topic.find({}).select('label').exec();
 }
 
 exports.insertTopic = (name) => {
@@ -99,11 +119,38 @@ exports.insertTopic = (name) => {
 }
 
 exports.userFollowTopics = (userid, topic_ids) => {
-    return User.findOneAndUpdate({_id: userid}, {$push: {followed_topics: topic_ids}}).exec();
+    console.log('userFollowTopics with topic_ids: ', topic_ids);
+    return User.findOneAndUpdate({_id: userid}, {$push: {followed_topics: topic_ids}}, {new: true}).exec();
+}
+
+exports.increaseTopicCounter = (topic_id) => {
+    return Topic.findByIdAndUpdate(topic_id, {$inc: {followers: 1}}, {new: true}).exec();
 }
 
 exports.userUnfollowTopics = (userid, topic_ids) => {
-    return User.findByIdAndUpdate({_id: userid}, {$pull: {followed_topics: topic_ids[0]}}).exec();
+    return User.findByIdAndUpdate({_id: userid}, {$pull: {followed_topics: topic_ids[0]}}, {new: true}).exec();
+}
+
+exports.findTopicDetailByID = (topic_id) => {
+    return Topic.findById(topic_id)
+    .populate({
+        path: 'questions',
+        populate: [{
+            path: 'answers',
+            options: {limit: 1},
+            populate: {
+                path: 'owner',
+                select: 'user_info.first_name user_info.last_name user_info.profileCredential'
+            },
+            select: 'time content'
+        },
+        {
+            path: 'topics',
+            select: 'label'
+        }],
+        select: 'content answers topics'
+    })
+    .exec();
 }
 
 exports.updateUser = (user) => {
@@ -112,23 +159,23 @@ exports.updateUser = (user) => {
 
 //Answer
 exports.upvoteAnswer = (answerid) => {
-    return Answer.findOneAndUpdate({answer_id: answerid}, {$inc : {upvote : 1}}).exec();
+    return Answer.findOneAndUpdate({_id: answerid}, {$inc : {upvote : 1}}).exec();
 }
 
 exports.downvoteAnswer = (answerid) => {
-    return Answer.findOneAndUpdate({answer_id: answerid}, {$inc : {downvote : 1}}).exec();
+    return Answer.findOneAndUpdate({_id: answerid}, {$inc : {downvote : 1}}).exec();
 }
 
 exports.getVotes = (answerid) => {
-    return Answer.findOne({answer_id: answerid}).exec();
+    return Answer.findOne({_id: answerid}).exec();
 }
 
 exports.getComments = (answerid) => {
-    return Answer.find({answer_id: answerid}).exec();
+    return Answer.findOne({_id: answerid}).exec();
 }
 
 exports.createComment = (comment) => {
-    return Answer.findOneAndUpdate({answer_id: comment.answer_id}, {$push: {comments: {owner: comment.owner, time : comment.time, comment : comment.comment, anonymous: comment.anonymous}}}).exec();
+    return Answer.findOneAndUpdate({_id: comment.answer_id}, {$push: {comments: {owner: comment.owner, time : comment.time, comment : comment.comment, anonymous: comment.anonymous}}}).exec();
 }
 
 exports.createAnswer = (data) => {
@@ -137,15 +184,15 @@ exports.createAnswer = (data) => {
 }
 
 exports.setBookmark = (userid, answerid) => {
-    return Answer.findOneAndUpdate({answer_id: answerid}, {$push: {bookmark: {user_id: userid}}}).exec();
+    return Answer.findOneAndUpdate({_id: answerid}, {$push: {bookmark: {_id: userid}}}).exec();
 }
 
 exports.findOneAnswer = (answerid) => {
-    return Answer.findOne({answer_id: answerid}).exec();
+    return Answer.findOne({_id: answerid}).exec();
 }
 
 exports.updateOneAnswer = (editInfo) => {
-    return Answer.findOneAndUpdate({answer_id: editInfo.answer_id}, {$set: {content: editInfo.content}}).exec();
+    return Answer.findOneAndUpdate({_id: editInfo.answer_id}, {$set: {content: editInfo.content, time: editInfo.time}}).exec();
 }
 
 exports.updateUserWithAnswer = (user, newAnswer) => {
@@ -156,10 +203,19 @@ exports.updateQuestionWithAnswer = (questionid, newAnswer) => {
     return Question.findOneAndUpdate({_id: questionid}, {$push: {answers: newAnswer._id}}).exec();
 }
 
-exports.updateUserBookmark = (user, answerid) => {
-    return User.findOneAndUpdate({email: user}, {$push: {bookmarked_answers: answerid._id}}).exec();
+exports.updateUserBookmark = (userid, answerid) => {
+    return User.findOneAndUpdate({_id: userid}, {$push: {bookmarked_answers: answerid._id}}).exec();
 }
 
+exports.getOwnerOfAnswer = (answerid) => {
+    return Answer.findById(answerid)
+    .populate({
+        path: 'owner',
+        select: 'user_info.first_name user_info.last_name user_info.profileCredential',
+    }).select('owner anonymous').exec();
+}
+
+//question
 exports.insertQuestion = (question) => {
     let newQuestion = new Question(question)
     return newQuestion.save();
@@ -169,6 +225,32 @@ exports.bindUserQuestion = (user_id, question_id) => {
     return User.findByIdAndUpdate(user_id, {$push: {created_questions: question_id}}).exec();
 }
 
-exports.fetchQuestion =(question_id)=>{
-    return Question.findOne({question_id:question_id}).exec();
+exports.bindTopicQuestion = (topic_id, question_id) => {
+    return Topic.findByIdAndUpdate(topic_id, {$push: {questions: question_id}}).exec();
+}
+
+exports.fetchQuestion = (question_id) =>{
+    return Question.findOne({_id: question_id})
+    .populate({
+        path: 'answers',
+        populate: {
+            path: 'owner',
+            select: 'user_info.first_name user_info.last_name user_info.profileCredential',
+        },
+        select: '_id owner time content upvote downvote anonymous'
+    })
+    .populate({
+        path: 'topics',
+        select: '_id label'
+    })
+    .select('_id content time followers answers topics')
+    .exec();
+}
+
+exports.increaseFollowerCounter = (question_id) => {
+    return Question.findByIdAndUpdate(question_id, {$inc: {followers: 1}}, {new: true}).exec();
+}
+
+exports.userFollowQuestion = (user_id, question_id) => {
+    return User.findByIdAndUpdate(user_id, {$push: {followed_questions: question_id}}).exec();
 }

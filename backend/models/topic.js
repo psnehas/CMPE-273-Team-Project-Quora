@@ -1,5 +1,4 @@
 var mongoose = require('mongoose')
-var autoIncrement = require('mongoose-sequence')(mongoose)
 
 const TopicSchema = new mongoose.Schema({
     label: {
@@ -7,9 +6,8 @@ const TopicSchema = new mongoose.Schema({
         trim: true,
         required: 'Name is required'
     },
-    questions: [ {type: mongoose.Schema.Types.ObjectId, ref: 'Question'} ]
+    questions: [ {type: mongoose.Schema.Types.ObjectId, ref: 'Question'} ],
+    followers: Number
 })
-
-TopicSchema.plugin(autoIncrement, {inc_field: 'topic_id'});
 
 module.exports =  mongoose.model('Topic', TopicSchema);

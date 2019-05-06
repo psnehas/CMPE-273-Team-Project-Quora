@@ -3,8 +3,7 @@ var formidable = require('formidable')
 var fs = require('fs')
 var path = require('path')
 
-const updateUser = (req, res) => {
-    let user = {}
+const updateUserAvatar = (req, res) => {
     const filepath = path.join(__dirname + '/' + '../public/images')
     if (!fs.existsSync(filepath)) {
         fs.mkdirSync(filepath, {recursive: true})
@@ -18,23 +17,23 @@ const updateUser = (req, res) => {
                 error: 'Photo could not be uploaded'
             })
         }
-        Object.assign(user, fields)
-        user.avatar = ''
         let absPath = ''
         if (files.avatar) {
             console.log('tmp avatar path: ', files.avatar.path)
-            db.findAvatarPathByID(user.id)
+            db.findAvatarPathByID(req.user.user_id)
             .then(result => {
                 console.log('query avatar path result: ', result.avatar)
-                user.avatar = user.id + '__' + files.avatar.name
-                absPath = path.join(__dirname, '../public/images', user.avatar)
+                let avatar = result.avatar;
+                if (avatar === 'defaultphoto.png') {
+                    avatar = req.user.user_id + '__' + files.avatar.name
+                }
+                absPath = path.join(__dirname, '../public/images', avatar)
                 console.log('abs path is: ', absPath)
                 fs.rename(files.avatar.path, absPath, err => {
                     if (err)
                         console.log(err)
                 })
-                console.log('user object: ', user)
-                db.updateUser(user)
+                db.updateUserAvatar(req.user.user_id, avatar)
                     .then(() => {
                         res.status(200).json({
                         success: 'Update user profile successfully'
@@ -45,7 +44,7 @@ const updateUser = (req, res) => {
     })   
 }
 
-const getPhoto = (req, res) => {
+const getUserAvatar = (req, res) => {
     console.log('Get user avatar of: ', req.params.userID)
     db.findAvatarPathByID(req.params.userID)
     .then(result => {
@@ -57,4 +56,4 @@ const getPhoto = (req, res) => {
 }
 
 
-module.exports = {updateUser, getPhoto}
+module.exports = {updateUserAvatar, getUserAvatar}

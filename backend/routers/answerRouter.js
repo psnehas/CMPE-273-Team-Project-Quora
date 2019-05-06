@@ -13,9 +13,6 @@ router.route('/answer/:answer_id/upvote')
 router.route('/answer/:answer_id/downvote')
 .put(authController.requireSignin, answerControllerKafka.downvote)
 
-router.route('/answer_votes/:answer_id')
-.get(authController.requireSignin, answerControllerKafka.allVotes)
-
 router.route('/answer/:answer_id/comment')
 .post(authController.requireSignin, answerControllerKafka.makeComment)
 
@@ -25,8 +22,11 @@ router.route('/answer_comments/:answer_id')
 router.route('/question/:question_id/answer')
 .post(authController.requireSignin, answerControllerKafka.makeAnswer)
 
-router.route('/question/:question_id/answer/:answer_id')
+router.route('/answer/:answer_id')
 .put(authController.requireSignin, answerControllerKafka.updateAnswer)
 .get(authController.requireSignin, answerControllerKafka.getOneAnswer)
+
+router.route('/answer/:answer_id/owner')
+.get(authController.requireSignin, answerControllerKafka.getOwnerOfAnswer)
 
 module.exports = {router}

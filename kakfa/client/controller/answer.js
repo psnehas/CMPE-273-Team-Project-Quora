@@ -28,19 +28,6 @@ const downvote = (req, res) => {
     })
 }
 
-const allVotes = (req, res) => {
-    console.log("req may has paprams", req.params)
-    console.log("get votes request")
-    let message = {
-        cmd: 'ALL_VOTES',
-        allVotes: req.params
-    }
-    client.send(message, function(err, result) {
-        console.log('the result for get votes is: ', result);
-        res.status(result.status).json(result.data);
-    })
-}
-
 const allComments = (req, res) => {
     console.log("get comments request")
     let message = {
@@ -57,7 +44,7 @@ const makeComment = (req, res) => {
     console.log("make comment request")
     let request = {
         answer_id: req.params.answer_id,
-        owner: req.body.owner,
+        owner: req.user.user_id,
         comment: req.body.comment,
         anonymous: req.body.anonymous
     }
@@ -75,7 +62,7 @@ const makeAnswer = (req, res) => {
     console.log("make answer request")
     let request = {
         question_id: req.params.question_id,
-        owner: req.body.owner,
+        owner: req.user.user_id,
         content: req.body.content,
         anonymous: req.body.anonymous
     }
@@ -129,5 +116,17 @@ const getOneAnswer = (req, res) => {
     })
 }
 
-module.exports = {upvote, downvote, allVotes, allComments, makeComment, createBookmark,
-    getOneAnswer, makeAnswer, updateAnswer}
+const getOwnerOfAnswer = (req, res) => {
+    console.log("get owner of answer request")
+    let message = {
+        cmd: 'GET_OWNER_OF_ANSWER',
+        answer: req.params
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for get one answer is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
+module.exports = {upvote, downvote, allComments, makeComment, createBookmark,
+    getOneAnswer, makeAnswer, updateAnswer, getOwnerOfAnswer}
