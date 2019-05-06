@@ -1,4 +1,5 @@
 var db=require("../lib/mongoDB");
+
 const addQuestion =(req,res)=>{
     var {question_text} = req.body;//only for console purpose
         console.log("Insert question", question_text);

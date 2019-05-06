@@ -49,19 +49,19 @@ exports.findUserByEmail = (email) => {
     return User.findOne({email: email}).exec();
 }
 
-exports.findUserByID = (id) => {
+exports.findUserProfileByID = (id) => {
     return User.findById(id)
     .populate({
         path: 'created_answers',
-        select: 'answer_id question_id time',
+        select: 'question_id time',
     })
     .populate({
         path: 'bookmarked_answers',
-        select: 'answer_id question_id time',
+        select: 'question_id time',
     })
     .populate({
         path: 'created_questions',
-        select: 'question_id question_text dateCreated',
+        select: 'content time',
     })
     .populate({
         path: 'followed_people',
@@ -160,6 +160,11 @@ exports.insertQuestion = (question) => {
     let newQuestion = new Question(question)
     return newQuestion.save();
 }
+
+exports.bindUserQuestion = (user_id, question_id) => {
+    return User.findByIdAndUpdate(user_id, {$push: {created_questions: question_id}}).exec();
+}
+
 exports.fetchQuestion =(question_id)=>{
     return Question.findOne({question_id:question_id}).exec();
 }
