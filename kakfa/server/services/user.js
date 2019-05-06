@@ -84,13 +84,13 @@ const getUser = (userid, next) => {
             }
             console.log('the user profile is: ', profile.user_info);
             profile.created_answers = user.created_answers.sort((a, b) => {
-                return a.time > b.time;
+                return a.time < b.time;
             })
             profile.bookmarked_answers = user.bookmarked_answers.sort((a, b) => {
-                return a.time > b.time;
+                return a.time < b.time;
             })
             profile.created_questions = user.created_questions.sort((a, b) => {
-                return a.time > b.time;
+                return a.time < b.time;
             })
             profile.followed_people = user.followed_people;
             profile.following_people = user.following_people;
@@ -181,14 +181,17 @@ const followTopics = (userid, action, topic_ids, next) => {
         db.userFollowTopics(userid, topic_ids)
         .then(result => {
             console.log('follow topic result: ', result);
+            topic_ids.map(topic_id => {
+                db.increaseTopicCounter(topic_id);
+            })
             db.findTopicsByUserID(userid)
             .then(topics => {
                 next(null, {
                     status: 200,
                     data: topics
-                })
-            })
-        })
+                });
+            });
+        });
     } else {
         db.userUnfollowTopics(userid, topic_ids)
         .then(result => {
@@ -205,12 +208,35 @@ const followTopics = (userid, action, topic_ids, next) => {
 }
 
 const createTopic = (topic_name, next) => {
-    db.insertTopic({name: topic_name})
+    db.insertTopic({label: topic_name})
     .then(result => {
         console.log('create topic reuslt: ', result);
         next(null, {
             status: 200,
             data: {success: 'Successfully created a topic'}
+        })
+    })
+}
+
+const getTopicQuestions = (userid, topic_id, next) => {
+    db.findTopicDetailByID(topic_id)
+    .then(result => {
+        console.log('find topic questions result: ', result);
+        result = result.toObject();
+        db.findTopicsByUserID(userid)
+        .then(user_topics => {
+            console.log('find user topics result: ', user_topics);
+            user_topics = user_topics.followed_topics.toObject();
+            let user_topics_id = user_topics.map(topic => topic._id.toString());
+            if (user_topics_id.includes(topic_id.toString())) {
+                result.followed = true;
+            } else {
+                result.followed = false;
+            }
+            next(null, {
+                status: 200,
+                data: result
+            })
         })
     })
 }
@@ -294,6 +320,9 @@ const dispatch = (message, next) => {
             break;
         case 'CREATE_TOPIC':
             createTopic(message.topic_name, next);
+            break;
+        case 'GET_TOPIC_QUESTIONS':
+            getTopicQuestions(message.userid, message.topic_id, next);
             break;
         case 'GET_MESSAGE':
             getUserMessages(message.userid, next);

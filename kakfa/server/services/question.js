@@ -11,11 +11,17 @@ const insertQuestion = (user_id, question, next) => {
     db.insertQuestion(que).then(result =>{
         console.log("insert question result: ", result);
         db.bindUserQuestion(user_id, result._id)
-        .then(result => {
-            console.log("bind user question result: ", result);
-            next(null, {
-                status: 200,
-                data: {success: true}
+        .then(res => {
+            console.log("bind user question result: ", res);
+            let promises = topics.map(topic_id => {
+                return db.bindTopicQuestion(topic_id, result._id);
+            });
+            Promise.all(promises)
+            .then(res => {
+                next(null, {
+                    status: 200,
+                    data: {success: true}
+                });
             });
         });
     });

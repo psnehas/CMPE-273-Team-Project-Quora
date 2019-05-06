@@ -14,6 +14,9 @@ router.route('/userTopics')
 .get(authController.requireSignin, userControllerKafka.getUserTopics)
 .post(authController.requireSignin, userControllerKafka.followTopics);
 
+router.route('/topics/:topic_id/questions')
+.get(authController.requireSignin, userControllerKafka.getTopicQuestions);
+
 router.route('/topics')
 .get(authController.requireSignin, userControllerKafka.getTopics)
 .post(authController.requireSignin, userControllerKafka.createTopic);

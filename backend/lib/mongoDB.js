@@ -119,8 +119,34 @@ exports.userFollowTopics = (userid, topic_ids) => {
     return User.findOneAndUpdate({_id: userid}, {$push: {followed_topics: topic_ids}}, {new: true}).exec();
 }
 
+exports.increaseTopicCounter = (topic_id) => {
+    return Topic.findByIdAndUpdate(topic_id, {$inc: {followers: 1}}, {new: true}).exec();
+}
+
 exports.userUnfollowTopics = (userid, topic_ids) => {
     return User.findByIdAndUpdate({_id: userid}, {$pull: {followed_topics: topic_ids[0]}}, {new: true}).exec();
+}
+
+exports.findTopicDetailByID = (topic_id) => {
+    return Topic.findById(topic_id)
+    .populate({
+        path: 'questions',
+        populate: [{
+            path: 'answers',
+            options: {limit: 1},
+            populate: {
+                path: 'owner',
+                select: 'user_info.first_name user_info.last_name user_info.profileCredential'
+            },
+            select: 'time content'
+        },
+        {
+            path: 'topics',
+            select: 'label'
+        }],
+        select: 'content answers topics'
+    })
+    .exec();
 }
 
 exports.updateUser = (user) => {
@@ -193,6 +219,10 @@ exports.insertQuestion = (question) => {
 
 exports.bindUserQuestion = (user_id, question_id) => {
     return User.findByIdAndUpdate(user_id, {$push: {created_questions: question_id}}).exec();
+}
+
+exports.bindTopicQuestion = (topic_id, question_id) => {
+    return Topic.findByIdAndUpdate(topic_id, {$push: {questions: question_id}}).exec();
 }
 
 exports.fetchQuestion = (question_id) =>{
