@@ -29,4 +29,7 @@ router.route('/answer/:answer_id')
 .put(authController.requireSignin, answerControllerKafka.updateAnswer)
 .get(authController.requireSignin, answerControllerKafka.getOneAnswer)
 
+router.route('/answer/:answer_id/owner')
+.get(authController.requireSignin, answerControllerKafka.getOwnerOfAnswer)
+
 module.exports = {router}
