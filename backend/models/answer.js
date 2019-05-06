@@ -3,7 +3,7 @@ var autoIncrement = require('mongoose-sequence')(mongoose)
 
 const CommentSchema = new mongoose.Schema({
     owner: {
-        type: String // email
+        type: mongoose.Schema.Types.ObjectId, ref: 'User'
     },
     time: {
         type: Date
