@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Container, Row, Button, Form, Card, Pagination } from 'react-bootstrap';
+import { Container, Row, Button, Form, Card, Pagination, Modal } from 'react-bootstrap';
 import cookie from 'react-cookies';
 import axios from 'axios';
 import config from '../../config'
@@ -142,8 +142,10 @@ class Messages extends Component {
 
         return (
             <React.Fragment>
-                <h1>Messages</h1>
                 <Container>
+                    <Row>
+                        <h1>Messages</h1>
+                    </Row>
                     <Row>
                         <Button onClick={this.onInboxClickHandler}>Inbox</Button>
                         <Button style={{ marginLeft: 10 }} onClick={this.onNewMsgClickHandler}>New Message</Button>

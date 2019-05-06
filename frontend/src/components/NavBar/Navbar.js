@@ -62,6 +62,7 @@ class navbar extends Component {
                 <NavDropdown title={authentication.first_name} id="basic-nav-dropdown">
                     <NavDropdown.Item onClick={this.handleLogout}>Logout</NavDropdown.Item>
                     <NavDropdown.Item as={NavLink} to ={`/profile/${this.props.authentication.user_id}`}>Profile</NavDropdown.Item>
+                    <NavDropdown.Item as={NavLink} to ={`/messages/${this.props.authentication.user_id}`}>Messages</NavDropdown.Item>
                 </NavDropdown>
             );
         }

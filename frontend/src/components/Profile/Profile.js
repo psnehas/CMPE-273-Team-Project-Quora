@@ -67,18 +67,17 @@ class Profile extends Component {
         data.append('avatar', this.state.selectedFile, this.state.selectedFile.name)
         console.log(data);
         // TODO
-        // axios
-        //     .post(config.host + '/profile/update_avatar', data, {
-        //         onUploadProgress: ProgressEvent => {
-        //             this.setState({
-        //                 loaded: (ProgressEvent.loaded / ProgressEvent.total * 100),
-        //             })
-        //         },
-        //     })
-        //     .then(res => {
-        //         console.log(res.statusText)
-        //         this.loadCourseFiles()
-        //     })
+        axios
+            .post(`${backend_host}/user_avatar/${this.props.match.params.uid}`, data, {
+                onUploadProgress: ProgressEvent => {
+                    this.setState({
+                        loaded: (ProgressEvent.loaded / ProgressEvent.total * 100),
+                    })
+                },
+            })
+            .then(res => {
+                console.log(res)
+            })
     }
 
     onEditProfileHandler = () => {
@@ -184,7 +183,7 @@ class Profile extends Component {
                     <Row>
                         <Col className={style.center}>
                             <div className={style.profile_photo_image_wrapper} onMouseEnter={() => this.setState({ show_edit_image: true })} onMouseLeave={() => this.setState({ show_edit_image: false })}>
-                                <Image className={style.profile_photo_image} src={this.props.profile.user_info.avatar} roundedCircle />
+                                <Image className={style.profile_photo_image} src={`${backend_host}/user_avatar/${this.props.match.params.uid}`} roundedCircle />
                                 {this.state.show_edit_image ? <span className={style.edit_text} onClick={this.onOpenImageUploaderHandler}>Edit</span> : null}
                             </div>
                         </Col>
@@ -193,8 +192,6 @@ class Profile extends Component {
                         </Col>
                     </Row>
                     <hr />
-
-
 
                     <Row>
                         <Col>
