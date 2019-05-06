@@ -169,6 +169,14 @@ exports.updateUserBookmark = (userid, answerid) => {
     return User.findOneAndUpdate({_id: userid}, {$push: {bookmarked_answers: answerid._id}}).exec();
 }
 
+exports.getOwnerOfAnswer = (answerid) => {
+    return Answer.findById(answerid)
+    .populate({
+        path: 'owner',
+        select: 'user_info.first_name user_info.last_name user_info.profileCredential',
+    }).select('owner anonymous').exec();
+}
+
 //question
 exports.insertQuestion = (question) => {
     let newQuestion = new Question(question)

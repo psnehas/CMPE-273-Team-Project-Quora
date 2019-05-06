@@ -128,6 +128,30 @@ const getOneAnswer = (req, next) => {
     })
 }
 
+const getOwnerOfAnswer = (req, next) => {
+    db.getOwnerOfAnswer(req.answer.answer_id).then(result =>{
+        console.log("Owner content: ", result)
+        if(result.anonymous == false){
+            next(null, {
+                status: 200,
+                data: {
+                    user_id: result.owner._id,
+                    name: result.owner.user_info.first_name +" "+ result.owner.user_info.last_name,
+                    crediential: result.owner.user_info.profileCredential
+                }
+            })
+        }
+        next(null, {
+            status: 200,
+            data: {
+                user_id: result.owner._id,
+                name: "anonymous",
+                crediential: result.owner.user_info.profileCredential
+            }
+        })
+    })
+}
+
 const dispatch = (message, next) => {
     switch (message.cmd) {
         case 'UPVOTE':
@@ -156,6 +180,9 @@ const dispatch = (message, next) => {
             break;
         case 'GET_ONE_ANSWER':
             getOneAnswer(message, next);
+            break;
+        case 'GET_OWNER_OF_ANSWER':
+            getOwnerOfAnswer(message, next);
             break;
         default:
             console.log('unknown request');
