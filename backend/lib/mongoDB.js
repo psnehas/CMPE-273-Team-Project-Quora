@@ -71,7 +71,7 @@ exports.findUserProfileByID = (id) => {
         path: 'following_people',
         select: 'first_name last_name'
     })
-    .select('first_name last_name profileCredential about').exec();
+    .select('first_name last_name email city state zipCode profileCredential about educations careers').exec();
 }
 
 exports.findAvatarPathByID = (id) => {

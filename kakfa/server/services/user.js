@@ -76,6 +76,12 @@ const getUser = (userid, next) => {
             profile.user_info.last_name = user.last_name;
             profile.user_info.profileCredential = user.profileCredential;
             profile.user_info.about = user.about;
+            profile.user_info.email = user.email;
+            profile.user_info.city = user.city;
+            profile.user_info.state = user.state;
+            profile.user_info.zipCode = user.zipCode;
+            profile.user_info.educations = user.educations;
+            profile.user_info.careers = user.careers;
             profile.created_answers = user.created_answers.sort((a, b) => {
                 return a.time > b.time;
             })
