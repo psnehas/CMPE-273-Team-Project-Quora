@@ -3,9 +3,13 @@ var db = require('../../../backend/lib/mongoDB')
 const upvote = (req, next) => {
     db.upvoteAnswer(req.upvote.answer_id).then(() =>{
         console.log("Upvote answer ", req.upvote.answer_id)
-        next(null, {
-            status: 200,
-            data: "Upvote answer " + req.upvote.answer_id + " Succeed!"
+        db.getVotes(req.upvote.answer_id).then(result =>{
+            console.log("Upvotes: ", result.upvote)
+            console.log("Downvotes: ", result.downvote)
+            next(null, {
+                status: 200,
+                data: {upvotes: result.upvote, downvote: result.downvote}
+            })
         })
     })
 }
@@ -13,20 +17,13 @@ const upvote = (req, next) => {
 const downvote = (req, next) => {
     db.downvoteAnswer(req.downvote.answer_id).then(() =>{
         console.log("Downvote answer ", req.downvote.answer_id)
-        next(null, {
-            status: 200,
-            data: "Downvote answer " + req.downvote.answer_id + " Succeed!"
-        })
-    })
-}
-
-const allVotes = (req, next) => {
-    db.getVotes(req.allVotes.answer_id).then(result =>{
-        console.log("Upvotes: ", result.upvote)
-        console.log("Downvotes: ", result.downvote)
-        next(null, {
-            status: 200,
-            data: {upvotes: result.upvote, downvote: result.downvote}
+        db.getVotes(req.downvote.answer_id).then(result =>{
+            console.log("Upvotes: ", result.upvote)
+            console.log("Downvotes: ", result.downvote)
+            next(null, {
+                status: 200,
+                data: {upvotes: result.upvote, downvote: result.downvote}
+            })
         })
     })
 }
@@ -159,9 +156,6 @@ const dispatch = (message, next) => {
             break;
         case 'DOWNVOTE':
             downvote(message, next);
-            break;
-        case 'ALL_VOTES':
-            allVotes(message, next);
             break;
         case 'ALL_COMMENTS':
             allComments(message, next);

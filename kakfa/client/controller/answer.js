@@ -28,19 +28,6 @@ const downvote = (req, res) => {
     })
 }
 
-const allVotes = (req, res) => {
-    console.log("req may has paprams", req.params)
-    console.log("get votes request")
-    let message = {
-        cmd: 'ALL_VOTES',
-        allVotes: req.params
-    }
-    client.send(message, function(err, result) {
-        console.log('the result for get votes is: ', result);
-        res.status(result.status).json(result.data);
-    })
-}
-
 const allComments = (req, res) => {
     console.log("get comments request")
     let message = {
