@@ -203,7 +203,7 @@ exports.fetchQuestion = (question_id) =>{
             path: 'owner',
             select: 'user_info.first_name user_info.last_name user_info.profileCredential',
         },
-        select: '_id owner time content upvote downvote bookmark anonymous'
+        select: '_id owner time content upvote downvote anonymous'
     })
     .populate({
         path: 'topics',
