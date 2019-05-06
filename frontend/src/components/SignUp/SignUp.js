@@ -89,6 +89,10 @@ class SignUp extends Component {
         if (signup.signedUp === true) {
             redirectVar = <Redirect to="/login" />
         }
+        let res_msg = null;
+        if (signup.signUpFailed === true) {
+            res_msg = (<p style={{color: 'red'}} class="err_msg">Exsiting User!</p>);
+        }
 
         return (
             <div>
@@ -99,6 +103,7 @@ class SignUp extends Component {
                         <div className="main-div">
                             <div className="panel">
                                 <h2>Sign Up</h2>
+                                {res_msg}
                                 <p>Please enter your name, email and password</p>
                             </div>
                             <div className={"form-group" + (submitted && !first_name ? 'has-error' : '')}>

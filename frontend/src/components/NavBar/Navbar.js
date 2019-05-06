@@ -93,7 +93,7 @@ class navbar extends Component {
 
             <Navbar bg="light" expand="md">
                 <Navbar.Brand>
-                    <Link to='/' style={{ color: 'red', 'textDecoration': 'none' }}>CWORA</Link>
+                    <Link to='/' style={{ color: 'red', 'textDecoration': 'none' }}>QUORA</Link>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">

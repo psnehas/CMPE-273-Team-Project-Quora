@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 //import { userActions } from '../../_actions';
 import { connect } from 'react-redux';
 import './QuestionPage.css';
-import { ListGroup, Container, Badge, ButtonToolbar, Button, Collapse, Card, Form} from 'react-bootstrap';
+import { ListGroup, Container, Badge, ButtonToolbar, Button, Collapse, Card, Form } from 'react-bootstrap';
 //import ReactPaginate from 'react-paginate';
 import axios from 'axios';
 import Moment from 'react-moment';
@@ -34,7 +34,7 @@ export class CommentPanel extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-//        console.log(this.props.data);
+        //        console.log(this.props.data);
         const data = {
             commentText: this.state.comment_text,
         };
@@ -113,11 +113,11 @@ export class CommentPanel extends Component {
             }
             else {
 
-                    comment_list = (<ListGroup.Item style={{ border: 'none' }}>
-                        <ul className="list-unstyled" style={{ 'padding': 0, margin: 0 }}>
-                        <li style={{ 'fontWeight': 'bold', 'fontSize': 13 }}>Be the first to comment this answer!</li>                   
-                        </ul>                       
-                    </ListGroup.Item>)
+                comment_list = (<ListGroup.Item style={{ border: 'none' }}>
+                    <ul className="list-unstyled" style={{ 'padding': 0, margin: 0 }}>
+                        <li style={{ 'fontWeight': 'bold', 'fontSize': 13 }}>Be the first to comment this answer!</li>
+                    </ul>
+                </ListGroup.Item>)
 
             }
         }
@@ -154,6 +154,30 @@ export class CommentPanel extends Component {
     }
 }
 
+export class AnswerEdit extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            answer_string: null,
+        }
+    }
+    static propTypes = {
+        onChange: PropTypes.func
+    };
+
+    handleInputChange = (value) => {
+        //       console.log(value);
+        this.props.onChange(value);
+        //       this.setState({ answer_string: value })
+    }
+
+    render() {
+        return (
+            <AnswerEditor onChange={this.handleInputChange} />
+        )
+    }
+}
+
 export class AnswerList extends Component {
     static propTypes = {
         data: PropTypes.array.isRequired,
@@ -162,6 +186,7 @@ export class AnswerList extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            edit_box: false
         }
     }
     handleUpvote = (value) => {
@@ -172,27 +197,61 @@ export class AnswerList extends Component {
         console.log('downvote this answer', value)
     }
 
+    handleBookmark = (value) => {
+        console.log('bookmard this answer', value)
+    }
+
+    handleEdit = (value) => {
+        this.setState({ edit_box: true })
+    }
+
     render() {
         let details = null;
+
+
         if (this.props.data.length !== 0) {
             details = this.props.data.map((post, idx) => {
+                let answer = null;
+                let edit_button = null;
+                if (this.state.edit_box === true ) {
+                    answer = <AnswerEditor value={post.answerText} onChange={() => { }}></AnswerEditor>;
+                    if (post.createdBy.user_id === this.props.authentication.user_id)
+                    edit_button = (<Button className="q_page_button pull-right" variant="link" onClick={() => this.handleUpdate(post._id)}>
+                        <span className="fa fa-edit"></span> Update</Button>)
+                }
+                else {
+                    answer = (<p>
+                        {renderHTML(post.answerText)}
+                    </p>);
+                    if (post.createdBy.user_id === this.props.authentication.user_id)
+                    edit_button = (<Button className="q_page_button pull-right" variant="link" onClick={() => this.handleEdit(post._id)}>
+                        <span className="fa fa-edit"></span> Edit</Button>)
+
+                }
                 return (
                     <ListGroup.Item key={idx}>
                         <ul className="list-unstyled">
-                            <li>{post.displayName} </li>
+                            <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'profile/' + post.createdBy.user_id}>{post.createdBy.name},</Link><span style={{ marginLeft: 10 }}>{post.createdBy.crediential}</span></li>
                             <li><small className="text-muted">Answered <Moment fromNow>{post.createdOn}</Moment></small></li>
                         </ul>
-                        <p>
+                        {/* <p>
                             {renderHTML(post.answerText)}
-                        </p>
-                        {/*
+                        </p> */}
+                        {answer}
                         <ButtonToolbar style={{ 'margin-left': -10 }}>
-                            <Button className="q_page_button" variant="link" onClick={() => this.handleUpvote(post.answers._id)}>
-                                <span className="fa fa-arrow-up"></span> Upvote</Button>
-                            <Button className="q_page_button pull-right" variant="link" onClick={() => this.handleDownvote(post.answers._id)}>
-                                <span className="fa fa-arrow-down"></span> Downvote</Button>
+                            <Button className="q_page_button" variant="link" onClick={() => this.handleUpvote(post._id)}>
+                                <span className="fa fa-arrow-up"></span> Upvote  · {post.upvote}</Button>
+                            <Button className="q_page_button pull-right" variant="link" onClick={() => this.handleDownvote(post._id)}>
+                                <span className="fa fa-arrow-down"></span> Downvote  · {post.downvote}</Button>
+                            <Button className="q_page_button pull-right" variant="link" onClick={() => this.handleBookmark(post._id)}>
+                                <span className="fa fa-bookmark"></span> Bookmark</Button>
+                                {edit_button}
+                                {/*
+                            <Button className="q_page_button pull-right" variant="link" onClick={() => this.handleEdit(post._id)}>
+                                <span className="fa fa-edit"></span> Edit</Button>
+                                */}
                         </ButtonToolbar>
-                        */}
+
                         <CommentPanel answerId={post._id}></CommentPanel>
                     </ListGroup.Item>
 
@@ -222,14 +281,14 @@ export class BadgeGroup extends Component {
             details = this.props.data.map((post, idx) => {
                 return (
                     <Badge pill variant="light" className='topic_pill' key={idx}>
-                       <Link style={{ color: '#666' }} to={'/topics/'+post.label}>{post.label}</Link> 
+                        <Link style={{ color: '#666' }} to={'/topics/' + post.name}>{post.name}</Link>
                     </Badge>
 
                 )
             });
         }
         else {
-            details = (<div>No Answer Yet</div>)
+            details = (<div>No Topic Yet</div>)
         }
         return (
             <div >
@@ -273,45 +332,51 @@ class QuestionPage extends Component {
             questionId: this.props.match.params.questionId,
             followed: false,
             answer_string: null,
-            token: cookie.load('JWT')
+            token: cookie.load('JWT'),
+            answer_anoymous: false
         }
         this.handleFollow = this.handleFollow.bind(this);
         this.handleSubmitAnswer = this.handleSubmitAnswer.bind(this);
+        this._onChangeAnoymous = this._onChangeAnoymous.bind(this);
     }
 
     componentDidMount() {
-        axios.get(backend_host + '/questions', {
+        const fake_data =
+            { "success": "Question fetched", "data": { "answers": [{ upvote: 1, downvote: 2, createdBy: { name: "Someone", user_id: 123456, crediential: "Test Only" }, 'answerText': "<p><strong>I don't know</strong></p>", "_id": 123 }], "follower": 5, "_id": "5ccf392b1b83d55e4c6c85fe", "question_text": "how is the weather", "display_name": "Avi", "questionTopics": [{ "_id": "5ccf392b1b83d55e4c6c8600", "topic_id": 3, "name": "Test Topic 3" }, { "_id": "5ccf392b1b83d55e4c6c85ff", "topic_id": 1, "name": "Test Topic 1" }], "dateCreated": "2019-05-05T19:27:39.497Z", "question_id": 16, "__v": 0 } }
+
+        axios.get(backend_host + '/questions/16', {
             headers: {
                 'Authorization': `Bearer ${this.state.token}`
             },
-            params: {
-                questionId: this.state.questionId,
-                depth: 1
-            }
+            //            params: {
+            //                questionId: this.state.questionId,
+            //                depth: 1
+            //            }
         }).then(response => {
             //console.log(response.data)
             this.setState({
-                question: response.data[0]
+                //                question: response.data.data
+                question: fake_data.data
             })
         })
     }
 
     handleFollow() {
-//        console.log("follow this question");
+        //        console.log("follow this question");
 
         const data = {
             action: 'question',
             ids: [this.state.questionId],
             unfollow: false
         }
-//        console.log(data);
+        //        console.log(data);
 
         axios.post(user_tracking_apis + '/userFollow', data, {
             headers: {
                 'Authorization': `JWT ${this.state.token}`
             }
         }).then(response => {
-//            console.log(response);
+            //            console.log(response);
             this.setState({
                 followed: true
             })
@@ -347,17 +412,21 @@ class QuestionPage extends Component {
 
 
     handleInput = (value) => {
-//        console.log(value);
+        //        console.log(value);
         this.setState({ answer_string: value }, () => {
-//            console.log(this.state.answer_string)
+            //            console.log(this.state.answer_string)
         })
     };
+
+    _onChangeAnoymous(e) {
+        this.setState({ answer_anoymous: e.target.checked });
+    }
 
     render() {
         //    console.log(this.state.question);
         let BadgeGroup_data = [];
-        if ('topics' in this.state.question) {
-            BadgeGroup_data = this.state.question.topics;
+        if ('questionTopics' in this.state.question) {
+            BadgeGroup_data = this.state.question.questionTopics;
         }
         let AnswerList_data = [];
         if ('answers' in this.state.question) {
@@ -365,7 +434,7 @@ class QuestionPage extends Component {
         }
         let redirectVar = null;
         if (this.props.authentication.loggedIn !== true) {
-            redirectVar = <Redirect to="/login" />
+            //            redirectVar = <Redirect to="/login" />
         }
         return (
             <div>
@@ -374,12 +443,12 @@ class QuestionPage extends Component {
                     <ListGroup variant="flush">
                         <ListGroup.Item>
                             <BadgeGroup data={BadgeGroup_data} />
-                            <h4><b>{this.state.question.questionText}</b></h4>
+                            <h4><b>{this.state.question.question_text}</b></h4>
                             <ButtonToolbar style={{ 'marginLeft': -10 }}>
                                 <Button className="q_page_button" variant="link" onClick={() => this.setState({ answer_input: !this.state.answer_input })}>
                                     <span className="fa fa-edit"></span> Answer</Button>
                                 <Button className="q_page_button" variant="link" onClick={this.handleFollow} disabled={this.state.followed}>
-                                    <span className="fa fa-plus-square"></span> {this.state.followed ? 'Followed' : 'Follow'}</Button>
+                                    <span className="fa fa-plus-square"></span> {this.state.followed ? 'Followed' : 'Follow'}  ·  {this.state.question.follower}</Button>
                             </ButtonToolbar>
                             <Collapse in={this.state.answer_input}>
                                 <Card>
@@ -388,6 +457,12 @@ class QuestionPage extends Component {
                                         <AnswerInput q_id={this.state.question._id} onChange={this.handleInput} />
                                     </Card.Body>
                                     <Card.Footer className="text-muted">
+                                        <input
+                                            type="checkbox"
+                                            onChange={this._onChangeAnoymous}
+                                            checked={this.state.answer_anoymous}
+                                        />
+                                        <span style={{ fontSize: 14, marginRight: 10 }}>   Answer anoymously </span>
                                         <Button size="sm" onClick={this.handleSubmitAnswer}> Submit</Button>
                                     </Card.Footer>
                                 </Card>

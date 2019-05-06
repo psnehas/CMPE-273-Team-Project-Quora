@@ -17,7 +17,7 @@ export function signup(state = {}, action) {
       }
     case userConstants.SIGNUP_FAILURE:
       return {
-        signInFailed: true,
+        signUpFailed: true,
         email: action.email,
         err: action.err,
       };

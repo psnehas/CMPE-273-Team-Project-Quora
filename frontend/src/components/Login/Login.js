@@ -91,13 +91,13 @@ class Login extends Component {
         //console.log(authentication);
 
         if (authentication.loggedIn === true) {
-        //    redirectVar = <Redirect to="/" />;
+            redirectVar = <Redirect to="/" />;
         }
 
 
         let res_msg = null;
         if (authentication.loginFailed === true) {
-            res_msg = (<p class="err_msg">Invalid Password or Email!</p>);
+            res_msg = (<p style={{color: 'red'}}>Invalid Password or Email!</p>);
         }
 
         return (
