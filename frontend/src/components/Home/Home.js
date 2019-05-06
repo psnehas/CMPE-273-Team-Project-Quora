@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import './Home.css';
@@ -106,7 +106,7 @@ class Home extends Component {
                     answer = (
                         <div>
                             <ul className="list-unstyled">
-                                <li>{q.answers[0].displayName} </li>
+                                <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'profile/' + q.answers[0].createdBy.user_id}>{q.answers[0].createdBy.name},</Link><span style={{ marginLeft: 10 }}>{q.answers[0].createdBy.crediential}</span></li>
                                 <li><small className="text-muted">Answered <Moment fromNow>{q.answers[0].createdOn}</Moment></small></li>
                             </ul>
                             <p className="comment_truncate">

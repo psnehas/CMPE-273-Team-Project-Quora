@@ -1,9 +1,8 @@
 var mongoose = require('mongoose')
-var autoIncrement = require('mongoose-sequence')(mongoose)
 
 const CommentSchema = new mongoose.Schema({
     owner: {
-        type: String // email
+        type: mongoose.Schema.Types.ObjectId, ref: 'User'
     },
     time: {
         type: Date
@@ -18,11 +17,10 @@ const CommentSchema = new mongoose.Schema({
 
 const AnswerSchema = new mongoose.Schema({
     question_id: {
-        type: Number,
-        trim: true
+        type: mongoose.Schema.Types.ObjectId, ref: 'Question'
     },
     owner: {
-        type: String // email
+        type: mongoose.Schema.Types.ObjectId, ref: 'User'
     },
     time: {
         type: Date
@@ -46,9 +44,5 @@ const AnswerSchema = new mongoose.Schema({
     ],
     comments: [CommentSchema]
 })
-
-
-CommentSchema.plugin(autoIncrement, {inc_field: 'comment_id'});
-AnswerSchema.plugin(autoIncrement, {inc_field: 'answer_id'});
 
 module.exports =  mongoose.model('Answer', AnswerSchema);

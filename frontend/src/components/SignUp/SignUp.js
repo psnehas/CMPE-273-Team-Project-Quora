@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Redirect } from 'react-router';
 import { userActions } from '../../_actions';
 import { connect } from 'react-redux';
-import { user_auth_apis } from '../../config';
+import { backend_host} from '../../config';
 //import Cookies from 'universal-cookie';
 
 //Define a Login Component
@@ -37,11 +37,11 @@ class SignUp extends Component {
     submitSignUp = (e) => {
         e.preventDefault();
         const data = {
-            FirstName: this.state.first_name,
-            LastName: this.state.last_name,
+            first_name: this.state.first_name,
+            last_name: this.state.last_name,
             //            role: this.state.role,
-            Password: this.state.password,
-            Email: this.state.email
+            password: this.state.password,
+            email: this.state.email
         }
 
         console.log('Fire submit button!');
@@ -52,12 +52,12 @@ class SignUp extends Component {
         this.props.dispatch(userActions.signup_request(email));
         this.setState({ submitted: true });
 
-        if (data.FirstName && data.LastName && data.Password && data.Email) {
+        if (data.first_name && data.last_name && data.password && data.email) {
 
             //set the with credentials to true
             //       axios.defaults.withCredentials = true;
             //make a post request with the user data
-            axios.post(user_auth_apis + '/signup', data)
+            axios.post(backend_host + '/signup', data)
                 .then(response => {
                     console.log("Status Code : ", response.status);
                     if (response.status === 200) {
@@ -65,7 +65,7 @@ class SignUp extends Component {
                         //cookie.save('role', response.data.role, { path: '/', expires: "", maxAge: 1000, httpOnly: false });
                         //                   const cookies = new Cookies();
                         //                   cookie.save('JWT', response.data.token, { path: '/' });
-                        this.props.dispatch(userActions.signup_success(email, response.data.role, response.data.user_id));
+                        this.props.dispatch(userActions.signup_success(email, response.data.user_id));
                         //                  this.props.dispatch(userActions.login_success(email, response.data.role, response.data.user_id));
                     } else {
                         this.props.dispatch(userActions.signup_failure(email, "HTTP CODE != 200"));
@@ -89,6 +89,10 @@ class SignUp extends Component {
         if (signup.signedUp === true) {
             redirectVar = <Redirect to="/login" />
         }
+        let res_msg = null;
+        if (signup.signUpFailed === true) {
+            res_msg = (<p style={{color: 'red'}} class="err_msg">Exsiting User!</p>);
+        }
 
         return (
             <div>
@@ -99,6 +103,7 @@ class SignUp extends Component {
                         <div className="main-div">
                             <div className="panel">
                                 <h2>Sign Up</h2>
+                                {res_msg}
                                 <p>Please enter your name, email and password</p>
                             </div>
                             <div className={"form-group" + (submitted && !first_name ? 'has-error' : '')}>

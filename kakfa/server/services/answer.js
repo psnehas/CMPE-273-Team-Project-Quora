@@ -26,17 +26,17 @@ const allVotes = (req, next) => {
         console.log("Downvotes: ", result.downvote)
         next(null, {
             status: 200,
-            data: result
+            data: {upvotes: result.upvote, downvote: result.downvote}
         })
     })
 }
 
 const allComments = (req, next) => {
     db.getComments(req.allComments.answer_id).then(result =>{
-        console.log("allComments: ", result)
+        console.log("allComments: ", result.comments)
         next(null, {
             status: 200,
-            data: result
+            data: result.comments
         })
     })
 }
@@ -74,6 +74,7 @@ const makeAnswer = (req, next) => {
     console.log("newAnswer", newAnswer)
     db.createAnswer(newAnswer).then(result =>{
         db.updateUserWithAnswer(req.answer.owner, result)
+        db.updateQuestionWithAnswer(req.answer.question_id, result)
         next(null, {
             status: 200,
             data: "New Answer created"
@@ -85,12 +86,13 @@ const updateAnswer = (req, next) => {
     console.log("question ID: ", req.update)
     editInfo ={
         answer_id: req.update.answer_id,
+        time: new Date(),
         content: req.update.content,
     }
-    db.updateOneAnswer(editInfo).then(result =>{
+    db.updateOneAnswer(editInfo).then(() =>{
         next(null, {
             status: 200,
-            data: result
+            data: "Answer " + editInfo.answer_id + " updated..."
         })
     })
 }
@@ -103,10 +105,10 @@ const createBookmark = (req, next) => {
             if(result.bookmark[i].user_id == req.userAnswer.user_id){
                 exist = true;
             }
-            if(!exist && i == result.bookmark.length-1){
-                db.setBookmark(req.userAnswer.user_id, req.userAnswer.answer_id)
-                db.updateUserBookmark(req.userAnswer.user_id, result)
-            }
+        }
+        if(!exist && i == result.bookmark.length){
+            db.setBookmark(req.userAnswer.user_id, req.userAnswer.answer_id)
+            db.updateUserBookmark(req.userAnswer.user_id, result)
         }
         next(null, {
             status: 200,

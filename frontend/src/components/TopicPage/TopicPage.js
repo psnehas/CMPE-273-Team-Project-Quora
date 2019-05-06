@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink,Link } from 'react-router-dom';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import './TopicPage.css';
@@ -7,7 +7,7 @@ import './TopicPage.css';
 import { connect } from 'react-redux';
 import { Card, Button } from 'react-bootstrap';
 import axios from 'axios';
-import { david_test_apis} from '../../config';
+import { david_test_apis } from '../../config';
 import renderHTML from 'react-render-html';
 import Moment from 'react-moment';
 import { BadgeGroup } from '../QuestionPage/QuestionPage'
@@ -56,14 +56,14 @@ class TopicPage extends Component {
         }
 
         if (this.state.questions.length !== 0) {
-            main_panel = this.state.questions.map((q,idx) => {
+            main_panel = this.state.questions.map((q, idx) => {
                 let answer = null;
                 if ('answers' in q) {
                     //console.log(html_truncate(q.answers[0].answerText, 3));
                     answer = (
                         <div>
                             <ul className="list-unstyled">
-                                <li>{q.answers[0].displayName} </li>
+                            <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'profile/' + q.answers[0].createdBy.user_id}>{q.answers[0].createdBy.name},</Link><span style={{ marginLeft: 10 }}>{q.answers[0].createdBy.crediential}</span></li>
                                 <li><small className="text-muted">Answered <Moment fromNow>{q.answers[0].createdOn}</Moment></small></li>
                             </ul>
                             <p className="comment_truncate">
@@ -102,7 +102,7 @@ class TopicPage extends Component {
         return (
 
             <div>
-            {redirectVar}
+                {redirectVar}
                 <Card>
                     <Card.Body style={{ "fontSize": 20, "color": '#666', 'fontWeight': 'bold' }}>
                         {this.state.topic}
