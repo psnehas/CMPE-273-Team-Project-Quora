@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import AsyncSelect from 'react-select/lib/Async';
 import axios from 'axios';
 import _ from "lodash";
-import {david_test_apis, user_tracking_apis} from '../../config';
+import {david_test_apis, user_tracking_apis, backend_host} from '../../config';
 import cookie from 'react-cookies';
 
 class TopicModal extends Component {
@@ -27,19 +27,19 @@ class TopicModal extends Component {
   handlePost = (e) => {
     e.preventDefault();
     const ids = this.state.selectedTopics.map(topic => 
-        topic.label
+        topic._id
     );
     console.log(ids);
     const data = {
-      action: 'topic',
-      ids: ids,
-      unfollow: false
+//      action: 'topic',
+      topic_ids: ids,
+      action: 'follow'
     }
     console.log(data);
 
-    axios.post(user_tracking_apis + '/userFollow', data, {
+    axios.post(backend_host + '/userTopics', data, {
       headers: {
-        'Authorization': `JWT ${this.state.token}`
+        'Authorization': `Bearer ${this.state.token}`
       }
     }).then(response => {
        this.props.update_sidebar(response.data.followed_topics);
@@ -62,12 +62,12 @@ class TopicModal extends Component {
 
 
   getOptions = inputValue => {
-    return axios.get(david_test_apis + '/topics', {
+    return axios.get(backend_host + '/topics', {
       headers: {
-        'Authorization': `JWT ${this.state.token}`
+        'Authorization': `Bearer ${this.state.token}`
       },
       params: {
-        excludeFollowed: true
+        exclude: true
        }
      })
       .then(response => {
@@ -110,13 +110,13 @@ class TopicModal extends Component {
                 defaultOptions
                 loadOptions={inputValue => this.getOptions(inputValue)}
                 onChange={this.handleSelectChange}
-                getOptionValue={option => option.label}
+                getOptionValue={option => option._id}
               />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button style={{ 'color': '#949494', 'text-decoration': 'none', 'fontWeight': 400}} variant="link" onClick={this.props.onHide}>Not now</Button>
+          <Button style={{ 'color': '#949494', 'textDecoration': 'none', 'fontWeight': 400}} variant="link" onClick={this.props.onHide}>Not now</Button>
           <Button onClick={this.handlePost}>Done</Button>
         </Modal.Footer>
       </Modal>

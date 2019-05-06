@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import AsyncSelect from 'react-select/lib/Async';
 import axios from 'axios';
 import _ from "lodash";
-import {david_test_apis} from '../../config';
+import {david_test_apis, backend_host} from '../../config';
 import cookie from 'react-cookies';
 
 class AddQModal extends Component {
@@ -29,14 +29,14 @@ class AddQModal extends Component {
   handlePost = (e) => {
     e.preventDefault();
     const data = {
-      questionText: this.state.questionText,
+      content: this.state.questionText,
       topics: this.state.selectedTopics
     }
     console.log(data);
 
-    axios.post(david_test_apis + '/questions', data, {
+    axios.post(backend_host + '/addQuestion', data, {
       headers: {
-        'Authorization': `JWT ${this.state.token}`
+        'Authorization': `Bearer ${this.state.token}`
       }
     }).then(response => {
      // console.log(response.data)
@@ -58,12 +58,12 @@ class AddQModal extends Component {
 
 
  getOptions = inputValue => {
-   return axios.get(david_test_apis + '/topics', {
+   return axios.get(backend_host + '/topics', {
     headers: {
-      'Authorization': `JWT ${this.state.token}`
+      'Authorization': `Bearer ${this.state.token}`
     },
      params: {
-      excludeFavorites: false
+      exclude: false
      }
    })
    .then(response=>{
@@ -113,7 +113,7 @@ class AddQModal extends Component {
                 defaultOptions
                 loadOptions={inputValue => this.getOptions(inputValue)}
                 onChange={this.handleSelectChange}
-                getOptionValue={option => option.label}
+                getOptionValue={option => option._id}
               />
             </Form.Group>
           </Form>

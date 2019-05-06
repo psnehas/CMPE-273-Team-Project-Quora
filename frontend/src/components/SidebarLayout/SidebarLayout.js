@@ -8,6 +8,7 @@ import { Route } from 'react-router';
 import Sidebar from '../Sidebar/Sidebar';
 import { Container, Col, Row } from 'react-bootstrap';
 
+
 const SidebarLayout = ({component: Component, ...rest}) => {
 
 return(

@@ -21,7 +21,7 @@ export default class AnswerEditor extends Component {
   }
   onChange = (value) => {
 
-    console.log(value);
+  //  console.log(value);
     this.setState({ value });
 
     if (this.props.onChange) {

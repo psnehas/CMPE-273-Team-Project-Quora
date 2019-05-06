@@ -23,7 +23,8 @@ class Home extends Component {
             user_feed: [],
             show_add: false,
             user_name: this.props.authentication.first_name + ' ' + this.props.authentication.last_name,
-            token: cookie.load('JWT')
+            token: cookie.load('JWT'),
+            refresh: true
         }
         this.showModal = this.showModal.bind(this);
     }
@@ -47,22 +48,30 @@ class Home extends Component {
             show_topics: true
         })
     }
+    componentDidUpdate() {
+        this.componentDidMount();
+    }
+
     componentDidMount() {
         axios.get(david_test_apis + '/userfeed', {
             headers: {
-                'Authorization': `JWT ${this.state.token}`
+                'Authorization': `Bearer ${this.state.token}`
             },
             params: {
  //               topAnswer: true,
-                depth: 1
+  //              depth: 1
             }
         }).then(response => {
  //           console.log(response);
             this.setState({
-                user_feed: response.data
+                user_feed: response.data,
+                refresh: false
             })
             
         }).catch(error => {
+            this.setState({
+                refresh: false
+            }, ()=>{console.log(this.state.refresh)})
             console.log(error);
         })
 /*
@@ -167,6 +176,8 @@ class Home extends Component {
         }*/
 
         let modal_Q_Close = () => this.setState({ show_add: false });
+        let handleReload = () => this.setState({refresh: true},()=>{console.log(this.state.refresh)});
+
         let redirectVar = null;
         if (this.props.authentication.loggedIn !== true){
             redirectVar = <Redirect to="/login" />
@@ -200,7 +211,9 @@ class Home extends Component {
                             <br />
 
                             <Card>
-                                <Card.Header as="h6"><span className="fa fa-question"></span> Questions for You</Card.Header>
+                                <Card.Header as="h6"><span className="fa fa-question"></span> Questions for You
+                                <Button variant="link" onClick={handleReload} style={{ 'textDecoration': 'none' }} className="add_q_link"><span className="fa fa-refresh"></span></Button>
+                                </Card.Header>
                             </Card>
                             {main_panel} {/* </Col>
                     </Row>

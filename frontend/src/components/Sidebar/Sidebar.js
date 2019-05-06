@@ -5,7 +5,7 @@ import { Nav,  Button } from 'react-bootstrap';
 import TopicModal from './TopicModal';
 import axios from 'axios';
 import cookie from 'react-cookies';
-import { user_tracking_apis} from '../../config'
+import { user_tracking_apis, backend_host} from '../../config'
 
 class Sidebar extends Component {
     constructor(props) {
@@ -38,12 +38,12 @@ class Sidebar extends Component {
         // ];
         let header = {
   //          'Content-Type': 'application/x-www-form-urlencoded',
-            'Authorization': `JWT ${this.state.token}`
+            'Authorization': `Bearer ${this.state.token}`
         }
         //axios.defaults.withCredentials = true;
         axios({
             medthod: 'get',
-            url: user_tracking_apis + '/userFollow',
+            url: backend_host + '/userTopics',
             headers: header
         })
             .then((res) => {
@@ -64,7 +64,7 @@ class Sidebar extends Component {
     render() {
         let sidebar_body = this.state.sidebar_links.map((link,idx) => {
             return (
-                <Nav.Link key={idx} className="sidebar" as={NavLink} to={'/topics/' + link.label}>{link.label}</Nav.Link>
+                <Nav.Link key={idx} className="sidebar" as={NavLink} to={'/topics/' + link._id}>{link.label}</Nav.Link>
             )
         });
         let modal_T_Close = () => this.setState({ show_topics: false });
