@@ -103,10 +103,10 @@ const createBookmark = (req, next) => {
             if(result.bookmark[i].user_id == req.userAnswer.user_id){
                 exist = true;
             }
-            if(!exist && i == result.bookmark.length-1){
-                db.setBookmark(req.userAnswer.user_id, req.userAnswer.answer_id)
-                db.updateUserBookmark(req.userAnswer.user_id, result)
-            }
+        }
+        if(!exist && i == result.bookmark.length){
+            db.setBookmark(req.userAnswer.user_id, req.userAnswer.answer_id)
+            db.updateUserBookmark(req.userAnswer.user_id, result)
         }
         next(null, {
             status: 200,
