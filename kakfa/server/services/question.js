@@ -2,7 +2,7 @@ var db = require('../../../backend/lib/mongoDB')
 
 
 const insertQuestion = (user_id, question, next) => {
-    let topics = question.topics.map(topic => topic.id);
+    let topics = question.topics.map(topic => topic._id);
     let que = {
         topics,
         user_id,
