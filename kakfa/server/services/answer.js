@@ -30,10 +30,10 @@ const downvote = (req, next) => {
 
 const allComments = (req, next) => {
     db.getComments(req.allComments.answer_id).then(result =>{
-        console.log("allComments: ", result.comments)
+        console.log("allComments: ", result)
         next(null, {
             status: 200,
-            data: result.comments
+            data: result
         })
     })
 }
