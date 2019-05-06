@@ -21,7 +21,7 @@ const AnswerSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, ref: 'Question'
     },
     owner: {
-        type: String // email
+        type: mongoose.Schema.Types.ObjectId, ref: 'User'
     },
     time: {
         type: Date
