@@ -77,9 +77,11 @@ const getUserTopics = (req, res) => {
 }
 
 const getTopics = (req, res) => {
-    console.log('Get all topics: ', req.user.user_id)
+    console.log('Get all topics with param: ', req.query.exclude);
     let message = {
         cmd: 'GET_TOPICS',
+        userid: req.user.user_id,
+        exclude: req.query.exclude
     }
     client.send(message, function(err, result) {
         console.log('the result for get all topics is: ', result);
@@ -88,7 +90,7 @@ const getTopics = (req, res) => {
 }
 
 const followTopics = (req, res) => {
-    console.log('User follow topics  with action: ', req.body.follow)
+    console.log('User follow topics with action: ', req.body.action)
     let message = {
         cmd: 'FOLLOW_TOPICS',
         userid: req.user.user_id,

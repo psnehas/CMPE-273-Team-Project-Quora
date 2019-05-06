@@ -75,7 +75,7 @@ exports.findUserProfileByID = (id) => {
 }
 
 exports.updateUserInfo = (id, user_info) => {
-    return User.findByIdAndUpdate(id, {$set: {user_info: user_info}}).exec();
+    return User.findByIdAndUpdate(id, {$set: {user_info: user_info}}, {new: true}).exec();
 }
 
 exports.findAvatarPathByID = (id) => {
@@ -93,7 +93,7 @@ exports.findFeedByUserID = (id) => {
 }
 
 exports.findTopicsByUserID = (id) => {
-    return User.findById(id).populate('followed_topics', 'name topic_id')
+    return User.findById(id).populate('followed_topics', 'label')
     .select('followed_topics -_id').exec();
 }
 
@@ -107,6 +107,7 @@ exports.insertTopic = (name) => {
 }
 
 exports.userFollowTopics = (userid, topic_ids) => {
+    console.log('userFollowTopics with topic_ids: ', topic_ids);
     return User.findOneAndUpdate({_id: userid}, {$push: {followed_topics: topic_ids}}).exec();
 }
 

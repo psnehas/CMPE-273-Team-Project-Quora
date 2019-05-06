@@ -144,35 +144,61 @@ const getUserTopics = (userid, next) => {
     })
 }
 
-const getTopics = (next) => {
+const getTopics = (userid, exclude, next) => {
+    console.log('get all topics with userid: ', userid);
     db.getAllTopics()
-    .then(result => {
-        console.log('get all topics reuslt: ', result);
-        next(null, {
-            status: 200,
-            data: result
-        })
+    .then(all_topics => {
+        console.log('get all topics reuslt: ', all_topics);
+        if (exclude === 'true') {
+            db.findTopicsByUserID(userid)
+            .then(user_topics => {
+                user_topics = user_topics.followed_topics.toObject();
+                let user_topics_id = user_topics.map(topic => topic._id.toString());
+                console.log('user_topics_id: ', user_topics_id);
+                let excluded = all_topics.filter(topic => {
+                    if (user_topics_id.includes(topic._id.toString()))
+                        return false;
+                    else
+                        return true;
+                })
+                next(null, {
+                    status: 200,
+                    data: excluded
+                })
+            })
+        } else {
+            next(null, {
+                status: 200,
+                data: all_topics
+            })
+        }
     })
 }
 
 const followTopics = (userid, action, topic_ids, next) => {
-    console.log('followTopics request, the typeof follow is: ', typeof follow);
+    console.log('followTopics request, the topic_ids are: ', topic_ids);
     if (action === 'follow') {
         db.userFollowTopics(userid, topic_ids)
         .then(result => {
             console.log('follow topic result: ', result);
-            next(null, {
-                status: 200,
-                success: true
+            db.findTopicsByUserID(userid)
+            .then(topics => {
+                next(null, {
+                    status: 200,
+                    data: topics
+                })
             })
         })
     } else {
         db.userUnfollowTopics(userid, topic_ids)
         .then(result => {
             console.log('unfollow topic result: ', result);
-            next(null, {
-                status: 200,
-                success: true
+            db.findTopicsByUserID(userid)
+            .then(topics => {
+                next(null, {
+                    status: 200,
+                    data: topics
+                })
             })
         })
     }
@@ -261,7 +287,7 @@ const dispatch = (message, next) => {
             getUserTopics(message.userid, next);
             break;
         case 'GET_TOPICS':
-            getTopics(next);
+            getTopics(message.userid, message.exclude, next);
             break;
         case 'FOLLOW_TOPICS':
             followTopics(message.userid, message.action, message.topic_ids, next);
