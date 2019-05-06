@@ -4,19 +4,17 @@ import { Container, Col, Row, Image, Modal, Button, Form } from 'react-bootstrap
 import moment from 'moment';
 import Content from './Content/Content'
 import Sidebar from './Sidebar/Sidebar';
+import { connect } from 'react-redux';
+import { userActions } from '../../_actions';
+import cookie from 'react-cookies';
+import { backend_host } from '../../config';
+
 
 import axios from 'axios';
 
 class Profile extends Component {
 
     state = {
-        // Data
-        user_info: {},
-        created_answers: [],
-        bookmarked_answers: [],
-        created_questions: [],
-        followed_people: [],
-        following_people: [],
         // Upload New Avatar
         show_edit_image: false,
         show_image_uploader: false,
@@ -32,72 +30,16 @@ class Profile extends Component {
     };
 
     componentDidMount() {
-
-        let fake_response = {
-            data: {
-                user_info: {
-                    avatar: "https://res-1.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco/v1425070395/lch84n574ygfa3xr5irq.png",
-                    first_name: "Yuxiang",
-                    last_name: "Chen",
-                    profileCredential: "string",
-                    about: "string"
-                },
-                created_answers: [
-                    {
-                        id: "string",
-                        title: "string",
-                        created_time: moment().unix()
-                    }
-                ],
-                bookmarked_answers: [
-                    {
-                        id: "string",
-                        title: "string",
-                        bookmarked_time: moment().unix()
-                    }
-                ],
-                created_questions: [
-                    {
-                        id: "string",
-                        title: "string",
-                        created_time: moment().unix()
-                    }
-                ],
-                followed_people: [
-                    {
-                        id: "string",
-                        first_name: "string",
-                        last_name: "string"
-                    }
-                ],
-                following_people: [
-                    {
-                        id: "string",
-                        first_name: "string",
-                        last_name: "string"
-                    }
-                ]
+        axios.get(`${backend_host}/profile/${this.props.match.params.uid}`, {
+            headers: {
+                'Authorization': `Bearer ${cookie.load('JWT')}`
             }
-        }
-
-        let {
-            user_info,
-            created_answers,
-            bookmarked_answers,
-            created_questions,
-            followed_people,
-            following_people } = fake_response.data;
-
-        user_info.uid = this.props.match.params.uid
-
-        this.setState({
-            user_info,
-            created_answers,
-            bookmarked_answers,
-            created_questions,
-            followed_people,
-            following_people
+        }).then(res => {
+            if (res.status === 200) {
+                this.props.dispatch(userActions.profile_update(res.data))
+            }
         })
+
     }
 
     onOpenImageUploaderHandler = () => {
@@ -142,10 +84,10 @@ class Profile extends Component {
     onEditProfileHandler = () => {
         this.setState({
             editing_profile: true,
-            new_first_name: this.state.user_info.first_name,
-            new_last_name: this.state.user_info.last_name,
-            new_profileCredential: this.state.user_info.profileCredential,
-            new_about: this.state.user_info.about
+            new_first_name: this.props.profile.user_info.first_name,
+            new_last_name: this.props.profile.user_info.last_name,
+            new_profileCredential: this.props.profile.user_info.profileCredential,
+            new_about: this.props.profile.user_info.about
         })
     }
 
@@ -158,19 +100,38 @@ class Profile extends Component {
     onSaveEditProfileHandler = () => {
 
         let new_user_info = {
-            avatar: this.state.user_info.avatar,
+            avatar: this.props.profile.user_info.avatar,
             first_name: this.state.new_first_name,
-            last_name: this.state.last_name,
+            last_name: this.state.new_last_name,
             profileCredential: this.state.new_profileCredential,
             about: this.state.new_about,
         }
 
+        console.log("Before dispatch", new_user_info);
+
+
+
+        this.props.dispatch(userActions.profile_update({ user_info: new_user_info }));
+
+        console.log("new profile", this.props.profile.user_info);
+
+        let data = {
+            ...this.props.profile.user_info,
+            ...new_user_info
+        }
+
+        axios.put(`${backend_host}/profile/update_info`, data,
+            {
+                headers: {
+                    'Authorization': `Bearer ${cookie.load('JWT')}`
+                }
+            }).then(res => {
+                console.log("Update Profile", res)
+            })
+
         this.setState({
             editing_profile: false,
-            user_info: new_user_info
-        })
-
-        // TODO
+        });
     }
 
     onChangeHandler = (e) => {
@@ -179,20 +140,12 @@ class Profile extends Component {
 
     render() {
 
-        let context = {
-            created_answers: this.state.created_answers,
-            bookmarked_answers: this.state.bookmarked_answers,
-            created_questions: this.state.created_questions,
-            followed_people: this.state.followed_people,
-            following_people: this.state.following_people
-        }
-
         let profile_content = (
             <div>
-                <h1>{this.state.user_info.first_name}&nbsp;{this.state.user_info.last_name}</h1>
-                <p>{this.state.user_info.profileCredential}</p>
-                <p>{this.state.user_info.about}</p>
-                <Button onClick={this.onEditProfileHandler}>Edit</Button>
+                <h1>{this.props.profile.user_info.first_name}&nbsp;{this.props.profile.user_info.last_name}</h1>
+                <p>{this.props.profile.user_info.profileCredential}</p>
+                <p>{this.props.profile.user_info.about}</p>
+                {this.props.authentication.user_id === this.props.match.params.uid ? <Button onClick={this.onEditProfileHandler}>Edit</Button> : null}
             </div>
         )
 
@@ -231,7 +184,7 @@ class Profile extends Component {
                     <Row>
                         <Col className={style.center}>
                             <div className={style.profile_photo_image_wrapper} onMouseEnter={() => this.setState({ show_edit_image: true })} onMouseLeave={() => this.setState({ show_edit_image: false })}>
-                                <Image className={style.profile_photo_image} src={this.state.user_info.avatar} roundedCircle />
+                                <Image className={style.profile_photo_image} src={this.props.profile.user_info.avatar} roundedCircle />
                                 {this.state.show_edit_image ? <span className={style.edit_text} onClick={this.onOpenImageUploaderHandler}>Edit</span> : null}
                             </div>
                         </Col>
@@ -245,10 +198,10 @@ class Profile extends Component {
 
                     <Row>
                         <Col>
-                            <Sidebar uid={this.state.user_info.uid} />
+                            <Sidebar uid={this.props.profile.user_info.uid} />
                         </Col>
                         <Col xs={8}>
-                            <Content uid={this.state.user_info.uid} data={context} />
+                            <Content uid={this.props.profile.user_info.uid} />
                         </Col>
                     </Row>
 
@@ -281,4 +234,7 @@ class Profile extends Component {
 
 }
 
-export default Profile;
+// reducer: profile 's output maps to this.props.profile.user_info
+const mapStateToProps = ({ authentication, profile }) => ({ authentication, profile });
+// apply above mapping to Login class
+export default connect(mapStateToProps)(Profile);

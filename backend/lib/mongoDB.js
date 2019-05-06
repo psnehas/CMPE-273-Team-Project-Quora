@@ -74,6 +74,14 @@ exports.findUserProfileByID = (id) => {
     .select('user_info email').exec();
 }
 
+exports.findUserFollowedQuestions = (id) => {
+    return User.findById(id)
+    .populate({
+        path: 'followed_questions',
+    })
+    .select('followed_questions').exec();
+}
+
 exports.updateUserInfo = (id, user_info) => {
     return User.findByIdAndUpdate(id, {$set: {user_info: user_info}}, {new: true}).exec();
 }
@@ -172,7 +180,7 @@ exports.createAnswer = (data) => {
 }
 
 exports.setBookmark = (userid, answerid) => {
-    return Answer.findOneAndUpdate({_id: answerid}, {$push: {bookmark: {user_id: userid}}}).exec();
+    return Answer.findOneAndUpdate({_id: answerid}, {$push: {bookmark: {_id: userid}}}).exec();
 }
 
 exports.findOneAnswer = (answerid) => {
@@ -225,11 +233,12 @@ exports.fetchQuestion = (question_id) =>{
             path: 'owner',
             select: 'user_info.first_name user_info.last_name user_info.profileCredential',
         },
-        select: '_id owner time content upvote downvote bookmark anonymous'
+        select: '_id owner time content upvote downvote anonymous'
     })
     .populate({
         path: 'topics',
         select: '_id label'
     })
+    .select('_id content time followers answers topics')
     .exec();
 }

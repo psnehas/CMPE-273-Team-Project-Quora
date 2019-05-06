@@ -12,6 +12,7 @@ function signup_request(email) { return { type: userConstants.SIGNUP_REQUEST, em
 function signup_success() { 
     return { type: userConstants.SIGNUP_SUCCESS}; }
 function signup_failure(email, err) { return { type: userConstants.SIGNUP_FAILURE, email, err } }
+function profile_update(data) {return {type: userConstants.PROFILE_UPDATE, data}}
 
 export const userActions = {
     login_request,
@@ -21,4 +22,5 @@ export const userActions = {
     signup_request,
     signup_success,
     signup_failure, 
+    profile_update
 };
