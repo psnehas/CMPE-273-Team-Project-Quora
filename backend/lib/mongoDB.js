@@ -187,6 +187,19 @@ exports.bindUserQuestion = (user_id, question_id) => {
     return User.findByIdAndUpdate(user_id, {$push: {created_questions: question_id}}).exec();
 }
 
-exports.fetchQuestion =(question_id)=>{
-    return Question.findOne({question_id:question_id}).exec();
+exports.fetchQuestion = (question_id) =>{
+    return Question.findOne({_id: question_id})
+    .populate({
+        path: 'answers',
+        populate: {
+            path: 'owner',
+            select: 'user_info.first_name user_info.last_name user_info.profileCredential',
+        },
+        select: '_id owner time content upvote downvote bookmark anonymous'
+    })
+    .populate({
+        path: 'topics',
+        select: '_id label'
+    })
+    .exec();
 }

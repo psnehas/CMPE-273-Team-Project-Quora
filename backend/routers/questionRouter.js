@@ -6,7 +6,9 @@ const router = express.Router();
 
 router.route('/addQuestion')
 .post(authController.requireSignin, questionControllerKafka.insertQuestion);
-router.route('/questions/:question_id').get(questionController.fetchQuestion);
+
+router.route('/questions/:question_id')
+.get(authController.requireSignin, questionControllerKafka.fetchQuestion);
 
 
 module.exports={router}

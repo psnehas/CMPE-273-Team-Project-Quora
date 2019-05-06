@@ -21,10 +21,25 @@ const insertQuestion = (user_id, question, next) => {
     });
 }
 
+const fetchQuestion = (req, next) => {
+    console.log("req",req.questionid.question_id)
+    db.fetchQuestion(req.questionid.question_id)
+    .then(result => {
+        console.log("Fetch question result: ", result);
+        next(null, {
+            status: 200,
+            data: result
+        });
+    });
+}
+
 const dispatch = (message, next) => {
     switch (message.cmd) {
         case 'INSERT_QUESTION':
             insertQuestion(message.user_id, message.question, next);
+            break;
+        case 'FETCH_QUESTION':
+            fetchQuestion(message, next);
             break;
         default: console.log('unknown request');
     }
