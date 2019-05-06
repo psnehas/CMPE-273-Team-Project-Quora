@@ -21,8 +21,9 @@ router.route('/topics')
 .get(authController.requireSignin, userControllerKafka.getTopics)
 .post(authController.requireSignin, userControllerKafka.createTopic);
 
-router.route('/api/users/photo/:userID')
-.get(userControllerLocal.getPhoto)
+router.route('/user_avatar/:userID')
+.get(userControllerLocal.getUserAvatar)
+.post(authController.requireSignin, userControllerLocal.updateUserAvatar)
 
 router.route('/profile/:userID')
 .get(authController.requireSignin, userControllerKafka.getUser);

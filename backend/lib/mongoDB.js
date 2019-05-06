@@ -90,6 +90,10 @@ exports.findAvatarPathByID = (id) => {
     return User.findById(id).exec();
 }
 
+exports.updateUserAvatar = (user_id, avatar) => {
+    return User.findByIdAndUpdate(user_id, {$set: {avatar: avatar}}).exec();
+}
+
 exports.findFeedByUserID = (id) => {
     return User.findById(id).select('feeded_q_a -_id').exec();
     /*
