@@ -24,8 +24,8 @@ const signin = (user, next) => {
                 res.data = {
                     token,
                     user_id: result._id,
-                    first_name: result.first_name,
-                    last_name: result.last_name
+                    first_name: result.user_info.first_name,
+                    last_name: result.user_info.last_name
                 }
             }
         }
@@ -39,6 +39,7 @@ const signup = (user, next) => {
     .then(result => {
        console.log(result)
        let res = {};
+       let newUser = {user_info: {}};
         if (result) {
             res.status = 400;
             res.data = {error: 'User exists'};
@@ -46,8 +47,12 @@ const signup = (user, next) => {
         } else {
             let hashed = bcrypt.hashSync(user.password, 10)
             console.log("hashed password: " + hashed)
-            user.password = hashed
-            db.insertUser(user)
+            newUser.password = hashed;
+            newUser.email = user.email;
+            newUser.user_info.first_name = user.first_name;
+            newUser.user_info.last_name = user.last_name;
+            console.log('new user inserted: ', newUser);
+            db.insertUser(newUser)
             .then(result => {
                 console.log('signup success', result)
                 res.status = 200;
@@ -63,7 +68,8 @@ const getUser = (userid, next) => {
     .then(user => {
         let res = {};
         if (user) {
-            console.log('the user profile is: ', user)
+            user = user.toObject();
+            console.log('the user profile is: ', user.email)
             let profile = {
                 user_info: {},
                 created_answers: [],
@@ -72,16 +78,11 @@ const getUser = (userid, next) => {
                 followed_people: [],
                 following_people:[]
             };
-            profile.user_info.first_name = user.first_name;
-            profile.user_info.last_name = user.last_name;
-            profile.user_info.profileCredential = user.profileCredential;
-            profile.user_info.about = user.about;
-            profile.user_info.email = user.email;
-            profile.user_info.city = user.city;
-            profile.user_info.state = user.state;
-            profile.user_info.zipCode = user.zipCode;
-            profile.user_info.educations = user.educations;
-            profile.user_info.careers = user.careers;
+            profile.user_info = {
+                ...user.user_info,
+                email: user.email
+            }
+            console.log('the user profile is: ', profile.user_info);
             profile.created_answers = user.created_answers.sort((a, b) => {
                 return a.time > b.time;
             })
@@ -100,6 +101,18 @@ const getUser = (userid, next) => {
             res.data = {error: `User doesn't exist`};
         }
         next(null, res);
+    })
+}
+
+const updateUserInfo = (userid, user_info, next) => {
+    console.log('updateUserInfo params: ', userid, user_info);
+    db.updateUserInfo(userid, user_info)
+    .then(user => {
+        console.log('update user info result: ', user);
+        next(null, {
+            status: 200,
+            data: user
+        })
     })
 }
 
@@ -124,6 +137,17 @@ const getUserTopics = (userid, next) => {
     db.findTopicsByUserID(userid)
     .then(result => {
         console.log('topics reuslt: ', result);
+        next(null, {
+            status: 200,
+            data: result
+        })
+    })
+}
+
+const getTopics = (next) => {
+    db.getAllTopics()
+    .then(result => {
+        console.log('get all topics reuslt: ', result);
         next(null, {
             status: 200,
             data: result
@@ -227,11 +251,17 @@ const dispatch = (message, next) => {
         case 'GET_USER':
             getUser(message.userid, next);
             break;
+        case 'UPDATE_USER_INFO':
+            updateUserInfo(message.userid, message.user_info, next);
+            break;
         case 'GET_FEED':
             getUserFeed(message.userid, next);
             break;
-        case 'GET_TOPICS':
+        case 'GET_USER_TOPICS':
             getUserTopics(message.userid, next);
+            break;
+        case 'GET_TOPICS':
+            getTopics(next);
             break;
         case 'FOLLOW_TOPICS':
             followTopics(message.userid, message.action, message.topic_ids, next);

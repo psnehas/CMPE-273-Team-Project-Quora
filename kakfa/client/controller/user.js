@@ -39,6 +39,19 @@ const getUser = (req, res) => {
     })
 }
 
+const updateUserInfo = (req, res) => {
+    console.log('Update user profile of: ', req.user.user_id)
+    let message = {
+        cmd: 'UPDATE_USER_INFO',
+        userid: req.user.user_id,
+        user_info: req.body
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for update user info is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
 const getUserFeed = (req, res) => {
     console.log('Get user feed from user id: ', req.user.user_id)
     let message = {
@@ -54,11 +67,22 @@ const getUserFeed = (req, res) => {
 const getUserTopics = (req, res) => {
     console.log('Get user topics  user id: ', req.user.user_id)
     let message = {
-        cmd: 'GET_TOPICS',
+        cmd: 'GET_USER_TOPICS',
         userid: req.user.user_id
     }
     client.send(message, function(err, result) {
         console.log('the result for getUserTopics is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
+const getTopics = (req, res) => {
+    console.log('Get all topics: ', req.user.user_id)
+    let message = {
+        cmd: 'GET_TOPICS',
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for get all topics is: ', result);
         res.status(result.status).json(result.data);
     })
 }
@@ -89,4 +113,5 @@ const createTopic = (req, res) => {
     })
 }
 
-module.exports = {signin, signup, getUserFeed, getUserTopics, followTopics, createTopic, getUser}
+module.exports = {signin, signup, getUserFeed, getUserTopics, getTopics, followTopics, createTopic, 
+    getUser, updateUserInfo}

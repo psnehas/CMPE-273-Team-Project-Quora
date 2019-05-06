@@ -1,5 +1,4 @@
 var mongoose = require('mongoose')
-var autoIncrement = require('mongoose-sequence')(mongoose)
 
 const TopicSchema = new mongoose.Schema({
     label: {
@@ -9,7 +8,5 @@ const TopicSchema = new mongoose.Schema({
     },
     questions: [ {type: mongoose.Schema.Types.ObjectId, ref: 'Question'} ]
 })
-
-TopicSchema.plugin(autoIncrement, {inc_field: 'topic_id'});
 
 module.exports =  mongoose.model('Topic', TopicSchema);

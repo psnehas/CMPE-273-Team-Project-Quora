@@ -71,7 +71,11 @@ exports.findUserProfileByID = (id) => {
         path: 'following_people',
         select: 'first_name last_name'
     })
-    .select('first_name last_name email city state zipCode profileCredential about educations careers').exec();
+    .select('user_info email').exec();
+}
+
+exports.updateUserInfo = (id, user_info) => {
+    return User.findByIdAndUpdate(id, {$set: {user_info: user_info}}).exec();
 }
 
 exports.findAvatarPathByID = (id) => {
@@ -91,6 +95,10 @@ exports.findFeedByUserID = (id) => {
 exports.findTopicsByUserID = (id) => {
     return User.findById(id).populate('followed_topics', 'name topic_id')
     .select('followed_topics -_id').exec();
+}
+
+exports.getAllTopics = () => {
+    return Topic.find({}).select('label').exec();
 }
 
 exports.insertTopic = (name) => {
