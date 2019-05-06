@@ -108,11 +108,11 @@ exports.insertTopic = (name) => {
 
 exports.userFollowTopics = (userid, topic_ids) => {
     console.log('userFollowTopics with topic_ids: ', topic_ids);
-    return User.findOneAndUpdate({_id: userid}, {$push: {followed_topics: topic_ids}}).exec();
+    return User.findOneAndUpdate({_id: userid}, {$push: {followed_topics: topic_ids}}, {new: true}).exec();
 }
 
 exports.userUnfollowTopics = (userid, topic_ids) => {
-    return User.findByIdAndUpdate({_id: userid}, {$pull: {followed_topics: topic_ids[0]}}).exec();
+    return User.findByIdAndUpdate({_id: userid}, {$pull: {followed_topics: topic_ids[0]}}, {new: true}).exec();
 }
 
 exports.updateUser = (user) => {
