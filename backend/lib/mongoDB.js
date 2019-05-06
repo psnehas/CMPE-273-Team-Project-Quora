@@ -112,11 +112,11 @@ exports.updateUser = (user) => {
 
 //Answer
 exports.upvoteAnswer = (answerid) => {
-    return Answer.findOneAndUpdate({answer_id: answerid}, {$inc : {upvote : 1}}).exec();
+    return Answer.findOneAndUpdate({_id: answerid}, {$inc : {upvote : 1}}).exec();
 }
 
 exports.downvoteAnswer = (answerid) => {
-    return Answer.findOneAndUpdate({answer_id: answerid}, {$inc : {downvote : 1}}).exec();
+    return Answer.findOneAndUpdate({_id: answerid}, {$inc : {downvote : 1}}).exec();
 }
 
 exports.getVotes = (answerid) => {
