@@ -9,4 +9,6 @@ export const userConstants = {
     
     LOGOUT: 'USERS_LOGOUT',
 
+    // Profile
+    PROFILE_UPDATE: 'PROFILE_UPDATE'
 };
