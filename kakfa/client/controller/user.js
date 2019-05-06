@@ -115,5 +115,18 @@ const createTopic = (req, res) => {
     })
 }
 
-module.exports = {signin, signup, getUserFeed, getUserTopics, getTopics, followTopics, createTopic, 
+const getTopicQuestions = (req, res) => {
+    console.log('Get topic questions with topic id: ', req.params.topic_id);
+    let message = {
+        cmd: 'GET_TOPIC_QUESTIONS',
+        userid: req.user.user_id,
+        topic_id: req.params.topic_id
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for get topic question is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
+module.exports = {signin, signup, getUserFeed, getUserTopics, getTopics, followTopics, createTopic, getTopicQuestions,
     getUser, updateUserInfo}
