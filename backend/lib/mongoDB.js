@@ -120,11 +120,11 @@ exports.downvoteAnswer = (answerid) => {
 }
 
 exports.getVotes = (answerid) => {
-    return Answer.findOne({answer_id: answerid}).exec();
+    return Answer.findOne({_id: answerid}).exec();
 }
 
 exports.getComments = (answerid) => {
-    return Answer.find({answer_id: answerid}).exec();
+    return Answer.find({_id: answerid}).exec();
 }
 
 exports.createComment = (comment) => {
@@ -160,6 +160,7 @@ exports.updateUserBookmark = (userid, answerid) => {
     return User.findOneAndUpdate({_id: userid}, {$push: {bookmarked_answers: answerid._id}}).exec();
 }
 
+//question
 exports.insertQuestion = (question) => {
     let newQuestion = new Question(question)
     return newQuestion.save();
