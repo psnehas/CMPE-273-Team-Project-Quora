@@ -129,5 +129,17 @@ const getOneAnswer = (req, res) => {
     })
 }
 
+const getOwnerOfAnswer = (req, res) => {
+    console.log("get owner of answer request")
+    let message = {
+        cmd: 'GET_OWNER_OF_ANSWER',
+        answer: req.params
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for get one answer is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
 module.exports = {upvote, downvote, allVotes, allComments, makeComment, createBookmark,
-    getOneAnswer, makeAnswer, updateAnswer}
+    getOneAnswer, makeAnswer, updateAnswer, getOwnerOfAnswer}
