@@ -124,7 +124,7 @@ exports.getVotes = (answerid) => {
 }
 
 exports.getComments = (answerid) => {
-    return Answer.find({_id: answerid}).exec();
+    return Answer.findOne({_id: answerid}).exec();
 }
 
 exports.createComment = (comment) => {

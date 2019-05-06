@@ -26,17 +26,17 @@ const allVotes = (req, next) => {
         console.log("Downvotes: ", result.downvote)
         next(null, {
             status: 200,
-            data: result
+            data: {upvotes: result.upvote, downvote: result.downvote}
         })
     })
 }
 
 const allComments = (req, next) => {
     db.getComments(req.allComments.answer_id).then(result =>{
-        console.log("allComments: ", result)
+        console.log("allComments: ", result.comments)
         next(null, {
             status: 200,
-            data: result
+            data: result.comments
         })
     })
 }
