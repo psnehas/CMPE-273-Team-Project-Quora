@@ -130,26 +130,25 @@ const getOneAnswer = (req, next) => {
 
 const getOwnerOfAnswer = (req, next) => {
     db.getOwnerOfAnswer(req.answer.answer_id).then(result =>{
-        console.log("Owner content: ", result.owner)
+        console.log("Owner content: ", result)
         if(result.anonymous == false){
             next(null, {
                 status: 200,
-                data: result.owner
-                // data: {
-                    // user_id: result.owner._id,
-                    // name: result.owner.user_info.first_name + result.owner.user_info.last_name,
-                    // crediential: result.owner.profileCredential
-                // }
+                data: {
+                    user_id: result.owner._id,
+                    name: result.owner.user_info.first_name +" "+ result.owner.user_info.last_name,
+                    crediential: result.owner.user_info.profileCredential
+                }
             })
         }
-        // next(null, {
-        //     status: 200,
-        //     data: {
-        //         user_id: result._id,
-        //         name: "anonymous",
-        //         crediential: profileCredential
-        //     }
-        // })
+        next(null, {
+            status: 200,
+            data: {
+                user_id: result.owner._id,
+                name: "anonymous",
+                crediential: result.owner.user_info.profileCredential
+            }
+        })
     })
 }
 
