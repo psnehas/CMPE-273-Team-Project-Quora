@@ -95,21 +95,26 @@ const updateAnswer = (req, next) => {
 }
 
 const createBookmark = (req, next) => {
-    db.findOneAnswer(req.userAnswer.answer_id).then(result =>{
+    db.findOneAnswer(req.answerid).then(result =>{
         console.log("Answer content: ", result)
         var exist = false
         for(i = 0; i < result.bookmark.length; i++){
-            if(result.bookmark[i].user_id == req.userAnswer.user_id){
+            if(result.bookmark[i].user_id == req.userid){
+                console.log(result.bookmark[i].user_id, req.userid)
                 exist = true;
             }
-        }
-        if(!exist && i == result.bookmark.length){
-            db.setBookmark(req.userAnswer.user_id, req.userAnswer.answer_id)
-            db.updateUserBookmark(req.userAnswer.user_id, result)
+            if(!exist && i == result.bookmark.length){
+                db.setBookmark(req.userid, req.answerid)
+                db.updateUserBookmark(req.userid, result)
+                next(null, {
+                    status: 200,
+                    data: "Answer/User Schema: " + req.userid + " add bookmark on answer " + req.answerid
+                })
+            }
         }
         next(null, {
             status: 200,
-            data: "Answer/User Schema: " + req.userAnswer.user_id + " add bookmark on answer " + req.userAnswer.answer_id
+            data: "Answer/User Schema: exist"
         })
     })
     console.log("Bookmark added")
