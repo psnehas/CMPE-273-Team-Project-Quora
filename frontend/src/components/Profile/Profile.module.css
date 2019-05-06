@@ -12,8 +12,9 @@
     top: 10px;
     right: 10px;
     cursor: pointer;
-    color: blue;
-    text-decoration: underline;
+    color: #ff00a18c;;
+    background-color: #15572461;
+    width: 100%;
 }
 
 .center {
