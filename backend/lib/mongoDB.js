@@ -112,19 +112,19 @@ exports.updateUser = (user) => {
 
 //Answer
 exports.upvoteAnswer = (answerid) => {
-    return Answer.findOneAndUpdate({answer_id: answerid}, {$inc : {upvote : 1}}).exec();
+    return Answer.findOneAndUpdate({_id: answerid}, {$inc : {upvote : 1}}).exec();
 }
 
 exports.downvoteAnswer = (answerid) => {
-    return Answer.findOneAndUpdate({answer_id: answerid}, {$inc : {downvote : 1}}).exec();
+    return Answer.findOneAndUpdate({_id: answerid}, {$inc : {downvote : 1}}).exec();
 }
 
 exports.getVotes = (answerid) => {
-    return Answer.findOne({answer_id: answerid}).exec();
+    return Answer.findOne({_id: answerid}).exec();
 }
 
 exports.getComments = (answerid) => {
-    return Answer.find({answer_id: answerid}).exec();
+    return Answer.findOne({_id: answerid}).exec();
 }
 
 exports.createComment = (comment) => {
@@ -137,15 +137,15 @@ exports.createAnswer = (data) => {
 }
 
 exports.setBookmark = (userid, answerid) => {
-    return Answer.findOneAndUpdate({answer_id: answerid}, {$push: {bookmark: {user_id: userid}}}).exec();
+    return Answer.findOneAndUpdate({_id: answerid}, {$push: {bookmark: {user_id: userid}}}).exec();
 }
 
 exports.findOneAnswer = (answerid) => {
-    return Answer.findOne({answer_id: answerid}).exec();
+    return Answer.findOne({_id: answerid}).exec();
 }
 
 exports.updateOneAnswer = (editInfo) => {
-    return Answer.findOneAndUpdate({answer_id: editInfo.answer_id}, {$set: {content: editInfo.content}}).exec();
+    return Answer.findOneAndUpdate({_id: editInfo.answer_id}, {$set: {content: editInfo.content, time: editInfo.time}}).exec();
 }
 
 exports.updateUserWithAnswer = (user, newAnswer) => {
@@ -156,10 +156,11 @@ exports.updateQuestionWithAnswer = (questionid, newAnswer) => {
     return Question.findOneAndUpdate({_id: questionid}, {$push: {answers: newAnswer._id}}).exec();
 }
 
-exports.updateUserBookmark = (user, answerid) => {
-    return User.findOneAndUpdate({email: user}, {$push: {bookmarked_answers: answerid._id}}).exec();
+exports.updateUserBookmark = (userid, answerid) => {
+    return User.findOneAndUpdate({_id: userid}, {$push: {bookmarked_answers: answerid._id}}).exec();
 }
 
+//question
 exports.insertQuestion = (question) => {
     let newQuestion = new Question(question)
     return newQuestion.save();
