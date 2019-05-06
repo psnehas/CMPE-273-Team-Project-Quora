@@ -57,7 +57,7 @@ const makeComment = (req, res) => {
     console.log("make comment request")
     let request = {
         answer_id: req.params.answer_id,
-        owner: req.body.owner,
+        owner: req.user.user_id,
         comment: req.body.comment,
         anonymous: req.body.anonymous
     }
@@ -75,7 +75,7 @@ const makeAnswer = (req, res) => {
     console.log("make answer request")
     let request = {
         question_id: req.params.question_id,
-        owner: req.body.owner,
+        owner: req.user.user_id,
         content: req.body.content,
         anonymous: req.body.anonymous
     }
