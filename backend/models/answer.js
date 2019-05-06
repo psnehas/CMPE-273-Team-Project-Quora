@@ -18,11 +18,10 @@ const CommentSchema = new mongoose.Schema({
 
 const AnswerSchema = new mongoose.Schema({
     question_id: {
-        type: Number,
-        trim: true
+        type: mongoose.Schema.Types.ObjectId, ref: 'Question'
     },
     owner: {
-        type: String // email
+        type: mongoose.Schema.Types.ObjectId, ref: 'User'
     },
     time: {
         type: Date

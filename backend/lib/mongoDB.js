@@ -149,11 +149,11 @@ exports.updateOneAnswer = (editInfo) => {
 }
 
 exports.updateUserWithAnswer = (user, newAnswer) => {
-    return User.findOneAndUpdate({email: user}, {$push: {created_answers: newAnswer._id}}).exec();
+    return User.findOneAndUpdate({_id: user}, {$push: {created_answers: newAnswer._id}}).exec();
 }
 
-exports.updateUserWithAnswer = (user, newAnswer) => {
-    return User.findOneAndUpdate({email: user}, {$push: {created_answers: newAnswer._id}}).exec();
+exports.updateQuestionWithAnswer = (questionid, newAnswer) => {
+    return Question.findOneAndUpdate({_id: questionid}, {$push: {answers: newAnswer._id}}).exec();
 }
 
 exports.updateUserBookmark = (user, answerid) => {
