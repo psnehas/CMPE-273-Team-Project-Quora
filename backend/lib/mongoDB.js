@@ -90,6 +90,10 @@ exports.findAvatarPathByID = (id) => {
     return User.findById(id).exec();
 }
 
+exports.updateUserAvatar = (user_id, avatar) => {
+    return User.findByIdAndUpdate(user_id, {$set: {avatar: avatar}}).exec();
+}
+
 exports.findFeedByUserID = (id) => {
     return User.findById(id).select('feeded_q_a -_id').exec();
     /*
@@ -241,4 +245,12 @@ exports.fetchQuestion = (question_id) =>{
     })
     .select('_id content time followers answers topics')
     .exec();
+}
+
+exports.increaseFollowerCounter = (question_id) => {
+    return Question.findByIdAndUpdate(question_id, {$inc: {followers: 1}}, {new: true}).exec();
+}
+
+exports.userFollowQuestion = (user_id, question_id) => {
+    return User.findByIdAndUpdate(user_id, {$push: {followed_questions: question_id}}).exec();
 }

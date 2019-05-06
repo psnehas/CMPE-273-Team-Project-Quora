@@ -34,4 +34,20 @@ const fetchQuestion = (req,res) => {
     })
 }
 
-module.exports = {insertQuestion, fetchQuestion};
+const followQuestion = (req,res) => {
+    console.log('Fetch question request, question', req.params)
+    let message = {
+        cmd: 'FOLLOW_QUESTION',
+        questionid: req.params,
+        userid: req.user.user_id
+    }
+    client.send(message, function(err, result) {
+        if(err){
+            console.log("error at kafka question controller",err);
+        }
+        console.log('the result for follow question request is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
+module.exports = {insertQuestion, fetchQuestion, followQuestion};

@@ -47,6 +47,19 @@ const fetchQuestion = (req, next) => {
     });
 }
 
+const followQuestion = (req, next) => {
+    db.userFollowQuestion(req.userid, req.questionid.question_id).then(result =>{
+        console.log("insert question result: ", result);
+        db.increaseFollowerCounter(req.questionid.question_id)
+        .then(res => {
+            next(null, {
+                status: 200,
+                data: res
+            });
+        });
+    });
+}
+
 const dispatch = (message, next) => {
     switch (message.cmd) {
         case 'INSERT_QUESTION':
@@ -54,6 +67,9 @@ const dispatch = (message, next) => {
             break;
         case 'FETCH_QUESTION':
             fetchQuestion(message, next);
+            break;
+        case 'FOLLOW_QUESTION':
+            followQuestion(message, next);
             break;
         default: console.log('unknown request');
     }
