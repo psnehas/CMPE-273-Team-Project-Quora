@@ -70,7 +70,7 @@ class ProfileContent extends Component {
             ...this.state
         };
         delete payload.editing_profile;
-        this.props.dispatch(userActions.profile_update(payload));
+        this.props.dispatch(userActions.profile_update({ user_info: payload }));
 
         let data = {
             ...this.props.profile.user_info,
@@ -78,13 +78,13 @@ class ProfileContent extends Component {
         }
 
         axios.put(`${backend_host}/profile/update_info`, data,
-        {
-            headers: {
-                'Authorization': `Bearer ${cookie.load('JWT')}`
-            }
-        }).then(res => {
-            console.log("Update Profile", res)
-        })
+            {
+                headers: {
+                    'Authorization': `Bearer ${cookie.load('JWT')}`
+                }
+            }).then(res => {
+                console.log("Update Profile", res)
+            })
 
         this.setState({
             editing_profile: false
@@ -171,7 +171,7 @@ class ProfileContent extends Component {
                         </div>
                     )
                 })}
-                <Button onClick={this.onEditProfileHandler}>Edit</Button>
+                {this.props.authentication.user_id === this.props.match.params.uid ? <Button onClick={this.onEditProfileHandler}>Edit</Button> : null}
             </div>
         )
 
@@ -289,14 +289,7 @@ class ProfileContent extends Component {
                         })
                     }
                     <Button onClick={() => this.onAddHandler('careers')}>Add</Button>
-                    <hr/>
-
-                    {/* <Form.Group controlId="city" as={Row}>
-                        <Form.Label column sm="2">City</Form.Label>
-                        <Col sm="10">
-                            <Form.Control type="text" placeholder="City" />
-                        </Col>
-                    </Form.Group> */}
+                    <hr />
 
                     <Button onClick={this.onSaveProfileHandler}>Save</Button>&nbsp;
                     <Button onClick={this.onEditProfileHandler}>Cancel</Button>
@@ -316,6 +309,6 @@ class ProfileContent extends Component {
 }
 
 // reducer: profile 's output maps to this.props.profile
-const mapStateToProps = ({ profile }) => ({ profile });
+const mapStateToProps = ({ authentication, profile }) => ({ authentication, profile });
 // apply above mapping to Login class
 export default connect(mapStateToProps)(ProfileContent);

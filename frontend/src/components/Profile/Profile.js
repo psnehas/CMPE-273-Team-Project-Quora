@@ -30,78 +30,13 @@ class Profile extends Component {
     };
 
     componentDidMount() {
-
-        // let fake_response = {
-        //     data: {
-        //         user_info: {
-        //             avatar: "https://res-1.cloudinary.com/crunchbase-production/image/upload/c_lpad,h_256,w_256,f_auto,q_auto:eco/v1425070395/lch84n574ygfa3xr5irq.png",
-        //             first_name: "Yuxiang",
-        //             last_name: "Chen",
-        //             profileCredential: "string",
-        //             about: "string",
-        //             email: "abc@abc.com",
-        //             city: "San Jose",
-        //             state: "CA",
-        //             zipCode: "95100",
-        //             educations: [],
-        //             careers: []
-        //         },
-        //         created_answers: [
-        //             {
-        //                 id: "string",
-        //                 title: "string",
-        //                 created_time: moment().unix()
-        //             }
-        //         ],
-        //         bookmarked_answers: [
-        //             {
-        //                 id: "string",
-        //                 title: "string",
-        //                 bookmarked_time: moment().unix()
-        //             }
-        //         ],
-        //         created_questions: [
-        //             {
-        //                 id: "string",
-        //                 title: "string",
-        //                 created_time: moment().unix()
-        //             }
-        //         ],
-        //         followed_people: [
-        //             {
-        //                 id: "string",
-        //                 first_name: "string",
-        //                 last_name: "string"
-        //             }
-        //         ],
-        //         following_people: [
-        //             {
-        //                 id: "string",
-        //                 first_name: "string",
-        //                 last_name: "string"
-        //             }
-        //         ]
-        //     }
-        // }
-
-        // let {
-        //     user_info,
-        //     created_answers,
-        //     bookmarked_answers,
-        //     created_questions,
-        //     followed_people,
-        //     following_people } = fake_response.data;
-
-        // user_info.uid = this.props.match.params.uid
-        // this.props.dispatch(userActions.profile_update(user_info))
-
         axios.get(`${backend_host}/profile/${this.props.match.params.uid}`, {
             headers: {
                 'Authorization': `Bearer ${cookie.load('JWT')}`
             }
         }).then(res => {
             if (res.status === 200) {
-                this.props.dispatch(userActions.profile_update(res.data.user_info))
+                this.props.dispatch(userActions.profile_update(res.data))
             }
         })
 
@@ -176,7 +111,7 @@ class Profile extends Component {
 
 
 
-        this.props.dispatch(userActions.profile_update(new_user_info));
+        this.props.dispatch(userActions.profile_update({ user_info: new_user_info }));
 
         console.log("new profile", this.props.profile.user_info);
 
@@ -210,7 +145,7 @@ class Profile extends Component {
                 <h1>{this.props.profile.user_info.first_name}&nbsp;{this.props.profile.user_info.last_name}</h1>
                 <p>{this.props.profile.user_info.profileCredential}</p>
                 <p>{this.props.profile.user_info.about}</p>
-                <Button onClick={this.onEditProfileHandler}>Edit</Button>
+                {this.props.authentication.user_id === this.props.match.params.uid ? <Button onClick={this.onEditProfileHandler}>Edit</Button> : null}
             </div>
         )
 

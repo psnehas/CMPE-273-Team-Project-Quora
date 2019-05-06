@@ -26,10 +26,11 @@ const profile_update = (state = initialState, action) => {
         case userConstants.PROFILE_UPDATE:
             let user_info = {
                 ...state.user_info,
-                ...action.data
+                ...action.data.user_info
             };
             let new_state = {
                 ...state,
+                ...action.data,
                 user_info: user_info
             }
             return new_state
