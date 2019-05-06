@@ -3,9 +3,10 @@ let client = new ClientConnection('question','response_question');
 client.init();
 
 const insertQuestion = (req, res) => {
-    console.log('insertQuestion request')
+    console.log('insertQuestion request with body: ', req.body)
     let message = {
         cmd: 'INSERT_QUESTION',
+        user_id: req.user.user_id,
         question: req.body
     }
     client.send(message, function(err, result) {

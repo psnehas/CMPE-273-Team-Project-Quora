@@ -59,13 +59,36 @@ const signup = (user, next) => {
 }
 
 const getUser = (userid, next) => {
-    db.findUserByID(userid)
+    db.findUserProfileByID(userid)
     .then(user => {
         let res = {};
         if (user) {
-            console.log('the user is: ', user)
+            console.log('the user profile is: ', user)
+            let profile = {
+                user_info: {},
+                created_answers: [],
+                bookmarked_answers: [],
+                created_questions: [],
+                followed_people: [],
+                following_people:[]
+            };
+            profile.user_info.first_name = user.first_name;
+            profile.user_info.last_name = user.last_name;
+            profile.user_info.profileCredential = user.profileCredential;
+            profile.user_info.about = user.about;
+            profile.created_answers = user.created_answers.sort((a, b) => {
+                return a.time > b.time;
+            })
+            profile.bookmarked_answers = user.bookmarked_answers.sort((a, b) => {
+                return a.time > b.time;
+            })
+            profile.created_questions = user.created_questions.sort((a, b) => {
+                return a.time > b.time;
+            })
+            profile.followed_people = user.followed_people;
+            profile.following_people = user.following_people;
             res.status = 200;
-            res.data = user;
+            res.data = profile;
         } else {
             res.status = 400;
             res.data = {error: `User doesn't exist`};

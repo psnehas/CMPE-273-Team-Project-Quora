@@ -2,7 +2,7 @@ var mongoose = require('mongoose')
 var autoIncrement = require('mongoose-sequence')(mongoose)
 
 const TopicSchema = new mongoose.Schema({
-    name: {
+    label: {
         type: String,
         trim: true,
         required: 'Name is required'
