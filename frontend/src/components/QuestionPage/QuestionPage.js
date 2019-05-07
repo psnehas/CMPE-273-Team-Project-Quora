@@ -97,12 +97,12 @@ export class CommentPanel extends Component {
         let comment_list = null;
         if (this.state.show_comments === true) {
 
-            if (this.state.comments && this.state.comments.length !== 0) {
-                comment_list = this.state.comments.map((post, idx) => {
+            if (this.state.comments && this.state.comments.comments.length !== 0) {
+                comment_list = this.state.comments.comments.map((post, idx) => {
                     return (
                         <ListGroup.Item key={idx} style={{ border: 'none' }}>
                             <ul className="list-unstyled" style={{ 'padding': 0, margin: 0 }}>
-                            <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'profile/' + post.owner._id}>{post.owner.user_info.first_name} {post.owner.user_info.last_name}</Link></li>
+                            <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'/profile/' + post.owner._id}>{post.owner.user_info.first_name} {post.owner.user_info.last_name}</Link></li>
                                 <li className='comment_body'> {post.comment}  </li>
                             </ul>
                         </ListGroup.Item>
@@ -178,7 +178,7 @@ export class AnswerEdit extends Component {
 
 export class AnswerList extends Component {
     static propTypes = {
-        data: PropTypes.array.isRequired,
+        data: PropTypes.array.isRequired
     };
 
     constructor(props) {
@@ -220,6 +220,18 @@ export class AnswerList extends Component {
     }
 
     handleBookmark = (value) => {
+        const data = {};
+        axios.post(backend_host + '/bookmark/answer/' + value, data, {
+            headers: {
+                'Authorization': `Bearer ${this.state.token}`
+            },
+        }).then(response => {
+            console.log(response.data);
+ //        this.props.data[idx].content = this.state.answer_string;
+            this.forceUpdate();
+            //window.location.reload();
+            //            this.componentDidMount();
+        }) 
         console.log('bookmard this answer', value)
     }
 
@@ -265,7 +277,7 @@ export class AnswerList extends Component {
                 let edit_button = null;
                 if (this.state.edit_box === true) {
                     answer = <AnswerEditor value={post.content} onChange={this.handleChange}></AnswerEditor>;
-                    //                   if (post.owner._id === this.props.authentication.user_id)
+                     if (post.owner._id === this.props.user_id)
                     edit_button = (<Button className="q_page_button pull-right" variant="link" onClick={() => this.handleUpdate(idx,post._id)}>
                         <span className="fa fa-edit"></span> Update</Button>)
                 }
@@ -273,14 +285,14 @@ export class AnswerList extends Component {
                     answer = (<p>
                         {renderHTML(post.content)}
                     </p>);
-                    //                   if (post.owner._id === this.props.authentication.user_id)
+                    if (post.owner._id === this.props.user_id)
                     edit_button = (<Button className="q_page_button pull-right" variant="link" onClick={() => this.handleEdit(post._id)}>
                         <span className="fa fa-edit"></span> Edit</Button>)
 
                 }
 
                 let displayName = (<ul className="list-unstyled">
-                    <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'profile/' + post.owner._id}>{post.owner.user_info.first_name} {post.owner.user_info.last_name}, </Link><span style={{ marginLeft: 10 }}>{post.owner.user_info.profileCredential}</span></li>
+                    <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'/profile/' + post.owner._id}>{post.owner.user_info.first_name} {post.owner.user_info.last_name}, </Link><span style={{ marginLeft: 10 }}>{post.owner.user_info.profileCredential}</span></li>
                     <li><small className="text-muted">Answered <Moment fromNow>{post.time}</Moment></small></li>
                 </ul>)
                 if (post.anonymous === true) {
@@ -306,7 +318,7 @@ export class AnswerList extends Component {
                                 <span className="fa fa-arrow-up"></span> Upvote  · {post.upvote}</Button>
                             <Button className="q_page_button pull-right" variant="link" onClick={() => this.handleDownvote(idx, post._id)}>
                                 <span className="fa fa-arrow-down"></span> Downvote  · {post.downvote}</Button>
-                            <Button className="q_page_button pull-right" disabled={post.bookmarked} variant="link" onClick={() => this.handleBookmark(idx, post._id)}>
+                            <Button className="q_page_button pull-right" disabled={post.bookmarked} variant="link" onClick={() => this.handleBookmark(post._id)}>
                                 <span className="fa fa-bookmark"></span> Bookmark</Button>
                             {edit_button}
                             {/*
@@ -530,7 +542,7 @@ class QuestionPage extends Component {
                         </ListGroup.Item>
                     </ListGroup>
 
-                    <AnswerList data={AnswerList_data} />
+                    <AnswerList data={AnswerList_data} user_id={this.props.authentication.user_id}/>
                 </Container>
             </div>
         )

@@ -68,7 +68,7 @@ class TopicPage extends Component {
                     answer = (
                         <div>
                             <ul className="list-unstyled">
-                            <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'profile/' + q.answers[0].owner._id}>{q.answers[0].owner.user_info_first_name} {q.answers[0].owner.user_info.last_name},</Link><span style={{ marginLeft: 10 }}>{q.answers[0].owner.user_info.profileCredential}</span></li>
+                            <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'/profile/' + q.answers[0].owner._id}>{q.answers[0].owner.user_info.first_name} {q.answers[0].owner.user_info.last_name},</Link><span style={{ marginLeft: 10 }}>{q.answers[0].owner.user_info.profileCredential}</span></li>
                                 <li><small className="text-muted">Answered <Moment fromNow>{q.answers[0].time}</Moment></small></li>
                             </ul>
                             <p className="comment_truncate">
