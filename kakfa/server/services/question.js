@@ -13,14 +13,17 @@ const insertQuestion = (user_id, question, next) => {
         db.bindUserQuestion(user_id, result._id)
         .then(res => {
             console.log("bind user question result: ", res);
-            let promises = topics.map(topic_id => {
-                return db.bindTopicQuestion(topic_id, result._id);
-            });
-            Promise.all(promises)
+            db.recordQuestionAsked(user_id, result._id)
             .then(res => {
-                next(null, {
-                    status: 200,
-                    data: {success: true}
+                let promises = topics.map(topic_id => {
+                    return db.bindTopicQuestion(topic_id, result._id);
+                });
+                Promise.all(promises)
+                .then(res => {
+                    next(null, {
+                        status: 200,
+                        data: {success: true}
+                    });
                 });
             });
         });
@@ -59,11 +62,14 @@ const followQuestion = (req, next) => {
         if(!questionFollwed && i == result.followed_questions.length){
             db.userFollowQuestion(req.userid, req.questionid.question_id).then(result2 =>{
                 console.log("insert question result: ", result2);
-                db.increaseFollowerCounter(req.questionid.question_id)
+                db.recordQuestionFollowed(req.userid, req.questionid.question_id)
                 .then(res => {
-                    next(null, {
-                        status: 200,
-                        data: res
+                    db.increaseFollowerCounter(req.questionid.question_id)
+                    .then(res => {
+                        next(null, {
+                            status: 200,
+                            data: res
+                        });
                     });
                 });
             });

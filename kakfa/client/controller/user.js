@@ -166,6 +166,21 @@ const unfollowUser = (req, res) => {
     })
 }
 
-module.exports = {signin, signup, deactiveUser, getUserFeed, getUserTopics, getTopics, followTopics, createTopic, getTopicQuestions,
+const getUserActivities = (req, res) => {
+    console.log('get user activities with user id: ', req.user.user_id);
+    let message = {
+        cmd: 'USER_ACTIVITIES',
+        user_id: req.user.user_id,
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for user activities are: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
+module.exports = {signin, signup, deactiveUser, getUserFeed, getUserTopics, 
+    getTopics, followTopics, createTopic, getTopicQuestions,
     getUser, updateUserInfo,
-    followUser, unfollowUser}
+    followUser, unfollowUser,
+    getUserActivities
+}
