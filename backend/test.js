@@ -101,25 +101,4 @@ describe('Quora simulation', function(){
                 console.log(res.body)
             });
     });
-
-    // it('GET /user_courses',function(){
-    //     agent.get('/user_courses/31')
-    //         .then(function(res){
-    //             expect(res.body.count).to.be.a('Object');
-    //         });
-    // });
-
-    // it('GET /course_info',function(){
-    //     agent.get('/course_info/1')
-    //         .then(function(res){
-    //             expect(res.body.count).to.be.a('Object');
-    //         });
-    // });
-
-    // it('GET /load_announcements',function(){
-    //     agent.get('/load_announcements/1')
-    //         .then(function(res){
-    //             expect(res.body.count).to.be.a('Object');
-    //         });
-    // });
 })
