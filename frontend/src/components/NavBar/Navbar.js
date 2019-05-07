@@ -108,6 +108,7 @@ class navbar extends Component {
                     <NavDropdown.Item as={NavLink} to={`/profile/${this.props.authentication.user_id}`} onClick={()=>this.onClickHandler(this.props.authentication.user_id)}>Profile</NavDropdown.Item>
                     <NavDropdown.Item as={NavLink} to={`/messages/${this.props.authentication.user_id}`}>Messages</NavDropdown.Item>
                     <NavDropdown.Item as={NavLink} to={`/content`}>Content</NavDropdown.Item>
+                    <NavDropdown.Item as={NavLink} to={`/stats`}>Stats</NavDropdown.Item>
                 </NavDropdown>
             );
         }
