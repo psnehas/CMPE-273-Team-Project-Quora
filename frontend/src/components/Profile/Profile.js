@@ -258,10 +258,10 @@ console.log("image src", `${this.props.profile.user_info.avatar}?${Date.now()}`)
 
                     <Row>
                         <Col>
-                            <Sidebar uid={this.props.profile.user_info.uid} />
+                            <Sidebar uid={this.props.match.params.uid} />
                         </Col>
                         <Col xs={8}>
-                            <Content uid={this.props.profile.user_info.uid} />
+                            <Content uid={this.props.match.params.uid} />
                         </Col>
                     </Row>
 

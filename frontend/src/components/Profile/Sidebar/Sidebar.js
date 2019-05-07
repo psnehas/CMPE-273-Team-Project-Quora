@@ -17,19 +17,19 @@ class Sidebar extends Component {
                         Feeds
                 </div>
                 </h3>
-                <NavLink to={`/profile/${this.props.authentication.user_id}`} className="nav-link" exact>
+                <NavLink to={`/profile/${this.props.uid}`} className="nav-link" exact>
                     Profile
             </NavLink>
-                <NavLink to={`/profile/${this.props.authentication.user_id}/answers`} className="nav-link">
+                <NavLink to={`/profile/${this.props.uid}/answers`} className="nav-link">
                     Answers
             </NavLink>
-                <NavLink to={`/profile/${this.props.authentication.user_id}/questions`} className="nav-link">
+                <NavLink to={`/profile/${this.props.uid}/questions`} className="nav-link">
                     Questions
             </NavLink>
-                <NavLink to={`/profile/${this.props.authentication.user_id}/followers`} className="nav-link">
+                <NavLink to={`/profile/${this.props.uid}/followers`} className="nav-link">
                     Followers
             </NavLink>
-                <NavLink to={`/profile/${this.props.authentication.user_id}/following`} className="nav-link">
+                <NavLink to={`/profile/${this.props.uid}/following`} className="nav-link">
                     Following
             </NavLink>
 
