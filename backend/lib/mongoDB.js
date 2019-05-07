@@ -332,3 +332,23 @@ exports.insertMessage = (userid, message) => {
         return User.findOneAndUpdate({_id: userid}, {$push: {messages: message._id}}).exec();
     });
 }
+
+exports.increaseView = (answerid) => {
+    return Answer.findByIdAndUpdate(answerid, {$inc: {view: 1}}).exec();
+}
+
+exports.increaseProfileView = (userid) => {
+    return User.findByIdAndUpdate(userid, {$inc: {view: 1}}).exec();
+}
+
+exports.findAllAnswersByView = () => {
+    return Answer.find({}).sort({view: -1}).limit(5).exec();
+}
+
+exports.findAllAnswersByUpvotes = () => {
+    return Answer.find({}).sort({upvote: -1}).limit(5).exec();
+}
+
+exports.findAllAnswersByDownvotes = () => {
+    return Answer.find({}).sort({downvote: -1}).limit(5).exec();
+}

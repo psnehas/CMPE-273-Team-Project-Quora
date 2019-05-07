@@ -115,6 +115,7 @@ const getUser = (query_userid, target_userid, next) => {
             profile.following_people = user.following_people;
             res.status = 200;
             res.data = profile;
+            db.increaseProfileView(target_userid);
         } else {
             res.status = 400;
             res.data = {error: `User doesn't exist`};
