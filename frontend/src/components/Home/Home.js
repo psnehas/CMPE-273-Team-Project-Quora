@@ -123,7 +123,7 @@ class Home extends Component {
         if (this.state.user_feed.length !== 0) {
             main_panel = this.state.user_feed.map((q, idx) => {
                 let answer = null;
-                console.log(q);
+ //               console.log(q);
                 if ('answers' in q && q.answers.length !== 0) {
                     let creator = (<ul className="list-unstyled">
                     <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'/profile/' + q.answers[0].owner._id}>{q.answers[0].owner.user_info.first_name} {q.answers[0].owner.user_info.last_name},</Link><span style={{ marginLeft: 10 }}>{q.answers[0].owner.user_info.profileCredential}</span></li>

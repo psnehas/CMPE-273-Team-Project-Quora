@@ -65,7 +65,7 @@ class TopicPage extends Component {
                 let answer = null;
 
                 if ('answers' in q && q.answers.length !== 0) {
-                    
+
                     let creator = (<ul className="list-unstyled">
                     <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'/profile/' +  q.answers[0].owner._id}>{q.answers[0].owner.user_info.first_name} {q.answers[0].owner.user_info.last_name},</Link><span style={{ marginLeft: 10 }}>{q.answers[0].owner.user_info.profileCredential}</span></li>
                     <li><small className="text-muted">Answered <Moment fromNow>{q.answers[0].time}</Moment></small></li>
@@ -87,9 +87,9 @@ class TopicPage extends Component {
                                 <li><small className="text-muted">Answered <Moment fromNow>{q.answers[0].time}</Moment></small></li>
                             </ul>
                             */}
-                            <p className="comment_truncate">
+                            <div className="comment_truncate">
                                 {renderHTML(html_truncate(q.answers[0].content, 150))}
-                            </p>
+                            </div>
                         </div>
                     )
                 }
@@ -101,9 +101,9 @@ class TopicPage extends Component {
                         <Card.Body >
                             <BadgeGroup data={q.topics} />
                             <Card.Title style={{ fontWeight: 'bold' }}>{q.content}</Card.Title>
-                            <Card.Text >
+                            {/*<Card.Text >*/}
                                 {answer}
-                            </Card.Text>
+                            {/*</Card.Text>*/}
                             <Card.Link as={NavLink} to={'/questions/' + q._id}>more</Card.Link>
                         </Card.Body>
                     </Card>

@@ -282,9 +282,9 @@ export class AnswerList extends Component {
                         <span className="fa fa-edit"></span> Update</Button>)
                 }
                 else {
-                    answer = (<p>
+                    answer = (<div>
                         {renderHTML(post.content)}
-                    </p>);
+                    </div>);
                     if (post.owner._id === this.props.user_id)
                     edit_button = (<Button className="q_page_button pull-right" variant="link" onClick={() => this.handleEdit(post._id)}>
                         <span className="fa fa-edit"></span> Edit</Button>)
