@@ -34,32 +34,32 @@ const fetchQuestion = (req, next) => {
     db.fetchQuestion(req.questionid.question_id)
     .then(result => {
         console.log("Fetch question result: ", result);
-        var questionFollwed = false;
+        var questionFollowed = false;
         db.findUserFollowedQuestions(req.userid).then(result2 => {
             console.log("result2",result2)
             for(i = 0; i < result2.followed_questions.length; i++){
                 if(req.questionid.question_id == result2.followed_questions[i]._id){
-                    questionFollwed = true
+                    questionFollowed = true
                 }
             }
             next(null, {
                 status: 200,
-                data: {question: result, questionFollwed: questionFollwed}
+                data: {question: result, questionFollowed: questionFollowed}
             });
         })
     });
 }
 
 const followQuestion = (req, next) => {
-    var questionFollwed = false;
+    var questionFollowed = false;
     db.findUserFollowedQuestions(req.userid).then(result => {
         console.log("result", result)
         for(i = 0; i < result.followed_questions.length; i++){
             if(req.questionid.question_id == result.followed_questions[i]._id){
-                questionFollwed = true
+                questionFollowed = true
             }
         }
-        if(!questionFollwed && i == result.followed_questions.length){
+        if(!questionFollowed && i == result.followed_questions.length){
             db.userFollowQuestion(req.userid, req.questionid.question_id).then(result2 =>{
                 console.log("insert question result: ", result2);
                 db.recordQuestionFollowed(req.userid, req.questionid.question_id)
@@ -80,8 +80,15 @@ const followQuestion = (req, next) => {
             });
         }
     })
+}
 
-    
+const search = (req, next) => {
+    db.search(req.query.catagory, req.query.content).then(result => {
+        next(null, {
+            status: 200,
+            data: result
+        });
+    })
 }
 
 const dispatch = (message, next) => {
@@ -94,6 +101,9 @@ const dispatch = (message, next) => {
             break;
         case 'FOLLOW_QUESTION':
             followQuestion(message, next);
+            break;
+        case 'SEARCH':
+            search(message, next);
             break;
         default: console.log('unknown request');
     }

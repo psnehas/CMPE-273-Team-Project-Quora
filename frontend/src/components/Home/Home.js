@@ -123,7 +123,7 @@ class Home extends Component {
         if (this.state.user_feed.length !== 0) {
             main_panel = this.state.user_feed.map((q, idx) => {
                 let answer = null;
-                console.log(q);
+ //               console.log(q);
                 if ('answers' in q && q.answers.length !== 0) {
                     let creator = (<ul className="list-unstyled">
                     <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'/profile/' + q.answers[0].owner._id}>{q.answers[0].owner.user_info.first_name} {q.answers[0].owner.user_info.last_name},</Link><span style={{ marginLeft: 10 }}>{q.answers[0].owner.user_info.profileCredential}</span></li>
@@ -146,9 +146,9 @@ class Home extends Component {
                             <li><small className="text-muted">Answered <Moment fromNow>{q.answers[0].time}</Moment></small></li>
                         </ul>
                         */}
-                            <p className="comment_truncate">
+                            <div className="comment_truncate">
                                 {renderHTML(html_truncate(q.answers[0].content, 150))}
-                            </p>
+                            </div>
                         </div>
                     )
                 }
@@ -176,14 +176,12 @@ class Home extends Component {
 
                 return (
                     <Card key={idx}>
-                        <Card.Body >
+                            <Card.Body >
                             <BadgeGroup data={q.topics} />
                             <Card.Title style={{ fontWeight: 'bold' }}>{q.questionText}</Card.Title>
-                            <Card.Text >
                                 {answer}
-                            </Card.Text>
                             <Card.Link as={NavLink} to={'/questions/' + q._id}>more</Card.Link>
-                        </Card.Body>
+                            </Card.Body>
                     </Card>
 
                 )

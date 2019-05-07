@@ -294,3 +294,21 @@ exports.getUserActivites = (user_id) => {
     .populate({path: 'activities.obj'})
     .select('activities').exec();
 }
+
+exports.search = (catagory, content) => {
+    switch(catagory) {
+        case 'user':
+            return User.find({ email: { $regex: content, $options: 'i' }})
+            .select('_id email').exec();             
+        case 'question':
+            return Question.find({ content: { $regex: content, $options: 'i' } })
+            .select('_id content').exec();             
+        case 'topic':
+            return Topic.find({ label: { $regex: content, $options: 'i' } })
+            .select('_id label').exec();             
+        default: console.log('unknown request');
+    }
+    return new Promise((resolve, reject) => {
+        resolve([]);
+    });
+}
