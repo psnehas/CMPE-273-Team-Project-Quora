@@ -35,15 +35,18 @@ const fetchQuestion = (req, next) => {
         db.findUserFollowedQuestions(req.userid).then(result2 => {
             console.log("result2",result2)
             for(i = 0; i < result2.followed_questions.length; i++){
-                if(req.userid == result2.followed_questions[i]){
+                if(req.questionid.question_id == result2.followed_questions[i]._id){
                     questionFollwed = true
                 }
+                console.log("in", questionFollwed)
             }
+            next(null, {
+                status: 200,
+                data: {question: result, questionFollwed: questionFollwed}
+            });
         })
-        next(null, {
-            status: 200,
-            data: {question: result, questionFollwed: questionFollwed}
-        });
+        console.log("out", questionFollwed)
+        
     });
 }
 
