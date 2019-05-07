@@ -280,8 +280,8 @@ exports.userFollowQuestion = (user_id, question_id) => {
 exports.search = (catagory, content) => {
     switch(catagory) {
         case 'user':
-            return User.find({$or: [{ email: { $regex: content, $options: 'i' }},{ first_name: { $regex: content, $options: 'i' }}, { last_name: { $regex: content, $options: 'i' }}]})
-            .select('_id first_name last_name').exec();             
+            return User.find({ email: { $regex: content, $options: 'i' }})
+            .select('_id email').exec();             
         case 'question':
             return Question.find({ content: { $regex: content, $options: 'i' } })
             .select('_id content').exec();             
