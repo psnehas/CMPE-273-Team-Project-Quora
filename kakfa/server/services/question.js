@@ -38,29 +38,44 @@ const fetchQuestion = (req, next) => {
                 if(req.questionid.question_id == result2.followed_questions[i]._id){
                     questionFollwed = true
                 }
-                console.log("in", questionFollwed)
             }
             next(null, {
                 status: 200,
                 data: {question: result, questionFollwed: questionFollwed}
             });
         })
-        console.log("out", questionFollwed)
-        
     });
 }
 
 const followQuestion = (req, next) => {
-    db.userFollowQuestion(req.userid, req.questionid.question_id).then(result =>{
-        console.log("insert question result: ", result);
-        db.increaseFollowerCounter(req.questionid.question_id)
-        .then(res => {
+    var questionFollwed = false;
+    db.findUserFollowedQuestions(req.userid).then(result => {
+        console.log("result", result)
+        for(i = 0; i < result.followed_questions.length; i++){
+            if(req.questionid.question_id == result.followed_questions[i]._id){
+                questionFollwed = true
+            }
+        }
+        if(!questionFollwed && i == result.followed_questions.length){
+            db.userFollowQuestion(req.userid, req.questionid.question_id).then(result2 =>{
+                console.log("insert question result: ", result2);
+                db.increaseFollowerCounter(req.questionid.question_id)
+                .then(res => {
+                    next(null, {
+                        status: 200,
+                        data: res
+                    });
+                });
+            });
+        }else{
             next(null, {
                 status: 200,
-                data: res
+                data: "Question has been followed"
             });
-        });
-    });
+        }
+    })
+
+    
 }
 
 const dispatch = (message, next) => {
