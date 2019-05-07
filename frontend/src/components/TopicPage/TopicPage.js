@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { NavLink,Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import './TopicPage.css';
@@ -27,15 +27,15 @@ class TopicPage extends Component {
     }
 
     componentDidMount() {
-        axios.get(backend_host + '/topics/'+ this.state.topic + '/questions', {
+        axios.get(backend_host + '/topics/' + this.state.topic + '/questions', {
             headers: {
                 'Authorization': `Bearer ${this.state.token}`
             },
- //           params: {
- //               topic: this.state.topic,
- //               topAnswer: true,
- //               depth: 1,
- //           }
+            //           params: {
+            //               topic: this.state.topic,
+            //               topAnswer: true,
+            //               depth: 1,
+            //           }
         }).then(response => {
             //console.log(response.data);
             this.setState({
@@ -63,14 +63,30 @@ class TopicPage extends Component {
         if (this.state.questions.length !== 0) {
             main_panel = this.state.questions.map((q, idx) => {
                 let answer = null;
+
                 if ('answers' in q && q.answers.length !== 0) {
+                    
+                    let creator = (<ul className="list-unstyled">
+                    <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'/profile/' +  q.answers[0].owner._id}>{q.answers[0].owner.user_info.first_name} {q.answers[0].owner.user_info.last_name},</Link><span style={{ marginLeft: 10 }}>{q.answers[0].owner.user_info.profileCredential}</span></li>
+                    <li><small className="text-muted">Answered <Moment fromNow>{q.answers[0].time}</Moment></small></li>
+                </ul>)
+
+                if (q.answers[0].anonymous === true) {
+                    creator = (<ul className="list-unstyled">
+                        <li style={{ fontSize: 14 }}>Anonymous User</li>
+                        <li><small className="text-muted">Answered <Moment fromNow>{q.answers[0].time}</Moment></small></li>
+                    </ul>)
+                }
                     //console.log(html_truncate(q.answers[0].answerText, 3));
                     answer = (
                         <div>
+                            {creator}
+                            {/*
                             <ul className="list-unstyled">
-                            <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'/profile/' + q.answers[0].owner._id}>{q.answers[0].owner.user_info.first_name} {q.answers[0].owner.user_info.last_name},</Link><span style={{ marginLeft: 10 }}>{q.answers[0].owner.user_info.profileCredential}</span></li>
+                                <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'/profile/' + q.answers[0].owner._id}>{q.answers[0].owner.user_info.first_name} {q.answers[0].owner.user_info.last_name},</Link><span style={{ marginLeft: 10 }}>{q.answers[0].owner.user_info.profileCredential}</span></li>
                                 <li><small className="text-muted">Answered <Moment fromNow>{q.answers[0].time}</Moment></small></li>
                             </ul>
+                            */}
                             <p className="comment_truncate">
                                 {renderHTML(html_truncate(q.answers[0].content, 150))}
                             </p>
@@ -113,7 +129,7 @@ class TopicPage extends Component {
                         {this.state.topic}
                         <br />
                         <Button variant="link" onClick={this.handleFollow} disabled={this.state.followed}>
-                                    <span className="fa fa-plus-square"></span> {this.state.followed ? 'Followed' : 'Follow'}  ·  {this.state.followers}</Button>
+                            <span className="fa fa-plus-square"></span> {this.state.followed ? 'Followed' : 'Follow'}  ·  {this.state.followers}</Button>
                     </Card.Body>
                 </Card>
                 <br />

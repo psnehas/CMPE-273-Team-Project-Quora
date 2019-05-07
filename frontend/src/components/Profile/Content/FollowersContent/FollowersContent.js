@@ -1,17 +1,32 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import { Nav, ListGroup } from 'react-bootstrap';
+import { connect } from 'react-redux';
 
 import style from '../../Profile.module.css'
 
 class FollowersContent extends Component {
     render() {
         return (
-            <h3 className={style.contentTitle}>
-                <div>
-                    Followers
-                </div>
-            </h3>
+            <React.Fragment>
+                <h3 className={style.contentTitle}>
+                Followers
+                </h3>
+                <ListGroup>
+                    {this.props.profile.following_people.map((p, index) => {
+                        return (
+                            <ListGroup.Item key={p._id}>
+                                <Link to={`/profile/${p._id}`}>{`${p.first_name} ${p.last_name}`}</Link>
+                            </ListGroup.Item>
+                        )
+                    })}
+                </ListGroup>
+            </React.Fragment>
         )
     }
 }
 
-export default FollowersContent;
+// reducer: profile 's output maps to this.props.profile
+const mapStateToProps = ({ profile }) => ({ profile });
+// apply above mapping to Login class
+export default connect(mapStateToProps)(FollowersContent);
