@@ -74,8 +74,15 @@ const followQuestion = (req, next) => {
             });
         }
     })
+}
 
-    
+const search = (req, next) => {
+    db.search(req.query.catagory, req.query.content).then(result => {
+        next(null, {
+            status: 200,
+            data: result
+        });
+    })
 }
 
 const dispatch = (message, next) => {
@@ -88,6 +95,9 @@ const dispatch = (message, next) => {
             break;
         case 'FOLLOW_QUESTION':
             followQuestion(message, next);
+            break;
+        case 'SEARCH':
+            search(message, next);
             break;
         default: console.log('unknown request');
     }

@@ -272,3 +272,18 @@ exports.increaseFollowerCounter = (question_id) => {
 exports.userFollowQuestion = (user_id, question_id) => {
     return User.findByIdAndUpdate(user_id, {$push: {followed_questions: question_id}}).exec();
 }
+
+exports.search = (catagory, content) => {
+    switch(catagory) {
+        case 'user':
+            return User.find({ term: { $regex: content, $options: 'i' } }).exec();             
+        case 'question':
+            return Question.find({ content: { $regex: content, $options: 'i' } })
+            .select('_id content').exec();             
+        case 'topic':
+            return Topic.find({ label: { $regex: content, $options: 'i' } })
+            .select('_id label').exec();             
+        default: console.log('unknown request');
+    }
+    return null;
+}
