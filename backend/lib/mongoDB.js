@@ -77,11 +77,11 @@ exports.findUserProfileByID = (id) => {
     })
     .populate({
         path: 'followed_people',
-        select: 'first_name last_name',
+        select: 'user_info.first_name user_info.last_name',
     })
     .populate({
         path: 'following_people',
-        select: 'first_name last_name'
+        select: 'user_info.first_name user_info.last_name',
     })
     .select('user_info email active').exec();
 }
@@ -275,6 +275,24 @@ exports.increaseFollowerCounter = (question_id) => {
 
 exports.userFollowQuestion = (user_id, question_id) => {
     return User.findByIdAndUpdate(user_id, {$push: {followed_questions: question_id}}).exec();
+}
+
+exports.recordQuestionAsked = (user_id, question_id) => {
+    return User.findByIdAndUpdate(user_id, {$push: {activities: {obj: question_id, onObj: 'Question', action: 'question_asked'}}}).exec();
+}
+
+exports.recordQuestionFollowed = (user_id, question_id) => {
+    return User.findByIdAndUpdate(user_id, {$push: {activities: {obj: question_id, onObj: 'Question', action: 'question_followed'}}}).exec();
+}
+
+exports.recordAnswer = (user_id, answer_id) => {
+    return User.findByIdAndUpdate(user_id, {$push: {activities: {obj: answer_id, onObj: 'Answer', action:'answer'}}}).exec();
+}
+
+exports.getUserActivites = (user_id) => {
+    return User.findById(user_id)
+    .populate({path: 'activities.obj'})
+    .select('activities').exec();
 }
 
 exports.search = (catagory, content) => {

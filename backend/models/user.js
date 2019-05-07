@@ -50,6 +50,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: 'defaultphoto.png'
     },
+    active: {type: Boolean, default: true},
     followed_people: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     following_people: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     created_questions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Question' }],
@@ -58,7 +59,17 @@ const UserSchema = new mongoose.Schema({
     bookmarked_answers: [{type: mongoose.Schema.Types.ObjectId, ref: 'Answer'}],
     followed_topics: [{type: mongoose.Schema.Types.ObjectId, ref: 'Topic'}],
     messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}],
-    active: {type: Boolean, default: true}
+    activities:[
+        {
+            obj: {type: mongoose.Schema.Types.ObjectId, refPath: 'activities.onObj'},
+            onObj: {type: String, enum:['Question', 'Answer']},
+            action: {type: String},
+            time:{type: Date, default: function() {
+                    return new Date().toUTCString();
+                }
+            }
+        }
+    ]
 })
 
 module.exports =  mongoose.model('User', UserSchema);

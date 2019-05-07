@@ -72,6 +72,7 @@ const makeAnswer = (req, next) => {
     db.createAnswer(newAnswer).then(result =>{
         db.updateUserWithAnswer(req.answer.owner, result)
         db.updateQuestionWithAnswer(req.answer.question_id, result)
+        db.recordAnswer(req.answer.owner, result._id)
         next(null, {
             status: 200,
             data: "New Answer created"

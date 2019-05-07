@@ -367,6 +367,17 @@ const readMessage = (messageid, next) => {
     })
 }
 
+const getUserActivities = (userid, next) => {
+    db.getUserActivites(userid)
+    .then(res => {
+        console.log('get user activities result are: ', res);
+        next(null, {
+            status: 200,
+            data: res
+        })
+    })
+}
+
 const dispatch = (message, next) => {
     switch (message.cmd) {
         case 'SIGN_IN':
@@ -416,6 +427,9 @@ const dispatch = (message, next) => {
             break;
         case 'DEACTIVE':
             deactiveUser(message.userid, next);
+            break;
+        case 'USER_ACTIVITIES':
+            getUserActivities(message.user_id, next);
             break;
         default:
             console.log('unknown request');

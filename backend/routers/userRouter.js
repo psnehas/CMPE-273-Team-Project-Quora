@@ -40,4 +40,7 @@ router.route('/unfollow_user/:unfollowed_user_id')
 router.route('/deactive')
 .put(authController.requireSignin, userControllerKafka.deactiveUser);
 
+router.route('/activities')
+.get(authController.requireSignin, userControllerKafka.getUserActivities);
+
 module.exports = {router}
