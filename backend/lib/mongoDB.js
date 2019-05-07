@@ -9,7 +9,7 @@ const uri_altas = 'mongodb+srv://admin:admin@quora-2jksh.mongodb.net/';
 const uri_local = 'mongodb://localhost:27017/quora';
 mongoose.Promise = global.Promise
 mongoose.connect(uri_altas, {
-    dbName: 'quora',
+    dbName: 'quora-new',
     useNewUrlParser: true,
     poolSize: 100,
     useFindAndModify: false,
