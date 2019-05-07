@@ -53,6 +53,10 @@ exports.findUserByEmail = (email) => {
     return User.findOne({email: email}).exec();
 }
 
+exports.findUserByID = (id) => {
+    return User.findById(id).exec();
+}
+
 exports.findUserProfileByID = (id) => {
     return User.findById(id)
     .populate({
@@ -310,5 +314,21 @@ exports.search = (catagory, content) => {
     }
     return new Promise((resolve, reject) => {
         resolve([]);
+    });
+}
+
+exports.getMessagesByUserID = (userid) => {
+    return User.findById(userid)
+        .populate({
+            path: 'messages',
+            select: 'from_email subject content'
+        }).select('messages -_id').exec();
+}
+
+exports.insertMessage = (userid, message) => {
+    const newMessage = new Message(message);
+    return newMessage.save()
+    .then(message => {
+        return User.findOneAndUpdate({_id: userid}, {$push: {messages: message._id}}).exec();
     });
 }

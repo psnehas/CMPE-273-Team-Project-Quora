@@ -179,9 +179,41 @@ const getUserActivities = (req, res) => {
     })
 }
 
+const createUserMessage = (req, res) => {
+    console.log('Create user messages message is: ', req.body)
+    console.log('Create user messages from user id: ', req.user.user_id)
+    const {subject, content, to_email} = req.body;
+    let message = {
+        cmd: 'CREATE_MESSAGE',
+        message: {
+            subject,
+            content,
+            to_email,
+            userid: req.user.user_id
+        }
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for createUserMessage is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
+const getUserMessages = (req, res) => {
+    console.log('Get user messages from user id: ', req.user.user_id)
+    let message = {
+        cmd: 'GET_MESSAGE',
+        userid: req.user.user_id
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for getUserMessages is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
 module.exports = {signin, signup, deactiveUser, getUserFeed, getUserTopics, 
     getTopics, followTopics, createTopic, getTopicQuestions,
     getUser, updateUserInfo,
     followUser, unfollowUser,
-    getUserActivities
+    getUserActivities,
+    createUserMessage, getUserMessages
 }
