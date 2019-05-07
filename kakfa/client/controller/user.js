@@ -43,7 +43,8 @@ const getUser = (req, res) => {
     console.log('Get user profile of: ', req.params.userID)
     let message = {
         cmd: 'GET_USER',
-        userid: req.params.userID
+        query_userid: req.user.user_id,
+        target_userid: req.params.userID
     }
     client.send(message, function(err, result) {
         console.log('the result for getUser is: ', result);

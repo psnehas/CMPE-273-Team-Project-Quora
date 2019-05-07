@@ -73,8 +73,8 @@ const deactiveUser = (userid, next) => {
     })
 }
 
-const getUser = (userid, next) => {
-    db.findUserProfileByID(userid)
+const getUser = (query_userid, target_userid, next) => {
+    db.findUserProfileByID(target_userid)
     .then(user => {
         let res = {};
         if (user) {
@@ -94,7 +94,7 @@ const getUser = (userid, next) => {
             }
             let followed = false;
             for (let i = 0; i < user.following_people.length; i++) {
-                if (user.following_people[i].toString() === userid.toString()) {
+                if (user.following_people[i]._id.toString() === query_userid.toString()) {
                     followed = true;
                     break;
                 }
@@ -387,7 +387,7 @@ const dispatch = (message, next) => {
             signup(message.user, next);
             break;
         case 'GET_USER':
-            getUser(message.userid, next);
+            getUser(message.query_userid, message.target_userid, next);
             break;
         case 'UPDATE_USER_INFO':
             updateUserInfo(message.userid, message.user_info, next);
