@@ -17,7 +17,7 @@ class AnswersContent extends Component {
                     {this.props.profile.created_answers.map((a, index) => {
                         return (
                             <ListGroup.Item key={"created" + a._id}>
-                                <Link to={`/questions/${a.question_id}`}>{a._id}</Link>
+                                <Link to={`/questions/${a.question_id._id}`}>Answer to: {a.question_id.content}</Link>
                             </ListGroup.Item>
                         )
                     })}
@@ -26,7 +26,7 @@ class AnswersContent extends Component {
                     {this.props.profile.bookmarked_answers.map((a, index) => {
                         return (
                             <ListGroup.Item key={"bookmarked" + a._id}>
-                                <Link to={`/questions/${a.question_id}`}>{a._id}</Link>
+                                <Link to={`/questions/${a.question_id._id}`}>Answer to: {a.question_id.content}</Link>
                             </ListGroup.Item>
                         )
                     })}
