@@ -10,5 +10,7 @@ router.route('/addQuestion')
 router.route('/questions/:question_id')
 .get(authController.requireSignin, questionControllerKafka.fetchQuestion);
 
+router.route('/question/:question_id/follow')
+.post(authController.requireSignin, questionControllerKafka.followQuestion);
 
 module.exports={router}

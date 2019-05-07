@@ -185,7 +185,11 @@ exports.getVotes = (answerid) => {
 }
 
 exports.getComments = (answerid) => {
-    return Answer.findOne({_id: answerid}).exec();
+    return Answer.findOne({_id: answerid})
+    .populate({
+        path: 'comments.owner',
+        select: 'user_info.first_name user_info.last_name user_info.profileCredential',
+    }).select('comments').exec();
 }
 
 exports.createComment = (comment) => {
@@ -259,4 +263,12 @@ exports.fetchQuestion = (question_id) =>{
     })
     .select('_id content time followers answers topics')
     .exec();
+}
+
+exports.increaseFollowerCounter = (question_id) => {
+    return Question.findByIdAndUpdate(question_id, {$inc: {followers: 1}}, {new: true}).exec();
+}
+
+exports.userFollowQuestion = (user_id, question_id) => {
+    return User.findByIdAndUpdate(user_id, {$push: {followed_questions: question_id}}).exec();
 }

@@ -96,7 +96,8 @@ const createBookmark = (req, res) => {
     console.log("create bookmark request")
     let message = {
         cmd: 'CREATE_BOOKMARK',
-        userAnswer: req.params
+        userid: req.user.user_id,
+        answerid: req.params.answer_id
     }
     client.send(message, function(err, result) {
         console.log('the result for create bookmark is: ', result);

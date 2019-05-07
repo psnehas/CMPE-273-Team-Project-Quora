@@ -9,7 +9,7 @@ const questionSchema = new mongoose.Schema({
             return new Date().toUTCString();
         }
     },
-    followers: {type: Number}
+    followers: {type: Number, default: 0}
 })
 
 module.exports = mongoose.model('Question',questionSchema);

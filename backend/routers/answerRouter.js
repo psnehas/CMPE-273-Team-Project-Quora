@@ -4,7 +4,7 @@ var answerControllerLocal = require('../controller/answerController')
 var answerControllerKafka = require('../../kakfa/client/controller/answer');
 const router = express.Router()
 
-router.route('/bookmark/user/:user_id/answer/:answer_id')
+router.route('/bookmark/answer/:answer_id')
 .post(authController.requireSignin, answerControllerKafka.createBookmark)
 
 router.route('/answer/:answer_id/upvote')

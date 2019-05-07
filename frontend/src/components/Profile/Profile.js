@@ -16,6 +16,8 @@ class Profile extends Component {
 
     state = {
         // Upload New Avatar
+        imageSrc: `${backend_host}/user_avatar/${this.props.match.params.uid}`,
+        imageHash: Date.now(),
         show_edit_image: false,
         show_image_uploader: false,
         selectedFile: null,
@@ -69,6 +71,9 @@ class Profile extends Component {
         // TODO
         axios
             .post(`${backend_host}/user_avatar/${this.props.match.params.uid}`, data, {
+                headers: {
+                    'Authorization': `Bearer ${cookie.load('JWT')}`
+                },
                 onUploadProgress: ProgressEvent => {
                     this.setState({
                         loaded: (ProgressEvent.loaded / ProgressEvent.total * 100),
@@ -77,6 +82,10 @@ class Profile extends Component {
             })
             .then(res => {
                 console.log(res)
+                this.setState({
+                    imageSrc: `${backend_host}/user_avatar/${this.props.match.params.uid}`,
+                    imageHash: Date.now()
+                })
             })
     }
 
@@ -183,8 +192,9 @@ class Profile extends Component {
                     <Row>
                         <Col className={style.center}>
                             <div className={style.profile_photo_image_wrapper} onMouseEnter={() => this.setState({ show_edit_image: true })} onMouseLeave={() => this.setState({ show_edit_image: false })}>
-                                <Image className={style.profile_photo_image} src={`${backend_host}/user_avatar/${this.props.match.params.uid}`} roundedCircle />
+                                <Image className={style.profile_photo_image} src={`${this.state.imageSrc}?${this.state.imageHash}`} roundedCircle />
                                 {this.state.show_edit_image ? <span className={style.edit_text} onClick={this.onOpenImageUploaderHandler}>Edit</span> : null}
+                                {/* <span className={style.edit_text} onClick={this.onOpenImageUploaderHandler}>Edit</span> */}
                             </div>
                         </Col>
                         <Col xs={8}>

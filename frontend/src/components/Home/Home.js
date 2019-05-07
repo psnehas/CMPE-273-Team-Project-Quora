@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import {Card, Button} from 'react-bootstrap';
 import AddModal from '../NavBar/Add_Q_Modal';
 import axios from 'axios';
-import {david_test_apis} from '../../config';
+import {david_test_apis, backend_host} from '../../config';
 import renderHTML from 'react-render-html';
 import Moment from 'react-moment';
 import { BadgeGroup } from '../QuestionPage/QuestionPage'
@@ -23,9 +23,11 @@ class Home extends Component {
             user_feed: [],
             show_add: false,
             user_name: this.props.authentication.first_name + ' ' + this.props.authentication.last_name,
-            token: cookie.load('JWT')
+            token: cookie.load('JWT'),
+           // refresh: false
         }
         this.showModal = this.showModal.bind(this);
+        this.handleReload = this.handleReload.bind(this);
     }
 
     showModal = (e) => {
@@ -47,19 +49,39 @@ class Home extends Component {
             show_topics: true
         })
     }
-    componentDidMount() {
-        axios.get(david_test_apis + '/userfeed', {
+
+    handleReload(e) {
+        e.preventDefault();
+        axios.get(backend_host + '/userfeed', {
             headers: {
-                'Authorization': `JWT ${this.state.token}`
+                'Authorization': `Bearer ${this.state.token}`
             },
-            params: {
+        }).then(response => {
+
+            this.setState({
+                user_feed: response.data.feeded_q_a,
+                //refresh: false
+            })
+            
+        }).catch(error => {
+            console.log(error);
+        })
+    } 
+
+    componentDidMount() {
+        axios.get(backend_host + '/userfeed', {
+            headers: {
+                'Authorization': `Bearer ${this.state.token}`
+            },
+ //          params: {
  //               topAnswer: true,
-                depth: 1
-            }
+  //              depth: 1
+  //          }
         }).then(response => {
  //           console.log(response);
             this.setState({
-                user_feed: response.data
+                user_feed: response.data.feeded_q_a,
+            //    refresh: false
             })
             
         }).catch(error => {
@@ -167,6 +189,8 @@ class Home extends Component {
         }*/
 
         let modal_Q_Close = () => this.setState({ show_add: false });
+        //let handleReload = () => this.setState({refresh: true},()=>{console.log(this.state.refresh)});
+
         let redirectVar = null;
         if (this.props.authentication.loggedIn !== true){
             redirectVar = <Redirect to="/login" />
@@ -200,7 +224,9 @@ class Home extends Component {
                             <br />
 
                             <Card>
-                                <Card.Header as="h6"><span className="fa fa-question"></span> Questions for You</Card.Header>
+                                <Card.Header as="h6"><span className="fa fa-question"></span> Questions for You
+                                <Button variant="link" onClick={this.handleReload} style={{ 'textDecoration': 'none' }} className="add_q_link"><span className="fa fa-refresh"></span></Button>
+                                </Card.Header>
                             </Card>
                             {main_panel} {/* </Col>
                     </Row>

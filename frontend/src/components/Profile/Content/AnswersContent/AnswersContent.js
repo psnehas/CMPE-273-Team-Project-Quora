@@ -16,7 +16,7 @@ class AnswersContent extends Component {
                     <h5>Created Answers</h5>
                     {this.props.profile.created_answers.map((a, index) => {
                         return (
-                            <ListGroup.Item key={a._id}>
+                            <ListGroup.Item key={"created" + a._id}>
                                 <Link to={`/questions/${a.question_id}`}>{a._id}</Link>
                             </ListGroup.Item>
                         )
@@ -25,7 +25,7 @@ class AnswersContent extends Component {
                     <h5>Bookmarked Answers</h5>
                     {this.props.profile.bookmarked_answers.map((a, index) => {
                         return (
-                            <ListGroup.Item key={a._id}>
+                            <ListGroup.Item key={"bookmarked" + a._id}>
                                 <Link to={`/questions/${a.question_id}`}>{a._id}</Link>
                             </ListGroup.Item>
                         )

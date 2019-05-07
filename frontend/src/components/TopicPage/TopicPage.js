@@ -7,10 +7,11 @@ import './TopicPage.css';
 import { connect } from 'react-redux';
 import { Card, Button } from 'react-bootstrap';
 import axios from 'axios';
-import { david_test_apis } from '../../config';
+import { david_test_apis, backend_host } from '../../config';
 import renderHTML from 'react-render-html';
 import Moment from 'react-moment';
 import { BadgeGroup } from '../QuestionPage/QuestionPage'
+//import { throws } from 'assert';
 
 var html_truncate = require('html-truncate');
 
@@ -19,27 +20,31 @@ class TopicPage extends Component {
         super(props);
         this.state = {
             questions: [],
-            user_name: 'Yu Zhao',
+            user_name: this.props.authentication.first_name + ' ' + this.props.authentication.last_name,
             topic: this.props.match.params.topic,
             token: cookie.load('JWT')
         }
     }
 
     componentDidMount() {
-        axios.get(david_test_apis + '/questions', {
+        axios.get(backend_host + '/topics/'+ this.state.topic + '/questions', {
             headers: {
-                'Authorization': `JWT ${this.state.token}`
+                'Authorization': `Bearer ${this.state.token}`
             },
-            params: {
-                topic: this.state.topic,
-                topAnswer: true,
-                depth: 1,
-
-            }
+ //           params: {
+ //               topic: this.state.topic,
+ //               topAnswer: true,
+ //               depth: 1,
+ //           }
         }).then(response => {
             //console.log(response.data);
             this.setState({
-                questions: response.data
+                questions: response.data.questions,
+                followers: response.data.followers,
+                topic: response.data.label,
+                followed: response.data.followed
+
+
             })
 
         }).catch(error => {
@@ -58,16 +63,16 @@ class TopicPage extends Component {
         if (this.state.questions.length !== 0) {
             main_panel = this.state.questions.map((q, idx) => {
                 let answer = null;
-                if ('answers' in q) {
+                if ('answers' in q && q.answers.length !== 0) {
                     //console.log(html_truncate(q.answers[0].answerText, 3));
                     answer = (
                         <div>
                             <ul className="list-unstyled">
-                            <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'profile/' + q.answers[0].createdBy.user_id}>{q.answers[0].createdBy.name},</Link><span style={{ marginLeft: 10 }}>{q.answers[0].createdBy.crediential}</span></li>
-                                <li><small className="text-muted">Answered <Moment fromNow>{q.answers[0].createdOn}</Moment></small></li>
+                            <li style={{ fontSize: 14 }}><Link style={{ color: 'black' }} to={'/profile/' + q.answers[0].owner._id}>{q.answers[0].owner.user_info.first_name} {q.answers[0].owner.user_info.last_name},</Link><span style={{ marginLeft: 10 }}>{q.answers[0].owner.user_info.profileCredential}</span></li>
+                                <li><small className="text-muted">Answered <Moment fromNow>{q.answers[0].time}</Moment></small></li>
                             </ul>
                             <p className="comment_truncate">
-                                {renderHTML(html_truncate(q.answers[0].answerText, 150))}
+                                {renderHTML(html_truncate(q.answers[0].content, 150))}
                             </p>
                         </div>
                     )
@@ -79,7 +84,7 @@ class TopicPage extends Component {
                     <Card key={idx}>
                         <Card.Body >
                             <BadgeGroup data={q.topics} />
-                            <Card.Title style={{ fontWeight: 'bold' }}>{q.questionText}</Card.Title>
+                            <Card.Title style={{ fontWeight: 'bold' }}>{q.content}</Card.Title>
                             <Card.Text >
                                 {answer}
                             </Card.Text>
@@ -107,8 +112,8 @@ class TopicPage extends Component {
                     <Card.Body style={{ "fontSize": 20, "color": '#666', 'fontWeight': 'bold' }}>
                         {this.state.topic}
                         <br />
-                        <Button variant="link" onClick={this.handleFollow} disabled>
-                            <span className="fa fa-plus-square"></span> Followed</Button>
+                        <Button variant="link" onClick={this.handleFollow} disabled={this.state.followed}>
+                                    <span className="fa fa-plus-square"></span> {this.state.followed ? 'Followed' : 'Follow'}  ·  {this.state.followers}</Button>
                     </Card.Body>
                 </Card>
                 <br />
