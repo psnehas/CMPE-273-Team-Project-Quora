@@ -48,15 +48,15 @@ const fetchQuestion = (req, next) => {
 }
 
 const followQuestion = (req, next) => {
-    var questionFollwed = false;
+    var questionFollowed = false;
     db.findUserFollowedQuestions(req.userid).then(result => {
         console.log("result", result)
         for(i = 0; i < result.followed_questions.length; i++){
             if(req.questionid.question_id == result.followed_questions[i]._id){
-                questionFollwed = true
+                questionFollowed = true
             }
         }
-        if(!questionFollwed && i == result.followed_questions.length){
+        if(!questionFollowed && i == result.followed_questions.length){
             db.userFollowQuestion(req.userid, req.questionid.question_id).then(result2 =>{
                 console.log("insert question result: ", result2);
                 db.increaseFollowerCounter(req.questionid.question_id)
