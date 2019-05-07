@@ -50,4 +50,19 @@ const followQuestion = (req,res) => {
     })
 }
 
-module.exports = {insertQuestion, fetchQuestion, followQuestion};
+const search = (req,res) => {
+    console.log('Search request, question', req.params)
+    let message = {
+        cmd: 'SEARCH',
+        query: req.params
+    }
+    client.send(message, function(err, result) {
+        if(err){
+            console.log("error at kafka question controller",err);
+        }
+        console.log('the result for search request is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
+module.exports = {insertQuestion, fetchQuestion, followQuestion, search};
