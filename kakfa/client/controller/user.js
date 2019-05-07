@@ -128,5 +128,32 @@ const getTopicQuestions = (req, res) => {
     })
 }
 
+const followUser = (req, res) => {
+    console.log('follow user with followed user id: ', req.params.followed_user_id);
+    let message = {
+        cmd: 'FOLLOW_PEOPLE',
+        following_user_id: req.user.user_id,
+        followed_user_id: req.params.followed_user_id
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for following people is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
+const unfollowUser = (req, res) => {
+    console.log('unfollow user with unfollowed user id: ', req.params.unfollowed_user_id);
+    let message = {
+        cmd: 'UNFOLLOW_PEOPLE',
+        unfollowing_user_id: req.user.user_id,
+        unfollowed_user_id: req.params.unfollowed_user_id
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for unfollowing people is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
 module.exports = {signin, signup, getUserFeed, getUserTopics, getTopics, followTopics, createTopic, getTopicQuestions,
-    getUser, updateUserInfo}
+    getUser, updateUserInfo,
+    followUser, unfollowUser}
