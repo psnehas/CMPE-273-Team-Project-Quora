@@ -442,20 +442,21 @@ class QuestionPage extends Component {
         //        console.log("follow this question");
 
         const data = {
-            action: 'question',
-            ids: [this.state.questionId],
-            unfollow: false
+//            action: 'question',
+//            ids: [this.state.questionId],
+//            unfollow: false
         }
         //        console.log(data);
 
-        axios.post(backend_host + '/userFollow', data, {
+        axios.post(backend_host + '/question/' + this.state.questionId + '/follow', data, {
             headers: {
                 'Authorization': `Bearer ${this.state.token}`
             }
         }).then(response => {
             //            console.log(response);
             this.setState({
-                followed: true
+                followed: true,
+                followers: response.data.followers
             })
         }).catch(error => {
             console.log(error);
@@ -477,7 +478,7 @@ class QuestionPage extends Component {
             },
         }).then(response => {
             console.log(response.data);
-            this.setState({ answer_input: false });
+            this.setState({ answer_input: false});
             this.componentDidMount();
         })
 
@@ -520,7 +521,7 @@ class QuestionPage extends Component {
                                 <Button className="q_page_button" variant="link" onClick={() => this.setState({ answer_input: !this.state.answer_input })}>
                                     <span className="fa fa-edit"></span> Answer</Button>
                                 <Button className="q_page_button" variant="link" onClick={this.handleFollow} disabled={this.state.followed}>
-                                    <span className="fa fa-plus-square"></span> {this.state.followed ? 'Followed' : 'Follow'}  ·  {this.state.question.followers}</Button>
+                                    <span className="fa fa-plus-square"></span> {this.state.followed ? 'Followed' : 'Follow'}  ·  {this.state.followers}</Button>
                             </ButtonToolbar>
                             <Collapse in={this.state.answer_input}>
                                 <Card>
