@@ -280,7 +280,7 @@ exports.userFollowQuestion = (user_id, question_id) => {
 exports.search = (catagory, content) => {
     switch(catagory) {
         case 'user':
-            return User.find({$or: [{ first_name: { $regex: content, $options: 'i' }}, { last_name: { $regex: content, $options: 'i' }}]})
+            return User.find({$or: [{ email: { $regex: content, $options: 'i' }},{ first_name: { $regex: content, $options: 'i' }}, { last_name: { $regex: content, $options: 'i' }}]})
             .select('_id first_name last_name').exec();             
         case 'question':
             return Question.find({ content: { $regex: content, $options: 'i' } })
@@ -290,5 +290,7 @@ exports.search = (catagory, content) => {
             .select('_id label').exec();             
         default: console.log('unknown request');
     }
-    return null;
+    return new Promise((resolve, reject) => {
+        resolve([]);
+    });
 }

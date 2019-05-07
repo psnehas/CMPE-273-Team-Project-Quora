@@ -23,7 +23,7 @@
     "ioredis": "^4.9.0",
     "jsonwebtoken": "^8.5.0",
     "kafka-node": "^4.1.1",
-    "mocha": "^6.0.2",
+    "mocha": "^6.1.4",
     "mongoose": "^5.4.20",
     "mongoose-sequence": "^5.0.1",
     "mysql": "^2.16.0",
