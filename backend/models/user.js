@@ -57,7 +57,8 @@ const UserSchema = new mongoose.Schema({
     created_answers: [{type: mongoose.Schema.Types.ObjectId, ref: 'Answer'}],
     bookmarked_answers: [{type: mongoose.Schema.Types.ObjectId, ref: 'Answer'}],
     followed_topics: [{type: mongoose.Schema.Types.ObjectId, ref: 'Topic'}],
-    messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}]
+    messages: [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}],
+    active: {type: Boolean, default: true}
 })
 
 module.exports =  mongoose.model('User', UserSchema);

@@ -146,9 +146,9 @@ class Home extends Component {
                             <li><small className="text-muted">Answered <Moment fromNow>{q.answers[0].time}</Moment></small></li>
                         </ul>
                         */}
-                            <p className="comment_truncate">
+                            <div className="comment_truncate">
                                 {renderHTML(html_truncate(q.answers[0].content, 150))}
-                            </p>
+                            </div>
                         </div>
                     )
                 }
@@ -176,14 +176,12 @@ class Home extends Component {
 
                 return (
                     <Card key={idx}>
-                        <Card.Body >
+                            <Card.Body >
                             <BadgeGroup data={q.topics} />
                             <Card.Title style={{ fontWeight: 'bold' }}>{q.questionText}</Card.Title>
-                            <Card.Text >
                                 {answer}
-                            </Card.Text>
                             <Card.Link as={NavLink} to={'/questions/' + q._id}>more</Card.Link>
-                        </Card.Body>
+                            </Card.Body>
                     </Card>
 
                 )

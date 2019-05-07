@@ -27,6 +27,18 @@ const signup = (req, res) => {
     })
 }
 
+const deactiveUser = (req, res) => {
+    console.log('deactive request from user: ', req.user.user_id);
+    let message = {
+        cmd: 'DEACTIVE',
+        userid: req.user.user_id
+    }
+    client.send(message, function(err, result) {
+        console.log('the result for deactive is: ', result);
+        res.status(result.status).json(result.data);
+    })
+}
+
 const getUser = (req, res) => {
     console.log('Get user profile of: ', req.params.userID)
     let message = {
@@ -154,6 +166,6 @@ const unfollowUser = (req, res) => {
     })
 }
 
-module.exports = {signin, signup, getUserFeed, getUserTopics, getTopics, followTopics, createTopic, getTopicQuestions,
+module.exports = {signin, signup, deactiveUser, getUserFeed, getUserTopics, getTopics, followTopics, createTopic, getTopicQuestions,
     getUser, updateUserInfo,
     followUser, unfollowUser}

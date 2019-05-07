@@ -99,6 +99,18 @@ class Profile extends Component {
         })
     }
 
+    onDeactiveHandler = () => {
+        axios.post(`${backend_host}/deactive`, null, {
+            headers: {
+                'Authorization': `Bearer ${cookie.load('JWT')}`
+            }
+        }).then(res => {
+            console.log(res);
+            this.props.dispatch(userActions.logout());
+            cookie.remove('JWT', { path: '/' });
+        })
+    }
+
     onCancelEditProfileHandler = () => {
         this.setState({
             editing_profile: false
@@ -146,6 +158,38 @@ class Profile extends Component {
         this.setState({ [e.target.id]: e.target.value });
     };
 
+    onChangeFollowHandler = () => {
+        if (this.props.profile.followed) {
+            axios.put(`${backend_host}/unfollow_user/${this.props.match.params.uid}`, null,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${cookie.load('JWT')}`
+                    }
+                }).then(res => {
+                    console.log("Unfollow user", res)
+                    let new_profile = {
+                        ...this.props.profile,
+                        followed: false
+                    }
+                    this.props.dispatch(userActions.profile_update(new_profile));
+                })
+        } else {
+            axios.put(`${backend_host}/follow_user/${this.props.match.params.uid}`, null,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${cookie.load('JWT')}`
+                    }
+                }).then(res => {
+                    console.log("follow user", res);
+                    let new_profile = {
+                        ...this.props.profile,
+                        followed: true
+                    }
+                    this.props.dispatch(userActions.profile_update(new_profile));
+                })
+        }
+    }
+
     render() {
 
         let profile_content = (
@@ -153,7 +197,13 @@ class Profile extends Component {
                 <h1>{this.props.profile.user_info.first_name}&nbsp;{this.props.profile.user_info.last_name}</h1>
                 <p>{this.props.profile.user_info.profileCredential}</p>
                 <p>{this.props.profile.user_info.about}</p>
-                {this.props.authentication.user_id === this.props.match.params.uid ? <Button onClick={this.onEditProfileHandler}>Edit</Button> : null}
+                {this.props.authentication.user_id === this.props.match.params.uid ? (
+                    <div>
+                        <Button onClick={this.onEditProfileHandler}>Edit</Button>
+                        &nbsp;
+                        <Button onClick={this.onEditProfileHandler} variant="danger" >Deactive</Button>
+                    </div>
+                ) : <Button variant="link" onClick={this.onChangeFollowHandler}><span className="fa fa-plus-square"></span>&nbsp;{this.props.profile.followed ? 'Unfollow' : 'Follow'}</Button>}
             </div>
         )
 

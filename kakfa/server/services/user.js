@@ -63,6 +63,16 @@ const signup = (user, next) => {
     })
 }
 
+const deactiveUser = (userid, next) => {
+    db.deactiveUser(userid)
+    .then(res => {
+        next(null, {
+            status: 200,
+            data: {msg: 'User deactived'}
+        })
+    })
+}
+
 const getUser = (userid, next) => {
     db.findUserProfileByID(userid)
     .then(user => {
@@ -80,8 +90,17 @@ const getUser = (userid, next) => {
             };
             profile.user_info = {
                 ...user.user_info,
-                email: user.email
+                email: user.email,
             }
+            let followed = false;
+            for (let i = 0; i < user.following_people.length; i++) {
+                if (user.following_people[i].toString() === userid.toString()) {
+                    followed = true;
+                    break;
+                }
+            }
+            profile.followed = followed;
+            profile.active = user.active;
             console.log('the user profile is: ', profile.user_info);
             profile.created_answers = user.created_answers.sort((a, b) => {
                 return a.time < b.time;
@@ -394,6 +413,9 @@ const dispatch = (message, next) => {
             break;
         case 'UNFOLLOW_PEOPLE':
             unfollowUser(message.unfollowing_user_id, message.unfollowed_user_id, next);
+            break;
+        case 'DEACTIVE':
+            deactiveUser(message.userid, next);
             break;
         default:
             console.log('unknown request');

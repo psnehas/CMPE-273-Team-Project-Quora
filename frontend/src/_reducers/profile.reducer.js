@@ -14,6 +14,8 @@ const initialState = {
         educations: [],
         careers: []
     },
+    followed: false,
+    active: false,
     created_answers: [],
     bookmarked_answers: [],
     created_questions: [],
