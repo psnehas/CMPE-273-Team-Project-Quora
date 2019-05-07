@@ -47,4 +47,7 @@ router.route('/message')
 .get(authController.requireSignin, userControllerKafka.getUserMessages)
 .post(authController.requireSignin, userControllerKafka.createUserMessage)
 
+router.route('/stats')
+.get(userControllerLocal.getStats);
+
 module.exports = {router}

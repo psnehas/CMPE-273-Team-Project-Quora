@@ -124,6 +124,7 @@ const createBookmark = (req, next) => {
 const getOneAnswer = (req, next) => {
     db.findOneAnswer(req.OneAnswer.answer_id).then(result =>{
         console.log("Answer content: ", result)
+        db.increaseView(result._id);
         next(null, {
             status: 200,
             data: result

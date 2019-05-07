@@ -56,4 +56,29 @@ const getUserAvatar = (req, res) => {
 }
 
 
-module.exports = {updateUserAvatar, getUserAvatar}
+const getStats = (req, res) => {
+    //console.log('get stats request from user: ', req.user.user_id);
+    let data = {
+        top5ViewAnswers: [],
+        top5UpvotesAnswers: [],
+        top5DownvotesAnswers: [],
+    };
+    db.findAllAnswersByView()
+    .then(answers => {
+        console.log('find top 5 view answers: ', answers);
+        data.top5ViewAnswers = answers;
+        db.findAllAnswersByUpvotes()
+        .then(answers => {
+            console.log('find top 5 upvote answers: ', answers);
+            data.top5UpvotesAnswers = answers;
+            db.findAllAnswersByDownvotes()
+            .then(answers => {
+                console.log('find top 5 downvote answers: ', answers);
+                data.top5DownvotesAnswers = answers;
+                res.status(200).json(data);
+            });
+        });
+    });
+}
+
+module.exports = {updateUserAvatar, getUserAvatar, getStats}
