@@ -432,7 +432,7 @@ class QuestionPage extends Component {
             this.setState({
                 //                question: response.data.data
                 question: response.data.question,
-                followed: response.data.questionFollwed,
+                followed: response.data.questionFollowed,
                 followers: response.data.question.followers
             })
         })
