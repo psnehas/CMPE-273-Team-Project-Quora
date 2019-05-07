@@ -336,19 +336,19 @@ const createUserMessage = (message, next) => {
         .then(from => {
             let fromuser = from.toObject();
             let message = {
-                from_user_id: fromuser.user_id,
+                from_user_id: fromuser._id,
                 from_name: fromuser.name,
                 from_email: fromuser.email,
-                to_user_id: touser.user_id,
+                to_user_id: touser._id,
                 to_name: touser.name,
                 to_email: touser.email,
                 subject,
                 content,
             }
-            db.insertMessage(touser.user_id, message)
+            db.insertMessage(touser._id, message)
             .then(() => {
                 message.status = 'readed';
-                db.insertMessage(fromuser.user_id, message)
+                db.insertMessage(fromuser._id, message)
                 .then(() => {
                     getUserMessages(userid, next);
                 })

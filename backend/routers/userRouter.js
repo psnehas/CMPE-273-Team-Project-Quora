@@ -43,4 +43,8 @@ router.route('/deactive')
 router.route('/activities')
 .get(authController.requireSignin, userControllerKafka.getUserActivities);
 
+router.route('/message')
+.get(authController.requireSignin, userControllerKafka.getUserMessages)
+.post(authController.requireSignin, userControllerKafka.createUserMessage)
+
 module.exports = {router}
