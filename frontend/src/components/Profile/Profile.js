@@ -103,7 +103,7 @@ class Profile extends Component {
     }
 
     onDeactiveHandler = () => {
-        axios.post(`${backend_host}/deactive`, null, {
+        axios.put(`${backend_host}/deactive`, null, {
             headers: {
                 'Authorization': `Bearer ${cookie.load('JWT')}`
             }
@@ -204,7 +204,7 @@ class Profile extends Component {
                     <div>
                         <Button onClick={this.onEditProfileHandler}>Edit</Button>
                         &nbsp;
-                        <Button onClick={this.onEditProfileHandler} variant="danger" >Deactive</Button>
+                        <Button onClick={this.onDeactiveHandler} variant="danger" >Deactive</Button>
                     </div>
                 ) : <Button variant="link" onClick={this.onChangeFollowHandler}><span className="fa fa-plus-square"></span>&nbsp;{this.props.profile.followed ? 'Unfollow' : 'Follow'}</Button>}
             </div>
@@ -238,54 +238,61 @@ class Profile extends Component {
                 </Form>
             </div>
         )
-console.log("image src", `${this.props.profile.user_info.avatar}?${Date.now()}`)
+        console.log("image src", `${this.props.profile.user_info.avatar}?${Date.now()}`)
         return (
             <React.Fragment>
-                <Container>
-                    <Row>
-                        <Col className={style.center}>
-                            <div className={style.profile_photo_image_wrapper} onMouseEnter={() => this.setState({ show_edit_image: true })} onMouseLeave={() => this.setState({ show_edit_image: false })}>
-                                <Image className={style.profile_photo_image} src={`${this.props.profile.user_info.avatar}?${Date.now()}`} roundedCircle />
-                                {this.state.show_edit_image ? <span className={style.edit_text} onClick={this.onOpenImageUploaderHandler}>Edit</span> : null}
-                                {/* <span className={style.edit_text} onClick={this.onOpenImageUploaderHandler}>Edit</span> */}
-                            </div>
-                        </Col>
-                        <Col xs={8}>
-                            {this.state.editing_profile ? profile_edit : profile_content}
-                        </Col>
-                    </Row>
-                    <hr />
+                {
+                    this.props.profile.active ?
+                        <Container>
+                            <Row>
+                                <Col className={style.center}>
+                                    <div className={style.profile_photo_image_wrapper} onMouseEnter={() => this.setState({ show_edit_image: true })} onMouseLeave={() => this.setState({ show_edit_image: false })}>
+                                        <Image className={style.profile_photo_image} src={`${this.props.profile.user_info.avatar}?${Date.now()}`} roundedCircle />
+                                        {this.state.show_edit_image ? <span className={style.edit_text} onClick={this.onOpenImageUploaderHandler}>Edit</span> : null}
+                                        {/* <span className={style.edit_text} onClick={this.onOpenImageUploaderHandler}>Edit</span> */}
+                                    </div>
+                                </Col>
+                                <Col xs={8}>
+                                    {this.state.editing_profile ? profile_edit : profile_content}
+                                </Col>
+                            </Row>
+                            <hr />
 
-                    <Row>
-                        <Col>
-                            <Sidebar uid={this.props.match.params.uid} />
-                        </Col>
-                        <Col xs={8}>
-                            <Content uid={this.props.match.params.uid} />
-                        </Col>
-                    </Row>
+                            <Row>
+                                <Col>
+                                    <Sidebar uid={this.props.match.params.uid} />
+                                </Col>
+                                <Col xs={8}>
+                                    <Content uid={this.props.match.params.uid} />
+                                </Col>
+                            </Row>
 
 
-                    <Modal show={this.state.show_image_uploader} onHide={this.onCloseImageUploaderHandler}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Modal heading</Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                            <Form.Control type="file" onChange={this.handleselectedFile} />
-                            <br />
-                            <div> {Math.round(this.state.loaded, 2)} %</div>
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={this.onCloseImageUploaderHandler}>
-                                Close
+                            <Modal show={this.state.show_image_uploader} onHide={this.onCloseImageUploaderHandler}>
+                                <Modal.Header closeButton>
+                                    <Modal.Title>Modal heading</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+                                    <Form.Control type="file" onChange={this.handleselectedFile} />
+                                    <br />
+                                    <div> {Math.round(this.state.loaded, 2)} %</div>
+                                </Modal.Body>
+                                <Modal.Footer>
+                                    <Button variant="secondary" onClick={this.onCloseImageUploaderHandler}>
+                                        Close
                             </Button>
-                            <Button variant="primary" onClick={this.handleUpload}>
-                                Save Changes
+                                    <Button variant="primary" onClick={this.handleUpload}>
+                                        Save Changes
                             </Button>
-                        </Modal.Footer>
-                    </Modal>
+                                </Modal.Footer>
+                            </Modal>
 
-                </Container>
+                        </Container>
+                        :
+                        <Container>
+                            <h1>User Not Found</h1>
+                        </Container>
+                }
             </React.Fragment>
         )
     }
