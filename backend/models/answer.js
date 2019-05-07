@@ -38,7 +38,8 @@ const AnswerSchema = new mongoose.Schema({
         type: Boolean
     },
     bookmark: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-    comments: [CommentSchema]
+    comments: [CommentSchema],
+    view: {type: Number, default: 0}
 })
 
 module.exports =  mongoose.model('Answer', AnswerSchema);

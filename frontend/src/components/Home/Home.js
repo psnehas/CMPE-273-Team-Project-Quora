@@ -59,7 +59,7 @@ class Home extends Component {
         }).then(response => {
 
             this.setState({
-                user_feed: response.data.feeded_q_a,
+                user_feed: response.data,
                 //refresh: false
             })
 
@@ -178,7 +178,7 @@ class Home extends Component {
                     <Card key={idx}>
                         <Card.Body >
                             <BadgeGroup data={q.topics} />
-                            <Card.Title style={{ fontWeight: 'bold' }}>{q.questionText}</Card.Title>
+                            <Card.Title style={{ fontWeight: 'bold' }}>{q.content}</Card.Title>
                             {answer}
                             <Card.Link as={NavLink} to={'/questions/' + q._id}>more</Card.Link>
                         </Card.Body>

@@ -69,7 +69,8 @@ const UserSchema = new mongoose.Schema({
                 }
             }
         }
-    ]
+    ],
+    view: {type: Number, default: 0}
 })
 
 module.exports =  mongoose.model('User', UserSchema);
