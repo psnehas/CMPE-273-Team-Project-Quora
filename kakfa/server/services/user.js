@@ -263,8 +263,8 @@ const followUser = (following_user_id, followed_user_id, next) => {
     db.getFollowedPeople(following_user_id)
     .then(people_list => {
         console.log('get followed people list result: ', people_list);
-        for (let i = 0; i < people_list.length; i++) {
-            if (people_list[i].equals(followed_user_id)) {
+        for (let i = 0; i < people_list.followed_people.length; i++) {
+            if (people_list.followed_people[i].toString() === followed_user_id.toString()) {
                 return next(null, {
                     status: 400,
                     data: {msg: 'Already followed this user'}
