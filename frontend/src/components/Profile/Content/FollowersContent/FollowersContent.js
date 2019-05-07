@@ -34,7 +34,7 @@ class FollowersContent extends Component {
                     {this.props.profile.following_people.map((p, index) => {
                         return (
                             <ListGroup.Item key={p._id} onClick={() => this.onClickHandler(p._id)}>
-                                <Link to={`/profile/${p._id}`}>{`${p.first_name} ${p.last_name}`}</Link>
+                                <Link to={`/profile/${p._id}`}>{`${p.user_info.first_name} ${p.user_info.last_name}`}</Link>
                             </ListGroup.Item>
                         )
                     })}

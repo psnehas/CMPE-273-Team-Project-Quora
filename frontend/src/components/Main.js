@@ -27,8 +27,8 @@ class Main extends Component {
                     <Route path='/signup' component={SignUp} />
 
                     <Route path="/questions/:questionId" component={QuestionPage} />
-                    {/* <Route path="/profile/:uid" component={ProfilePage} /> */}
-                    <Route path="/profile/:uid" render={(props) => <ProfilePage {...props}></ProfilePage>} />
+                    <Route path="/profile/:uid" component={ProfilePage} />
+                    {/* <Route path="/profile/:uid" render={(props) => <ProfilePage {...props}></ProfilePage>} /> */}
                     <Route path="/messages/:uid" component={MessagesPage} />
                     <Route path="/content" component={ContentPage} />
                 </Switch>
