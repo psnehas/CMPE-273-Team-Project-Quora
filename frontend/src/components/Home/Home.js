@@ -59,7 +59,7 @@ class Home extends Component {
         }).then(response => {
 
             this.setState({
-                user_feed: response.data.feeded_q_a,
+                user_feed: response.data,
                 //refresh: false
             })
 
