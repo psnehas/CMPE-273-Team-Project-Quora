@@ -79,6 +79,20 @@ class navbar extends Component {
         })
     }
 
+    onClickHandler = (id) => {
+        // this.dispatch(userActions.)
+        axios.get(`${backend_host}/profile/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${cookie.load('JWT')}`
+            }
+        }).then(res => {
+            if (res.status === 200) {
+                res.data.user_info.avatar = `${backend_host}/user_avatar/${id}`
+                this.props.dispatch(userActions.profile_update(res.data))
+            }
+        })
+    }
+
     render() {
         //if Cookie is set render Logout Button
 
@@ -91,7 +105,7 @@ class navbar extends Component {
             navLogin = (
                 <NavDropdown title={authentication.first_name} id="basic-nav-dropdown">
                     <NavDropdown.Item onClick={this.handleLogout}>Logout</NavDropdown.Item>
-                    <NavDropdown.Item as={NavLink} to={`/profile/${this.props.authentication.user_id}`}>Profile</NavDropdown.Item>
+                    <NavDropdown.Item as={NavLink} to={`/profile/${this.props.authentication.user_id}`} onClick={()=>this.onClickHandler(this.props.authentication.user_id)}>Profile</NavDropdown.Item>
                     <NavDropdown.Item as={NavLink} to={`/messages/${this.props.authentication.user_id}`}>Messages</NavDropdown.Item>
                     <NavDropdown.Item as={NavLink} to={`/content`}>Content</NavDropdown.Item>
                 </NavDropdown>
@@ -166,7 +180,7 @@ class navbar extends Component {
 
                                         if (this.state.search.catagory === 'user') {
                                             content = (
-                                                <Link to={`/profile/${res._id}`} >{res.email}</Link>
+                                                <Link to={`/profile/${res._id}`} onClick={() => this.onClickHandler(res._id)} >{res.email}</Link>
                                             )
                                         } else if (this.state.search.catagory === 'topic') {
                                             content = (
