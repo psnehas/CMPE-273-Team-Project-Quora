@@ -31,17 +31,17 @@ const fetchQuestion = (req, next) => {
     db.fetchQuestion(req.questionid.question_id)
     .then(result => {
         console.log("Fetch question result: ", result);
-        var questionFollwed = false;
+        var questionFollowed = false;
         db.findUserFollowedQuestions(req.userid).then(result2 => {
             console.log("result2",result2)
             for(i = 0; i < result2.followed_questions.length; i++){
                 if(req.questionid.question_id == result2.followed_questions[i]._id){
-                    questionFollwed = true
+                    questionFollowed = true
                 }
             }
             next(null, {
                 status: 200,
-                data: {question: result, questionFollwed: questionFollwed}
+                data: {question: result, questionFollowed: questionFollowed}
             });
         })
     });
