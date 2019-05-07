@@ -44,6 +44,10 @@ exports.insertUser = (user) => {
     return newUser.save();
 }
 
+exports.deactiveUser = (userid) => {
+    return User.findByIdAndUpdate(userid, {$set: {active: false}}).exec();
+}
+
 exports.findUserByEmail = (email) => {
     console.log('findUserByEmail: ', email);
     return User.findOne({email: email}).exec();
@@ -79,7 +83,7 @@ exports.findUserProfileByID = (id) => {
         path: 'following_people',
         select: 'first_name last_name'
     })
-    .select('user_info email').exec();
+    .select('user_info email active').exec();
 }
 
 exports.findUserFollowedQuestions = (id) => {
