@@ -30,4 +30,10 @@ router.route('/profile/:userID')
 
 router.route('/profile/update_info')
 .put(authController.requireSignin, userControllerKafka.updateUserInfo);
+
+router.route('/follow_user/:followed_user_id')
+.put(authController.requireSignin, userControllerKafka.followUser);
+
+router.route('/unfollow_user/:followed_user_id')
+.put(authController.requireSignin, userControllerKafka.unfollowUser)
 module.exports = {router}

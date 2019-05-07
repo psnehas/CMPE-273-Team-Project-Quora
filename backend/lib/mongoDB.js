@@ -53,10 +53,18 @@ exports.findUserProfileByID = (id) => {
     return User.findById(id)
     .populate({
         path: 'created_answers',
+        populate: {
+            path: 'question_id',
+            select: 'content'
+        },  
         select: 'question_id time',
     })
     .populate({
         path: 'bookmarked_answers',
+        populate: {
+            path: 'question_id',
+            select: 'content'
+        },  
         select: 'question_id time',
     })
     .populate({
@@ -92,16 +100,6 @@ exports.findAvatarPathByID = (id) => {
 
 exports.updateUserAvatar = (user_id, avatar) => {
     return User.findByIdAndUpdate(user_id, {$set: {avatar: avatar}}).exec();
-}
-
-exports.findFeedByUserID = (id) => {
-    return User.findById(id).select('feeded_q_a -_id').exec();
-    /*
-    .then(feed => {
-        let question_id = feed.question_id;
-        return Question.findOne({question_id})
-    });
-    */
 }
 
 exports.findTopicsByUserID = (id) => {
@@ -142,7 +140,7 @@ exports.findTopicDetailByID = (topic_id) => {
                 path: 'owner',
                 select: 'user_info.first_name user_info.last_name user_info.profileCredential'
             },
-            select: 'time content'
+            select: 'time content anonymous'
         },
         {
             path: 'topics',
@@ -153,8 +151,24 @@ exports.findTopicDetailByID = (topic_id) => {
     .exec();
 }
 
-exports.updateUser = (user) => {
-    return User.findOneAndUpdate({_id: user.id}, user).exec();
+exports.getFollowedPeople = (userid) => {
+    return User.findById(userid).select('followed_people').exec();
+}
+
+exports.followedPeople = (following_user_id, followed_user_id) => {
+    return User.findByIdAndUpdate(following_user_id, {$push: {followed_people: followed_user_id}}).exec();
+}
+
+exports.followingPeople = (followed_user_id, following_user_id) => {
+    return User.findByIdAndUpdate(followed_user_id, {$push: {following_people: following_user_id}}).exec();
+}
+
+exports.unfollowedPeople = (following_user_id, followed_user_id) => {
+    return User.findByIdAndUpdate(following_user_id, {$pull: {followed_people: followed_user_id}}).exec();
+}
+
+exports.unfollowingPeople = (followed_user_id, following_user_id) => {
+    return User.findByIdAndUpdate(followed_user_id, {$pull: {following_people: following_user_id}}).exec();
 }
 
 //Answer

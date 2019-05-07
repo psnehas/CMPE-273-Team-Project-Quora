@@ -117,20 +117,38 @@ const updateUserInfo = (userid, user_info, next) => {
 }
 
 const getUserFeed = (userid, next) => {
-    /*
-    db.findFeedByUserID(userid)
+    db.findTopicsByUserID(userid)
     .then(result => {
-        console.log('feed reuslt: ', result);
-        next(null, {
-            status: 200,
-            data: result
+        console.log('get topics reuslt: ', result);
+        let followed_topics = result.followed_topics.map(topic => topic._id);
+        let feed = [], feed_question_ids = [];
+        let promises = followed_topics.map(topic_id => {
+            return db.findTopicDetailByID(topic_id)
+            .then(topic => {
+                console.log('get user feed, topic detail: ', topic);
+                topic.questions.map(question => {
+                    if (feed_question_ids.includes(question._id.toString()) === false) {
+                        feed.push(question);
+                        feed_question_ids.push(question._id.toString());
+                    }
+                })
+            })
+        })
+
+        Promise.all(promises)
+        .then(res => {
+            let feed2 = [];
+            while (feed.length !== 0) {
+                let randomIndex = Math.floor(Math.random() * feed.length);
+                feed2.push(feed[randomIndex]);
+                feed.splice(randomIndex, 1);
+            }
+            next(null, {
+                status: 200,
+                data: feed2
+            })
         })
     })
-    */
-   next(null, {
-       status: 200,
-       data: {feeded_q_a: []}
-   });
 }
 
 const getUserTopics = (userid, next) => {
@@ -241,6 +259,44 @@ const getTopicQuestions = (userid, topic_id, next) => {
     })
 }
 
+const followUser = (following_user_id, followed_user_id, next) => {
+    db.getFollowedPeople(following_user_id)
+    .then(people_list => {
+        console.log('get followed people list result: ', people_list);
+        for (let i = 0; i < people_list.followed_people.length; i++) {
+            if (people_list.followed_people[i].toString() === followed_user_id.toString()) {
+                return next(null, {
+                    status: 400,
+                    data: {msg: 'Already followed this user'}
+                })
+            }
+        }
+        db.followedPeople(following_user_id, followed_user_id)
+        .then(res => {
+            db.followingPeople(followed_user_id, following_user_id)
+            .then(res => {
+                return next(null, {
+                    status: 200,
+                    data: {msg: 'Follow user successed'}
+                })
+            })
+        })
+    })
+}
+
+const unfollowUser = (unfollowing_user_id, unfollowed_user_id, next) => {
+    db.unfollowedPeople(unfollowing_user_id, unfollowed_user_id)
+    .then(res => {
+        db.unfollowingPeople(unfollowed_user_id, unfollowing_user_id)
+        .then(res => {
+            return next(null, {
+                status: 200,
+                data: {msg: 'Unfollow user successed'}
+            })
+        })
+    })
+}
+
 const getUserMessages = (userid, next) => {
     db.getMessagesByUserID(userid)
     .then(result => {
@@ -332,6 +388,12 @@ const dispatch = (message, next) => {
             break;
         case 'READ_MESSAGE':
             readMessage(message.messageid, next);
+            break;
+        case 'FOLLOW_PEOPLE':
+            followUser(message.following_user_id, message.followed_user_id, next);
+            break;
+        case 'UNFOLLOW_PEOPLE':
+            unfollowUser(message.unfollowing_user_id, message.unfollowed_user_id, next);
             break;
         default:
             console.log('unknown request');
