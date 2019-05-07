@@ -171,7 +171,11 @@ exports.getVotes = (answerid) => {
 }
 
 exports.getComments = (answerid) => {
-    return Answer.findOne({_id: answerid}).exec();
+    return Answer.findOne({_id: answerid})
+    .populate({
+        path: 'comments.owner',
+        select: 'user_info.first_name user_info.last_name user_info.profileCredential',
+    }).select('comments').exec();
 }
 
 exports.createComment = (comment) => {
