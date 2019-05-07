@@ -38,6 +38,7 @@ class Profile extends Component {
             }
         }).then(res => {
             if (res.status === 200) {
+                res.data.user_info.avatar = `${backend_host}/user_avatar/${this.props.match.params.uid}`
                 this.props.dispatch(userActions.profile_update(res.data))
             }
         })
@@ -86,6 +87,8 @@ class Profile extends Component {
                     imageSrc: `${backend_host}/user_avatar/${this.props.match.params.uid}`,
                     imageHash: Date.now()
                 })
+                this.props.dispatch(userActions.profile_update({ user_info: { avatar: `${backend_host}/user_avatar/${this.props.match.params.uid}` } }));
+
             })
     }
 
@@ -235,14 +238,14 @@ class Profile extends Component {
                 </Form>
             </div>
         )
-
+console.log("image src", `${this.props.profile.user_info.avatar}?${Date.now()}`)
         return (
             <React.Fragment>
                 <Container>
                     <Row>
                         <Col className={style.center}>
                             <div className={style.profile_photo_image_wrapper} onMouseEnter={() => this.setState({ show_edit_image: true })} onMouseLeave={() => this.setState({ show_edit_image: false })}>
-                                <Image className={style.profile_photo_image} src={`${this.state.imageSrc}?${this.state.imageHash}`} roundedCircle />
+                                <Image className={style.profile_photo_image} src={`${this.props.profile.user_info.avatar}?${Date.now()}`} roundedCircle />
                                 {this.state.show_edit_image ? <span className={style.edit_text} onClick={this.onOpenImageUploaderHandler}>Edit</span> : null}
                                 {/* <span className={style.edit_text} onClick={this.onOpenImageUploaderHandler}>Edit</span> */}
                             </div>

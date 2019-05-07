@@ -14,10 +14,10 @@ class Content extends Component {
             // props => <ProfileContent {...props} />
             <React.Fragment>
                 <Route path='/profile/:uid/' exact component={ProfileContent} />
-                <Route path='/profile/:uid/answers' component={AnswersContent} />
-                <Route path='/profile/:uid/questions' component={QuestionsContent} />
-                <Route path='/profile/:uid/followers' component={FollowersContent} />
-                <Route path='/profile/:uid/following' component={FollowingContent} />
+                <Route path='/profile/:uid/answers' exact component={AnswersContent} />
+                <Route path='/profile/:uid/questions' exact component={QuestionsContent} />
+                <Route path='/profile/:uid/followers' exact component={FollowersContent} />
+                <Route path='/profile/:uid/following' exact component={FollowingContent} />
             </React.Fragment>
 
         )
