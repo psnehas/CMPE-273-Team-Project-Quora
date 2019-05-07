@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Container, Row, Button, Form, Card, Pagination, Modal } from 'react-bootstrap';
 import cookie from 'react-cookies';
 import axios from 'axios';
-import config from '../../config'
+import {backend_host} from '../../config'
 
 class Messages extends Component {
 
@@ -10,8 +10,7 @@ class Messages extends Component {
         showInbox: false,
         sendMsg: false,
         newMsg: {
-            from: cookie.load('email'),
-            recipient: '',
+            to_email: '',
             subject: '',
             content: ''
         },
@@ -25,13 +24,17 @@ class Messages extends Component {
     }
 
     loadInbox = () => {
-        // axios.get(config.host + '/inbox_msg/' + cookie.load("uid"))
-        //     .then((res) => {
-        //         console.log("msg:", res.data);
-        //         this.setState({
-        //             messages: res.data
-        //         })
-        //     })
+        axios.get(backend_host + '/message', {
+            headers: {
+                'Authorization': `Bearer ${cookie.load('JWT')}`
+            }
+        })
+            .then((res) => {
+                console.log("msg:", res.data);
+                this.setState({
+                    messages: res.data
+                })
+            })
     }
 
     onInboxClickHandler = () => {
@@ -54,19 +57,24 @@ class Messages extends Component {
     };
 
     sendNewMsg = () => {
-        console.log("to:", this.state.newMsg.recipient, "content:", this.state.newMsg.content)
-        // axios.post(config.host + '/new_msg', this.state.newMsg)
-        //     .then((res) => {
-        //         if (res.data === true) {
-        //             this.setState({
-        //                 errMsg: 'Sent!'
-        //             });
-        //         } else {
-        //             this.setState({
-        //                 errMsg: 'Failed!'
-        //             });
-        //         }
-        //     })
+        console.log("to:", this.state.newMsg.to_email, "content:", this.state.newMsg.content)
+        axios.post(backend_host + '/message', this.state.newMsg, {
+            headers: {
+                'Authorization': `Bearer ${cookie.load('JWT')}`
+            }
+        })
+            .then((res) => {
+                console.log("adfasdf",res)
+                if (res.status === 200) {
+                    this.setState({
+                        errMsg: 'Sent!'
+                    });
+                } else {
+                    this.setState({
+                        errMsg: 'Failed!'
+                    });
+                }
+            })
     }
 
     onChangePageHandler = (num) => {
@@ -81,11 +89,11 @@ class Messages extends Component {
             <React.Fragment>
                 <h2>New Message</h2>
                 <Form>
-                    <Form.Group controlId="recipient">
-                        <Form.Label>Recipient:</Form.Label>
-                        <Form.Control type="text" placeholder="Recipient" onChange={this.onChangeHandler} value={this.state.newMsg.recipient} />
+                    <Form.Group controlId="to_email">
+                        <Form.Label>To Email:</Form.Label>
+                        <Form.Control type="text" placeholder="To Email" onChange={this.onChangeHandler} value={this.state.newMsg.to_email} />
                     </Form.Group>
-                    <Form.Group controlId="Subject">
+                    <Form.Group controlId="subject">
                         <Form.Label>Subject:</Form.Label>
                         <Form.Control type="text" placeholder="Subject" onChange={this.onChangeHandler} value={this.state.newMsg.subject} />
                     </Form.Group>
@@ -123,7 +131,7 @@ class Messages extends Component {
                     .map(msg => {
                         return (
                             <Card style={{ marginTop: "20px" }} key={msg._id}>
-                                <Card.Header>From: {msg.from}</Card.Header>
+                                <Card.Header>From: {msg.from_email}</Card.Header>
                                 <Card.Body>
                                     <Card.Text>
                                         {`${msg.subject}
