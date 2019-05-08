@@ -4,6 +4,10 @@ import cookie from 'react-cookies';
 import { backend_host } from '../../config';
 import moment from 'moment';
 import axios from 'axios';
+import renderHTML from 'react-render-html';
+import { Link } from 'react-router-dom';
+
+var html_truncate = require('html-truncate');
 
 const new_first_sort = (a, b) => {
     return moment.utc(b.time).diff(moment.utc(a.time))
@@ -113,7 +117,7 @@ class ContentPage extends Component {
                             <ListGroup>
                                 {data_to_render.map(d => {
                                     return <ListGroup.Item key={`${d.id}${d.time}`}>
-                                        {d.content}
+                                                <Link to={`/questions/${d.id}`}>{renderHTML(html_truncate(d.content, 20))}</Link>
                                     </ListGroup.Item>
                                 })}
                             </ListGroup>

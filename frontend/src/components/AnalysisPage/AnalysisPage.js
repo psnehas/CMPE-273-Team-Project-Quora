@@ -4,6 +4,7 @@ import { Pie } from 'react-chartjs-2';
 import cookie from 'react-cookies';
 import axios from 'axios';
 import { backend_host } from '../../config'
+import renderHTML from 'react-render-html';
 
 const colors = [
     '#FF6384',
