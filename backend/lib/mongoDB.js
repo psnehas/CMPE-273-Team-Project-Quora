@@ -87,7 +87,7 @@ exports.findUserProfileByID = (id) => {
         path: 'following_people',
         select: 'user_info.first_name user_info.last_name',
     })
-    .select('user_info email active').exec();
+    .select('user_info email active view').exec();
 }
 
 exports.findUserFollowedQuestions = (id) => {
